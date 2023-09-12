@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ProfanityFilter.Action": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

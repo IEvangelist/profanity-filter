@@ -1,0 +1,12 @@
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\ProfanityFilter.Services.csproj.AssemblyReference.cache
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\ProfanityFilter.Services.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\ProfanityFilter.Services.AssemblyInfoInputs.cache
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\ProfanityFilter.Services.AssemblyInfo.cs
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\ProfanityFilter.Services.csproj.CoreCompileInputs.cache
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\bin\Debug\net8.0\ProfanityFilter.Services.deps.json
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\bin\Debug\net8.0\ProfanityFilter.Services.dll
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\bin\Debug\net8.0\ProfanityFilter.Services.pdb
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\ProfanityFilter.Services.dll
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\refint\ProfanityFilter.Services.dll
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\ProfanityFilter.Services.pdb
+C:\Users\dapine\source\repos\profanity-filter\ProfanityFilter.Services\obj\Debug\net8.0\ref\ProfanityFilter.Services.dll

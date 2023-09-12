@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Data\ArabicSwearWords.txt" />
+    <None Remove="Data\BritishSwearWords.txt" />
+    <None Remove="Data\ChineseSwearWords.txt" />
+    <None Remove="Data\FrenchSwearWords.txt" />
+    <None Remove="Data\GermanSwearWords.txt" />
+    <None Remove="Data\GoogleBannedWords.txt" />
+    <None Remove="Data\IndonesianSwearWords.txt" />
+    <None Remove="Data\ItalianSwearWords.txt" />
+    <None Remove="Data\SpanishSwearWords.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\ArabicSwearWords.txt" />
+    <EmbeddedResource Include="Data\BritishSwearWords.txt" />
+    <EmbeddedResource Include="Data\ChineseSwearWords.txt" />
+    <EmbeddedResource Include="Data\FrenchSwearWords.txt" />
+    <EmbeddedResource Include="Data\GermanSwearWords.txt" />
+    <EmbeddedResource Include="Data\GoogleBannedWords.txt" />
+    <EmbeddedResource Include="Data\IndonesianSwearWords.txt" />
+    <EmbeddedResource Include="Data\ItalianSwearWords.txt" />
+    <EmbeddedResource Include="Data\SpanishSwearWords.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.7.23375.6" />
+    <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
+  </ItemGroup>
+
+</Project>

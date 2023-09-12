@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34004.107
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfanityFilter.Action", "ProfanityFilter.Action\ProfanityFilter.Action.csproj", "{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D15A4762-7188-4307-9654-627275F5AE7E}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfanityFilter.Services", "ProfanityFilter.Services\ProfanityFilter.Services.csproj", "{F2750329-F469-4BD8-A0D3-7E1CE2D62E19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfanityFilter.Services.Tests", "ProfanityFilter.Services.Tests\ProfanityFilter.Services.Tests.csproj", "{A1F889D2-290B-42C2-A61C-877C97F9D5EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2750329-F469-4BD8-A0D3-7E1CE2D62E19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2750329-F469-4BD8-A0D3-7E1CE2D62E19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2750329-F469-4BD8-A0D3-7E1CE2D62E19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2750329-F469-4BD8-A0D3-7E1CE2D62E19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1F889D2-290B-42C2-A61C-877C97F9D5EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1F889D2-290B-42C2-A61C-877C97F9D5EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1F889D2-290B-42C2-A61C-877C97F9D5EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1F889D2-290B-42C2-A61C-877C97F9D5EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72DBDAF8-D0CD-4A55-A944-0E1787FFA5C6}
+	EndGlobalSection
+EndGlobal

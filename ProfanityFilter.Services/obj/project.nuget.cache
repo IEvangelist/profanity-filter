@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "2MCOszfan3yklkiJrFELp+u4ptsXZqAIwTJk+BdsYHwKDziuXzgGlN4ByP/Ng5yxudUR2rdqy4jpKOq6uQfzHA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\dapine\\source\\repos\\profanity-filter\\ProfanityFilter.Services\\ProfanityFilter.Services.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dapine\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0-preview.7.23375.6\\microsoft.extensions.dependencyinjection.abstractions.8.0.0-preview.7.23375.6.nupkg.sha512",
+    "C:\\Users\\dapine\\.nuget\\packages\\nito.asyncex.coordination\\5.1.2\\nito.asyncex.coordination.5.1.2.nupkg.sha512",
+    "C:\\Users\\dapine\\.nuget\\packages\\nito.asyncex.tasks\\5.1.2\\nito.asyncex.tasks.5.1.2.nupkg.sha512",
+    "C:\\Users\\dapine\\.nuget\\packages\\nito.collections.deque\\1.1.1\\nito.collections.deque.1.1.1.nupkg.sha512",
+    "C:\\Users\\dapine\\.nuget\\packages\\nito.disposables\\2.2.1\\nito.disposables.2.2.1.nupkg.sha512",
+    "C:\\Users\\dapine\\.nuget\\packages\\system.collections.immutable\\1.7.1\\system.collections.immutable.1.7.1.nupkg.sha512"
+  ],
+  "logs": []
+}

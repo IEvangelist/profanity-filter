@@ -1,0 +1,2 @@
+# GitHub Action: Profanity filter
+
