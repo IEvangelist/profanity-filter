@@ -29,4 +29,6 @@ internal static class MatchEvaluators
 
             return emoji[Random.Shared.Next(emoji.Length)];
         });
+
+    // TODO: Consider additional replacement types/match evaluator pairs...
 }

@@ -1,8 +1,6 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Text.RegularExpressions;
-
 namespace ProfanityFilter.Services.Tests;
 
 public partial class MatchEvaluatorTests
@@ -12,10 +10,10 @@ public partial class MatchEvaluatorTests
     public void AsteriskEvaluator_Returns_Expected_Result(string input, string expected)
     {
         var regex = TestRegex();
-
         var match = regex.Match(input);
+        var sut = MatchEvaluators.AsteriskEvaluator;
 
-        var actual = MatchEvaluators.AsteriskEvaluator.Invoke(match);
+        var actual = sut(match);
 
         Assert.Equal(expected, actual);
     }
@@ -25,10 +23,10 @@ public partial class MatchEvaluatorTests
     public void EmojiEvaluator_Returns_Expected_Result(string input)
     {
         var regex = TestRegex();
-
         var match = regex.Match(input);
+        var sut = MatchEvaluators.EmojiEvaluator;
 
-        var actual = MatchEvaluators.EmojiEvaluator.Invoke(match);
+        var actual = sut(match);
 
         Assert.NotEqual(input, actual);
     }

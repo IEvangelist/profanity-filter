@@ -16,5 +16,7 @@ public enum ReplacementType
     /// <summary>
     /// Replaces the profanity word with an emoji.
     /// </summary>
-    Emoji
+    Emoji,
+
+    // TODO: Consider additional replacement types/match evaluator pairs...
 }

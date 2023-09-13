@@ -44,4 +44,16 @@ public class DefaultProfaneContentCensorServiceTests
         // Assert
         Assert.Equal(expectedResult, result);
     }
+
+    [Fact]
+    public async Task CensorProfanityAsyncWithEmoji_Returns_Valid_Result()
+    {
+        var input = "This is fucking bullshit!";
+
+        // Act
+        var result = await _sut.CensorProfanityAsync(input, ReplacementType.Emoji);
+
+        // Assert
+        Assert.NotEqual(input, result);
+    }
 }
