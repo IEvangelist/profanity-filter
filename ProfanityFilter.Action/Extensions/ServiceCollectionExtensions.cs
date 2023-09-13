@@ -16,7 +16,16 @@ internal static class ServiceCollectionExtensions
     internal static IServiceCollection AddOctokitServices(
         this IServiceCollection services)
     {
-        //services.Add
+        services.AddSingleton<GitHubGraphQLClient>(static provider =>
+        {
+            var core = provider.GetRequiredService<ICoreService>();
+
+            var owner = core.GetInput("owner");
+            var repo = core.GetInput("repo");
+            var token = core.GetInput("token");
+
+            return new GitHubGraphQLClient(owner, repo, token);
+        });
 
         return services;
     }

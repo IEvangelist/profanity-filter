@@ -5,9 +5,10 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddGitHubActionsCore();
 builder.Services.AddProfanityFilter();
+builder.Services.AddOctokitServices();
 
 var app = builder.Build();
 
-// TODO: Dispatch work from invocation context...
+// TODO: get an action processor and run it to apply the profanity filter.
 
 app.Run();
