@@ -11,13 +11,9 @@ COPY . .
 RUN dotnet build ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-# Install clang/zlib1g-dev dependencies for publishing to native
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    clang zlib1g-dev
-RUN dotnet publish ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=true
+RUN dotnet publish ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj -c $BUILD_CONFIGURATION -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0.0-rc.1-jammy AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["/app/ProfanityFilter.Action"]
+ENTRYPOINT ["dotnet" "/app/ProfanityFilter.Action.dll"]
