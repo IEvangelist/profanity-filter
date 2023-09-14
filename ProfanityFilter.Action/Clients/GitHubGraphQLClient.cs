@@ -1,38 +1,21 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using Octokit.GraphQL.Model;
-using Octokit.GraphQL;
-using Octokit;
-
-using IGraphQLConnection = Octokit.GraphQL.IConnection;
-using GraphQLConnection = Octokit.GraphQL.Connection;
-using GraphQLProductHeaderValue = Octokit.GraphQL.ProductHeaderValue;
-
-using Connection = Octokit.Connection;
-using ProductHeaderValue = Octokit.ProductHeaderValue;
+using System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace ProfanityFilter.Action.Clients;
 
-internal sealed class GitHubGraphQLClient
+internal sealed class GitHubGraphQLClient(string owner, string repo, string token)
 {
     const string ProductID = "GitHub Action: Profanity filter";
     const string ProductVersion = "1.0";
 
-    readonly IGraphQLConnection _connection;
-    readonly IGitHubClient _client;
-    
-    readonly (string Owner, string Repo, string Token) _config;
+    readonly IGraphQLConnection _connection = new GraphQLConnection(
+        new GraphQLProductHeaderValue(ProductID, ProductVersion), token);
 
-    public GitHubGraphQLClient(string owner, string repo, string token)
-    {
-        _config = (owner, repo, token);
-        _connection = new GraphQLConnection(new GraphQLProductHeaderValue(ProductID, ProductVersion), token);
-        _client = new GitHubClient(new Connection(new ProductHeaderValue(ProductID, ProductVersion))
-        {
-           Credentials = new Credentials(token)
-        });
-    }
+    readonly (string Owner, string Repo, string Token) _config = (owner, repo, token);
 
     public async ValueTask<string> AddLabelAsync(string issueOrPullRequestId, string[] labelIds, string clientId)
     {
@@ -128,11 +111,11 @@ internal sealed class GitHubGraphQLClient
        return result.ClientMutationId;
     }
 
-    public async ValueTask<string> UpdateIssueAsync(int number, IssueUpdate input)
-    {
-       var result = await _client.Issue.Update(_config.Owner, _config.Repo, number, input);
-       return result.NodeId;
-    }
+    //public async ValueTask<string> UpdateIssueAsync(int number, IssueUpdate input)
+    //{
+    //   var result = await _client.Issue.Update(_config.Owner, _config.Repo, number, input);
+    //   return result.NodeId;
+    //}
 
     public async ValueTask<string> UpdatePullRequestAsync(UpdatePullRequestInput input)
     {
@@ -149,43 +132,86 @@ internal sealed class GitHubGraphQLClient
        return result.ClientMutationId;
     }
 
-    public async ValueTask<string> UpdatePullRequestAsync(int number, PullRequestUpdate input)
+    //public async ValueTask<string> UpdatePullRequestAsync(int number, PullRequestUpdate input)
+    //{
+    //   var result = await _client.PullRequest.Update(_config.Owner, _config.Repo, number, input);
+    //   return result.NodeId;
+    //}
+
+    public async ValueTask<GraphQLLabel?> GetLabelAsync(string label = "profane content 🤬")
     {
-       var result = await _client.PullRequest.Update(_config.Owner, _config.Repo, number, input);
-       return result.NodeId;
+        var query =
+            new Query()
+                .Repository(_config.Repo, _config.Owner)
+                .Label(label)
+                .Compile();
+
+        return await _connection.Run(query);
     }
 
-    public async ValueTask<(string title, string body)> GetIssueTitleAndBodyAsync(int issueNumber)
+    public async ValueTask<GraphQLLabel?> CreateLabelAsync(string clientId)
+    {
+        const string LabelName = "profane content 🤬";
+        const string LabelDescription = "Either the title or body text contained profanity";
+        const string LabelColor = "512bd4";
+
+        var repositoryId = await _connection.Run(
+            new Query()
+                .Repository(_config.Repo, _config.Owner)
+                .Select(repository => repository.Id)
+                .Compile());
+
+        var mutation = $$"""
+            mutation  {
+              createLabel(input: {
+                clientMutationId: {{clientId}}
+                color: "{{LabelColor}}"
+                description: "{{LabelDescription}}"
+                name: "{{LabelName}}"
+                repositoryId: "{{repositoryId}}"
+              }) {
+              label {
+                id
+                name
+                description
+                color
+              }
+            }
+            """;
+
+        var json = await _connection.Run(mutation);
+
+        var newLabel = JsonConvert.DeserializeObject<GraphQLLabel>(
+            json,
+            new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+
+        return newLabel;
+    }
+
+    public async ValueTask<GraphQLIssue?> GetIssueAsync(int issueNumber)
     {
        var query =
            new Query()
                .Repository(_config.Repo, _config.Owner)
                .Issue(issueNumber)
-               .Select(issue => new
-               {
-                   issue.Title,
-                   issue.Body
-               })
                .Compile();
 
-       var result = await _connection.Run(query);
-       return (result.Title, result.Body);
+       var issue = await _connection.Run(query);
+       return issue;
     }
 
-    public async ValueTask<(string title, string body)> GetPullRequestTitleAndBodyAsync(int pullRequestNumber)
+    public async ValueTask<GraphQLPullRequest?> GetPullRequestAsync(int pullRequestNumber)
     {
        var query =
            new Query()
                .Repository(_config.Repo, _config.Owner)
                .PullRequest(pullRequestNumber)
-               .Select(pullRequest => new
-               {
-                   pullRequest.Title,
-                   pullRequest.Body
-               })
                .Compile();
 
-       var result = await _connection.Run(query);
-       return (result.Title, result.Body);
+       var pullRequest = await _connection.Run(query);
+        return pullRequest;
     }
 }

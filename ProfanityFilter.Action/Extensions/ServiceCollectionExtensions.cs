@@ -1,6 +1,8 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace ProfanityFilter.Action.Extensions;
 
 internal static class ServiceCollectionExtensions
@@ -20,11 +22,12 @@ internal static class ServiceCollectionExtensions
         {
             var core = provider.GetRequiredService<ICoreService>();
 
-            var owner = core.GetInput("owner");
-            var repo = core.GetInput("repo");
+            var context = Context.Current;
+            var repository = context.Repo;
+
             var token = core.GetInput("token");
 
-            return new GitHubGraphQLClient(owner, repo, token);
+            return new GitHubGraphQLClient(repository.Owner, repository.Repo, token);
         });
 
         return services;

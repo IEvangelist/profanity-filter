@@ -11,6 +11,6 @@ builder.Services.AddSingleton<ActionProcessor>();
 var app = builder.Build();
 
 var processor = app.Services.GetRequiredService<ActionProcessor>();
-await processor.ProcessAsync();
 
-app.Run();
+await processor.ProcessAsync();
+await app.RunAsync();

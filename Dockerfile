@@ -7,7 +7,7 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0-preview AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ProfanityFilter.Action/ProfanityFilter.Action.csproj", "ProfanityFilter.Action/"]
+COPY ["ProfanityFilter.Action/ProfanityFilter.Action.csproj", "ProfanityFilter.Action/", "ProfanityFilter.Services/ProfanityFilter.Services.csproj", "ProfanityFilter.Services/"]
 RUN dotnet restore "ProfanityFilter.Action/ProfanityFilter.Action.csproj"
 COPY . .
 WORKDIR "/src/ProfanityFilter.Action"
