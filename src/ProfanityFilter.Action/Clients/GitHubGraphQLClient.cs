@@ -9,7 +9,7 @@ namespace ProfanityFilter.Action.Clients;
 
 internal sealed class GitHubGraphQLClient(string owner, string repo, string token)
 {
-    const string ProductID = "GitHub Action: Profanity filter";
+    const string ProductID = "ievangelist-profanity-filter";
     const string ProductVersion = "1.0";
 
     readonly IGraphQLConnection _connection = new GraphQLConnection(
