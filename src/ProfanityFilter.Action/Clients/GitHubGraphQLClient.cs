@@ -1,20 +1,17 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-
 namespace ProfanityFilter.Action.Clients;
 
 internal sealed class GitHubGraphQLClient(string owner, string repo, string token)
 {
-    const string ProductID = "ievangelist-profanity-filter";
-    const string ProductVersion = "1.0";
+    private const string ProductID = "ievangelist-profanity-filter";
+    private const string ProductVersion = "1.0";
 
-    readonly IGraphQLConnection _connection = new GraphQLConnection(
+    private readonly GraphQLConnection _connection = new(
         new GraphQLProductHeaderValue(ProductID, ProductVersion), token);
 
-    readonly (string Owner, string Repo, string Token) _config = (owner, repo, token);
+    private readonly (string Owner, string Repo, string Token) _config = (owner, repo, token);
 
     public async ValueTask<string> AddLabelAsync(string issueOrPullRequestId, string[] labelIds, string clientId)
     {
@@ -137,12 +134,14 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
     //   return result.NodeId;
     //}
 
-    public async ValueTask<GraphQLLabel?> GetLabelAsync(string label = "profane content 🤬")
+    public async ValueTask<GraphQLLabel?> GetLabelAsync()
     {
+        var name = "profane content 🤬";
+
         var query =
             new Query()
                 .Repository(_config.Repo, _config.Owner)
-                .Label(label)
+                .Label(name)
                 .Select(label => label)
                 .Compile();
 
