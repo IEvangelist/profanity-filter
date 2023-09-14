@@ -13,7 +13,7 @@ RUN dotnet build ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj -c $
 FROM build AS publish
 RUN dotnet publish ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj -c $BUILD_CONFIGURATION -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/runtime-deps:8.0.0-rc.1-jammy AS final
+FROM mcr.microsoft.com/dotnet/runtime:8.0.0-rc.1-jammy AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["/app/ProfanityFilter.Action"]
