@@ -20,4 +20,4 @@ RUN dotnet publish ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj -c
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0.0-rc.1-jammy AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["./ProfanityFilter.Action"]
+ENTRYPOINT ["/app/ProfanityFilter.Action"]
