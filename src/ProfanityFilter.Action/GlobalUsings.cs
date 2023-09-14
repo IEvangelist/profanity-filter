@@ -9,7 +9,6 @@ global using Actions.Octokit;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 
-global using Octokit;
 global using Octokit.GraphQL;
 global using Octokit.GraphQL.Model;
 
@@ -19,6 +18,8 @@ global using ProfanityFilter.Action.Extensions;
 
 global using ProfanityFilter.Services;
 global using ProfanityFilter.Services.Extensions;
+
+global using Env = System.Environment;
 
 global using GraphQLConnection = Octokit.GraphQL.Connection;
 global using IGraphQLConnection = Octokit.GraphQL.IConnection;

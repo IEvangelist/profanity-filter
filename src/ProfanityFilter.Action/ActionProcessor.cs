@@ -15,13 +15,14 @@ internal sealed class ActionProcessor(
             var context = Context.Current;
             var runFilter = context.Action switch
             {
-                "opened" or "edited" or "reopened" => true,
+                "profanity-filter" or "opened" or "edited" or "reopened" => true,
 
                 _ => false
             };
 
             if (runFilter is false)
             {
+                core.Info(context.ToString() ?? "Unknown context");
                 core.Warning($"The action '{context.Action}' is not supported.");
 
                 return;
@@ -56,7 +57,8 @@ internal sealed class ActionProcessor(
         }
         catch (Exception ex)
         {
-            core.Error(ex.ToString());
+            core.SetFailed(ex.ToString());
+            Env.Exit(Env.ExitCode);
         }
     }
 
