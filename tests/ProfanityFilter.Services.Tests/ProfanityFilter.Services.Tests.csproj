@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProfanityFilter.Services\ProfanityFilter.Services.csproj" />
+    <ProjectReference Include="..\..\src\ProfanityFilter.Services\ProfanityFilter.Services.csproj" />
   </ItemGroup>
 
 </Project>
