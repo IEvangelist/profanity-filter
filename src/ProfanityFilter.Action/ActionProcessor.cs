@@ -10,6 +10,8 @@ internal sealed class ActionProcessor(
 {
     public async Task ProcessAsync()
     {
+        var success = true;
+
         try
         {
             var context = Context.Current;
@@ -57,8 +59,18 @@ internal sealed class ActionProcessor(
         }
         catch (Exception ex)
         {
+            success = false;
+
             core.SetFailed(ex.ToString());
             Env.Exit(Env.ExitCode);
+        }
+        finally
+        {
+            if (success)
+            {
+                core.Info("Profanity filter completed successfully.");
+                Env.Exit(0);
+            }
         }
     }
 

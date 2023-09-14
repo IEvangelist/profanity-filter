@@ -1,7 +1,6 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Text.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -144,6 +143,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
             new Query()
                 .Repository(_config.Repo, _config.Owner)
                 .Label(label)
+                .Select(label => label)
                 .Compile();
 
         return await _connection.Run(query);
@@ -197,6 +197,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
            new Query()
                .Repository(_config.Repo, _config.Owner)
                .Issue(issueNumber)
+               .Select(issue => issue)
                .Compile();
 
        var issue = await _connection.Run(query);
@@ -209,6 +210,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
            new Query()
                .Repository(_config.Repo, _config.Owner)
                .PullRequest(pullRequestNumber)
+               .Select(pr => pr)
                .Compile();
 
        var pullRequest = await _connection.Run(query);
