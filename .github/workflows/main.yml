@@ -1,0 +1,28 @@
+name: Dogfood
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+
+jobs:
+  eat:
+
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - uses: IEvangelist/profanity-filter@main
+    - name: Profanity filter
+      id: profanity-filter
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
