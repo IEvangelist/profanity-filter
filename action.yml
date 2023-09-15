@@ -1,4 +1,4 @@
-name: 'Profanity filter'
+name: 'Profane content filter'
 description: 'When used on issues or pull requests, will automatically filter out profanity.'
 
 branding:
