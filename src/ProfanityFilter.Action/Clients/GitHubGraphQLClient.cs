@@ -15,29 +15,68 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
 
     public async ValueTask<string> AddLabelAsync(string issueOrPullRequestId, string[] labelIds, string clientId)
     {
-       var mutation =
-           new Mutation()
-               .AddLabelsToLabelable(new AddLabelsToLabelableInput
-               {
-                   ClientMutationId = clientId,
-                   LabelableId = issueOrPullRequestId.ToGitHubId(),
-                   LabelIds = labelIds.Select(id => id.ToGitHubId()).ToArray()
-               })
-               .Select(payload => new
-               {
-                   payload.ClientMutationId
-               })
-               .Compile();
+        var mutation =
+            new Mutation()
+                .AddLabelsToLabelable(new AddLabelsToLabelableInput
+                {
+                    ClientMutationId = clientId,
+                    LabelableId = issueOrPullRequestId.ToGitHubId(),
+                    LabelIds = labelIds.Select(id => id.ToGitHubId()).ToArray()
+                })
+                .Select(payload => new
+                {
+                    payload.ClientMutationId
+                })
+                .Compile();
 
-       var result = await _connection.Run(mutation);
-       return result.ClientMutationId;
+        var result = await _connection.Run(mutation);
+        return result.ClientMutationId;
     }
 
     public async ValueTask<string> AddReactionAsync(string issueOrPullRequestId, ReactionContent reaction, string clientId)
     {
-       var mutation =
+        var mutation =
+            new Mutation()
+                .AddReaction(new AddReactionInput
+                {
+                    ClientMutationId = clientId,
+                    SubjectId = issueOrPullRequestId.ToGitHubId(),
+                    Content = reaction
+                })
+                .Select(payload => new
+                {
+                    payload.ClientMutationId
+                })
+                .Compile();
+
+        var result = await _connection.Run(mutation);
+        return result.ClientMutationId;
+    }
+
+    public async ValueTask<string> RemoveLabelAsync(string issueOrPullRequestId, string clientId)
+    {
+        var mutation =
+            new Mutation()
+                .ClearLabelsFromLabelable(new ClearLabelsFromLabelableInput
+                {
+                    ClientMutationId = clientId,
+                    LabelableId = issueOrPullRequestId.ToGitHubId()
+                })
+                .Select(payload => new
+                {
+                    payload.ClientMutationId
+                })
+                .Compile();
+
+        var result = await _connection.Run(mutation);
+        return result.ClientMutationId;
+    }
+
+    public async ValueTask<string> RemoveReactionAsync(string issueOrPullRequestId, ReactionContent reaction, string clientId)
+    {
+        var mutation =
            new Mutation()
-               .AddReaction(new AddReactionInput
+               .RemoveReaction(new RemoveReactionInput
                {
                    ClientMutationId = clientId,
                    SubjectId = issueOrPullRequestId.ToGitHubId(),
@@ -49,90 +88,75 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                })
                .Compile();
 
-       var result = await _connection.Run(mutation);
-       return result.ClientMutationId;
+        var result = await _connection.Run(mutation);
+        return result.ClientMutationId;
     }
 
-    public async ValueTask<string> RemoveLabelAsync(string issueOrPullRequestId, string clientId)
+    public async ValueTask UpdateIssueAsync(UpdateIssueInput input)
     {
-       var mutation =
-           new Mutation()
-               .ClearLabelsFromLabelable(new ClearLabelsFromLabelableInput
-               {
-                   ClientMutationId = clientId,
-                   LabelableId = issueOrPullRequestId.ToGitHubId()
-               })
-               .Select(payload => new
-               {
-                   payload.ClientMutationId
-               })
-               .Compile();
+        var mutation =
+            new Mutation()
+                .UpdateIssue(input)
+                .Select(payload => new
+                {
+                    payload.ClientMutationId
+                })
+                .Compile();
 
-       var result = await _connection.Run(mutation);
-       return result.ClientMutationId;
+        await _connection.Run(mutation);
     }
 
-    public async ValueTask<string> RemoveReactionAsync(string issueOrPullRequestId, ReactionContent reaction, string clientId)
+    private async ValueTask<List<LabelModel>> GetIssueLabelsAsync(int issueNumber)
     {
-       var mutation =
-          new Mutation()
-              .RemoveReaction(new RemoveReactionInput
-              {
-                  ClientMutationId = clientId,
-                  SubjectId = issueOrPullRequestId.ToGitHubId(),
-                  Content = reaction
-              })
-              .Select(payload => new
-              {
-                  payload.ClientMutationId
-              })
-              .Compile();
+        var query = new Query()
+            .Repository(_config.Repo, _config.Owner)
+            .Issue(issueNumber)
+            .Labels(10, null, null, null, null)
+            .Nodes
+            .Select(label => new
+            {
+                label.Id,
+                label.Name
+            })
+            .Compile();
 
-       var result = await _connection.Run(mutation);
-       return result.ClientMutationId;
+        var issue = await _connection.Run(query);
+        return issue?.Select(label => new LabelModel(label.Name, label.Id))
+               ?.ToList() ?? new();
     }
 
-    public async ValueTask<string> UpdateIssueAsync(UpdateIssueInput input)
+    private async ValueTask<List<LabelModel>> GetPullRequestLabelsAsync(int pullRequestNumber)
     {
-       var mutation =
-           new Mutation()
-               .UpdateIssue(input)
-               .Select(payload => new
-               {
-                   payload.ClientMutationId
-               })
-               .Compile();
+        var query = new Query()
+            .Repository(_config.Repo, _config.Owner)
+            .PullRequest(pullRequestNumber)
+            .Labels(10, null, null, null, null)
+            .Nodes
+            .Select(label => new
+            {
+                label.Id,
+                label.Name
+            })
+            .Compile();
 
-       var result = await _connection.Run(mutation);
-       return result.ClientMutationId;
+        var issue = await _connection.Run(query);
+        return issue?.Select(label => new LabelModel(label.Name, label.Id))
+               ?.ToList() ?? new();
     }
 
-    //public async ValueTask<string> UpdateIssueAsync(int number, IssueUpdate input)
-    //{
-    //   var result = await _client.Issue.Update(_config.Owner, _config.Repo, number, input);
-    //   return result.NodeId;
-    //}
-
-    public async ValueTask<string> UpdatePullRequestAsync(UpdatePullRequestInput input)
+    public async ValueTask UpdatePullRequestAsync(UpdatePullRequestInput input)
     {
-       var mutation =
-           new Mutation()
-               .UpdatePullRequest(input)
-               .Select(payload => new
-               {
-                   payload.ClientMutationId
-               })
-               .Compile();
+        var mutation =
+            new Mutation()
+                .UpdatePullRequest(input)
+                .Select(payload => new
+                {
+                    payload.ClientMutationId
+                })
+                .Compile();
 
-       var result = await _connection.Run(mutation);
-       return result.ClientMutationId;
+        await _connection.Run(mutation);
     }
-
-    //public async ValueTask<string> UpdatePullRequestAsync(int number, PullRequestUpdate input)
-    //{
-    //   var result = await _client.PullRequest.Update(_config.Owner, _config.Repo, number, input);
-    //   return result.NodeId;
-    //}
 
     public async ValueTask<LabelModel?> GetLabelAsync()
     {
@@ -201,38 +225,34 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
 
     public async ValueTask<IssueOrPullRequestModel?> GetIssueAsync(int issueNumber)
     {
-       var query =
-           new Query()
-               .Repository(_config.Repo, _config.Owner)
-               .Issue(issueNumber)
-               .Select(issue => new
-               {
-                   issue.Id,
-                   issue.Title,
-                   issue.Body,
-                   issue.Editor.Login,
-                   issue.Number,
-                   Labels = issue.Labels(10, null, null, null, null).Nodes.Select(label => new
-                   {
-                       label.Id,
-                       label.Name
-                   })
-                   .ToList()
-               })
-               .Compile();
+        var query =
+            new Query()
+                .Repository(_config.Repo, _config.Owner)
+                .Issue(issueNumber)
+                .Select(issue => new
+                {
+                    issue.Id,
+                    issue.Title,
+                    issue.Body,
+                    issue.Editor.Login,
+                    issue.Number
+                })
+                .Compile();
 
-       var issue = await _connection.Run(query);
-       return issue is null
-           ? null
-           : new IssueOrPullRequestModel
-           {
-               Id = issue.Id,
-               Title = issue.Title,
-               Body = issue.Body,
-               EditorLogin = issue.Login,
-               Number = issue.Number,
-               Labels = issue.Labels.Select(label => new LabelModel(label.Name, label.Id)).ToList()
-           };
+        var labels = await GetIssueLabelsAsync(issueNumber);
+
+        var issue = await _connection.Run(query);
+        return issue is null
+            ? null
+            : new IssueOrPullRequestModel
+            {
+                Id = issue.Id,
+                Title = issue.Title,
+                Body = issue.Body,
+                EditorLogin = issue.Login,
+                Number = issue.Number,
+                Labels = labels
+            };
     }
 
     public async ValueTask<IssueOrPullRequestModel?> GetPullRequestAsync(int pullRequestNumber)
@@ -248,15 +268,11 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                     pullRequest.Body,
                     pullRequest.Editor.Login,
                     pullRequest.Number,
-                    pullRequest.BaseRefName,
-                    Labels = pullRequest.Labels(10, null, null, null, null).Nodes.Select(label => new
-                    {
-                        label.Id,
-                        label.Name
-                    })
-                    .ToList()
+                    pullRequest.BaseRefName
                 })
                 .Compile();
+
+        var labels = await GetPullRequestLabelsAsync(pullRequestNumber);
 
         var pullRequest = await _connection.Run(query);
         return pullRequest is null
@@ -269,7 +285,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                 EditorLogin = pullRequest.Login,
                 Number = pullRequest.Number,
                 BaseRefName = pullRequest.BaseRefName,
-                Labels = pullRequest.Labels.Select(label => new LabelModel(label.Name, label.Id)).ToList()
+                Labels = labels
             };
     }
 }
