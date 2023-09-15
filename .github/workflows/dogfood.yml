@@ -26,3 +26,4 @@ jobs:
       id: profanity-filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        replacement-type: Emoji # Asterisk or Emoji
