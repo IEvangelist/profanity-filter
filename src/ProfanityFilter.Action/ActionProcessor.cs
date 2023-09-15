@@ -15,8 +15,7 @@ internal sealed class ActionProcessor(
 
         try
         {
-            var context = Context.Current;
-            if (IsInvalidContext(context))
+            if (TryGetContext(out var context) is false)
             {
                 return;
             }
@@ -65,8 +64,10 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private bool IsInvalidContext(Context context)
+    private bool TryGetContext(out Context context)
     {
+        context = Context.Current;
+
         var isValidAction = context.Action switch
         {
             "profanity-filter" or "opened" or "edited" or "reopened" => true,
@@ -84,7 +85,10 @@ internal sealed class ActionProcessor(
 
         var isValidActor = context.Actor switch
         {
-            "dependabot" or "github-actions" or "github-actions[bot]" or "bot" => false,
+            "bot" or
+            "dependabot" or "dependabot[bot]" or
+            "github-actions" or "github-actions[bot]" => false,
+
             _ => true
         };
 

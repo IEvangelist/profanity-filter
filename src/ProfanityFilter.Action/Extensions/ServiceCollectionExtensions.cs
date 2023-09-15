@@ -1,13 +1,17 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace ProfanityFilter.Action.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
-    internal static IServiceCollection AddProfanityFilter(
+    internal static IServiceCollection AddActionProcessorServices(
+        this IServiceCollection services) =>
+        services.AddSingleton<ActionProcessor>()
+            .AddProfanityFilter()
+            .AddOctokitServices();
+
+    private static IServiceCollection AddProfanityFilter(
         this IServiceCollection services)
     {
         services.AddProfanityFilterServices();
@@ -15,7 +19,7 @@ internal static class ServiceCollectionExtensions
         return services;
     }
 
-    internal static IServiceCollection AddOctokitServices(
+    private static IServiceCollection AddOctokitServices(
         this IServiceCollection services)
     {
         services.AddGitHubActionsCore();

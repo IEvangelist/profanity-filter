@@ -12,7 +12,7 @@ public class ServiceCollectionExtensionsTests
         var services = new ServiceCollection();
 
         // Act
-        services.AddProfanityFilter();
+        services.AddActionProcessorServices();
 
         // Assert
         var provider = services.BuildServiceProvider();
