@@ -9,26 +9,6 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
     private readonly GraphQLConnection _connection = new(
         new GraphQLProductHeaderValue(ProductID, ProductVersion), token);
 
-    public async ValueTask<string> AddLabelAsync(string issueOrPullRequestId, string[] labelIds, string clientId)
-    {
-        var mutation =
-            new Mutation()
-                .AddLabelsToLabelable(new AddLabelsToLabelableInput
-                {
-                    ClientMutationId = clientId,
-                    LabelableId = issueOrPullRequestId.ToGitHubId(),
-                    LabelIds = labelIds.Select(id => id.ToGitHubId()).ToArray()
-                })
-                .Select(payload => new
-                {
-                    payload.ClientMutationId
-                })
-                .Compile();
-
-        var result = await _connection.Run(mutation);
-        return result.ClientMutationId;
-    }
-
     public async ValueTask<string> AddReactionAsync(string issueOrPullRequestId, ReactionContent reaction, string clientId)
     {
         var mutation =
@@ -44,45 +24,6 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                     payload.ClientMutationId
                 })
                 .Compile();
-
-        var result = await _connection.Run(mutation);
-        return result.ClientMutationId;
-    }
-
-    public async ValueTask<string> RemoveLabelAsync(string issueOrPullRequestId, string clientId)
-    {
-        var mutation =
-            new Mutation()
-                .ClearLabelsFromLabelable(new ClearLabelsFromLabelableInput
-                {
-                    ClientMutationId = clientId,
-                    LabelableId = issueOrPullRequestId.ToGitHubId()
-                })
-                .Select(payload => new
-                {
-                    payload.ClientMutationId
-                })
-                .Compile();
-
-        var result = await _connection.Run(mutation);
-        return result.ClientMutationId;
-    }
-
-    public async ValueTask<string> RemoveReactionAsync(string issueOrPullRequestId, ReactionContent reaction, string clientId)
-    {
-        var mutation =
-           new Mutation()
-               .RemoveReaction(new RemoveReactionInput
-               {
-                   ClientMutationId = clientId,
-                   SubjectId = issueOrPullRequestId.ToGitHubId(),
-                   Content = reaction
-               })
-               .Select(payload => new
-               {
-                   payload.ClientMutationId
-               })
-               .Compile();
 
         var result = await _connection.Run(mutation);
         return result.ClientMutationId;
@@ -213,7 +154,6 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                 Id = issue.Id,
                 Title = issue.Title,
                 Body = issue.Body,
-                EditorLogin = issue.Login,
                 Number = issue.Number,
                 Labels = labels
             };
@@ -230,7 +170,6 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                     pullRequest.Id,
                     pullRequest.Title,
                     pullRequest.Body,
-                    //pullRequest.Editor.Login,
                     pullRequest.Number,
                     pullRequest.BaseRefName
                 })
@@ -246,9 +185,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                 Id = pullRequest.Id,
                 Title = pullRequest.Title,
                 Body = pullRequest.Body,
-                EditorLogin = "",//pullRequest.Login,
                 Number = pullRequest.Number,
-                BaseRefName = pullRequest.BaseRefName,
                 Labels = labels
             };
     }

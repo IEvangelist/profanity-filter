@@ -16,18 +16,8 @@ internal sealed class ActionProcessor(
         try
         {
             var context = Context.Current;
-            var runFilter = context.Action switch
+            if (IsInvalidContext(context))
             {
-                "profanity-filter" or "opened" or "edited" or "reopened" => true,
-
-                _ => false
-            };
-
-            if (runFilter is false)
-            {
-                core.Info(context.ToString() ?? "Unknown context");
-                core.Warning($"The action '{context.Action}' is not supported.");
-
                 return;
             }
 
@@ -75,6 +65,39 @@ internal sealed class ActionProcessor(
         }
     }
 
+    private bool IsInvalidContext(Context context)
+    {
+        var isValidAction = context.Action switch
+        {
+            "profanity-filter" or "opened" or "edited" or "reopened" => true,
+
+            _ => false
+        };
+
+        if (isValidAction is false)
+        {
+            core.Info(context.ToString() ?? "Unknown context");
+            core.Warning($"The action '{context.Action}' is not supported.");
+
+            return false;
+        }
+
+        var isValidActor = context.Actor switch
+        {
+            "dependabot" or "github-actions" or "github-actions[bot]" or "bot" => false,
+            _ => true
+        };
+
+        if (isValidActor is false)
+        {
+            core.Info($"Ignored as {context.Actor} triggered this...");
+
+            return false;
+        }
+
+        return true;
+    }
+
     private async Task HandleIssueAsync(long issueNumber, LabelModel label)
     {
         var clientId = Guid.NewGuid().ToString();
@@ -86,16 +109,6 @@ internal sealed class ActionProcessor(
             if (issue is null)
             {
                 core.Error($"Unable to get issue with number: {issueNumber}");
-                return;
-            }
-
-            if (issue.EditorLogin is
-                    "dependabot" or
-                    "github-actions" or
-                    "github-actions[bot]" or
-                    "bot")
-            {
-                core.Info($"Ignoring PR #{issueNumber}, as it was edited by a bot.");
                 return;
             }
 
@@ -137,16 +150,6 @@ internal sealed class ActionProcessor(
             if (pullRequest is null)
             {
                 core.Error($"Unable to get PR with number: {pullRequestNumber}");
-                return;
-            }
-
-            if (pullRequest.EditorLogin is
-                    "dependabot" or
-                    "github-actions" or
-                    "github-actions[bot]" or
-                    "bot")
-            {
-                core.Info($"Ignoring PR #{pullRequestNumber}, as it was edited by a bot.");
                 return;
             }
 
