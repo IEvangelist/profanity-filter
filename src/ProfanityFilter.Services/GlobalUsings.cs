@@ -11,3 +11,6 @@ global using Nito.AsyncEx;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo(
     assemblyName: "ProfanityFilter.Services.Tests")]
+
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo(
+    assemblyName: "ProfanityFilter.Action.Tests")]

@@ -4,14 +4,10 @@
 namespace ProfanityFilter.Action.Clients;
 
 internal sealed class GitHubGraphQLClient(string owner, string repo, string token)
+    : GitHubBaseClient(owner, repo, token)
 {
-    private const string ProductID = "ievangelist-profanity-filter";
-    private const string ProductVersion = "1.0";
-
     private readonly GraphQLConnection _connection = new(
         new GraphQLProductHeaderValue(ProductID, ProductVersion), token);
-
-    private readonly (string Owner, string Repo, string Token) _config = (owner, repo, token);
 
     public async ValueTask<string> AddLabelAsync(string issueOrPullRequestId, string[] labelIds, string clientId)
     {
@@ -92,20 +88,6 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
         return result.ClientMutationId;
     }
 
-    public async ValueTask UpdateIssueAsync(UpdateIssueInput input)
-    {
-        var mutation =
-            new Mutation()
-                .UpdateIssue(input)
-                .Select(payload => new
-                {
-                    payload.ClientMutationId
-                })
-                .Compile();
-
-        await _connection.Run(mutation);
-    }
-
     private async ValueTask<List<LabelModel>> GetIssueLabelsAsync(int issueNumber)
     {
         var query = new Query()
@@ -144,20 +126,6 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                ?.ToList() ?? new();
     }
 
-    public async ValueTask UpdatePullRequestAsync(UpdatePullRequestInput input)
-    {
-        var mutation =
-            new Mutation()
-                .UpdatePullRequest(input)
-                .Select(payload => new
-                {
-                    payload.ClientMutationId
-                })
-                .Compile();
-
-        await _connection.Run(mutation);
-    }
-
     public async ValueTask<LabelModel?> GetLabelAsync()
     {
         var name = "profane content 🤬";
@@ -183,10 +151,6 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
 
     public async ValueTask<GraphQLLabel?> CreateLabelAsync(string clientId)
     {
-        const string LabelName = "profane content 🤬";
-        const string LabelDescription = "Either the title or body text contained profanity";
-        const string LabelColor = "512bd4";
-
         var repositoryId = await _connection.Run(
             new Query()
                 .Repository(_config.Repo, _config.Owner)
@@ -197,9 +161,9 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
             mutation  {
               createLabel(input: {
                 clientMutationId: {{clientId}}
-                color: "{{LabelColor}}"
-                description: "{{LabelDescription}}"
-                name: "{{LabelName}}"
+                color: "{{DefaultLabel.Color}}"
+                description: "{{DefaultLabel.Description}}"
+                name: "{{DefaultLabel.Name}}"
                 repositoryId: "{{repositoryId}}"
               }) {
               label {
@@ -266,7 +230,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                     pullRequest.Id,
                     pullRequest.Title,
                     pullRequest.Body,
-                    pullRequest.Editor.Login,
+                    //pullRequest.Editor.Login,
                     pullRequest.Number,
                     pullRequest.BaseRefName
                 })
@@ -282,7 +246,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                 Id = pullRequest.Id,
                 Title = pullRequest.Title,
                 Body = pullRequest.Body,
-                EditorLogin = pullRequest.Login,
+                EditorLogin = "",//pullRequest.Login,
                 Number = pullRequest.Number,
                 BaseRefName = pullRequest.BaseRefName,
                 Labels = labels

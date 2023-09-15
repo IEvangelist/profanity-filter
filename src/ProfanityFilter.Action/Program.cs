@@ -3,7 +3,6 @@
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddGitHubActionsCore();
 builder.Services.AddProfanityFilter();
 builder.Services.AddOctokitServices();
 builder.Services.AddSingleton<ActionProcessor>();

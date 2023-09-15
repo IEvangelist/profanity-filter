@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProfanityFilter.Services", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProfanityFilter.Services.Tests", "tests\ProfanityFilter.Services.Tests\ProfanityFilter.Services.Tests.csproj", "{A1F889D2-290B-42C2-A61C-877C97F9D5EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfanityFilter.Action.Tests", "tests\ProfanityFilter.Action.Tests\ProfanityFilter.Action.Tests.csproj", "{37D19359-799E-468B-B404-7A920C7FD1CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{A1F889D2-290B-42C2-A61C-877C97F9D5EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1F889D2-290B-42C2-A61C-877C97F9D5EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1F889D2-290B-42C2-A61C-877C97F9D5EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37D19359-799E-468B-B404-7A920C7FD1CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37D19359-799E-468B-B404-7A920C7FD1CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37D19359-799E-468B-B404-7A920C7FD1CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37D19359-799E-468B-B404-7A920C7FD1CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,6 +4,7 @@
 namespace ProfanityFilter.Action;
 
 internal sealed class ActionProcessor(
+    GitHubRestClient gitHubRestClient,
     GitHubGraphQLClient gitHubGraphQLClient,
     IProfaneContentCensorService profaneContentCensor,
     ICoreService core)
@@ -33,7 +34,7 @@ internal sealed class ActionProcessor(
             var (isIssue, isPullRequest) =
                 (context?.Payload?.Issue is not null, context?.Payload?.PullRequest is not null);
 
-            Func<long, ID, Task> handler = (isIssue, isPullRequest) switch
+            Func<long, LabelModel, Task> handler = (isIssue, isPullRequest) switch
             {
                 (true, _) => HandleIssueAsync,
                 (_, true) => HandlePullRequestAsync,
@@ -55,7 +56,7 @@ internal sealed class ActionProcessor(
 
             var number = (context?.Payload?.Issue ?? context?.Payload?.PullRequest)!.Number;
 
-            await handler(number, label.Id);
+            await handler(number, label);
         }
         catch (Exception ex)
         {
@@ -74,10 +75,10 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandleIssueAsync(long issueNumber, ID labelId)
+    private async Task HandleIssueAsync(long issueNumber, LabelModel label)
     {
         var clientId = Guid.NewGuid().ToString();
-        core.StartGroup($"Evaluating issue for profanity: {issueNumber} (Client mutation: {clientId})");
+        core.StartGroup($"Evaluating issue #{issueNumber} for profanity (Client mutation: {clientId})");
 
         try
         {
@@ -105,16 +106,15 @@ internal sealed class ActionProcessor(
 
             if (filterResult.IsFiltered)
             {
-                var existingLabels = issue.Labels?.Select(l => l.Id).ToList();
-
-                _ = await gitHubGraphQLClient.UpdateIssueAsync(new()
+                var issueUpdate = new IssueUpdate
                 {
-                    Id = issue.Id,
-                    Title = filterResult.Title,
                     Body = filterResult.Body,
-                    ClientMutationId = clientId,
-                    LabelIds = new[] { labelId }.Concat(existingLabels ?? new())
-                });
+                    Title = filterResult.Title
+                };
+
+                issueUpdate.AddLabel(label.Name);
+
+                await gitHubRestClient.UpdateIssueAsync(issue.Number, issueUpdate);
 
                 await gitHubGraphQLClient.AddReactionAsync(
                     issue.Id.Value, ReactionContent.Confused, clientId);
@@ -126,10 +126,10 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandlePullRequestAsync(long pullRequestNumber, ID labelId)
+    private async Task HandlePullRequestAsync(long pullRequestNumber, LabelModel label)
     {
         var clientId = Guid.NewGuid().ToString();
-        core.StartGroup($"Evaluating pull request for profanity: {pullRequestNumber} (Client mutation: {clientId})");
+        core.StartGroup($"Evaluating pull request #{pullRequestNumber} for profanity (Client mutation: {clientId})");
 
         try
         {
@@ -157,17 +157,14 @@ internal sealed class ActionProcessor(
 
             if (filterResult.IsFiltered)
             {
-                var existingLabels = pullRequest.Labels?.Select(l => l.Id).ToList();
-
-                _ = await gitHubGraphQLClient.UpdatePullRequestAsync(new()
+                var issueUpdate = new PullRequestUpdate
                 {
-                    PullRequestId = pullRequest.Id,
-                    BaseRefName = pullRequest.BaseRefName,
-                    Title = filterResult.Title,
                     Body = filterResult.Body,
-                    ClientMutationId = clientId,
-                    LabelIds = new[] { labelId }.Concat(existingLabels ?? new())
-                });
+                    Title = filterResult.Title
+                };
+
+                await gitHubRestClient.UpdatePullRequestAsync(
+                    pullRequest.Number, issueUpdate, label.Name);
 
                 await gitHubGraphQLClient.AddReactionAsync(
                     pullRequest.Id.Value, ReactionContent.Confused, clientId);
@@ -209,7 +206,10 @@ internal sealed class ActionProcessor(
 
         if (filterText)
         {
-            core.Info($"Replaced text: {resultingText}");
+            core.Info($"""
+                Original text: {text}
+                Filtered text: {resultingText}
+                """);
         }
 
         return (resultingText, filterText);
