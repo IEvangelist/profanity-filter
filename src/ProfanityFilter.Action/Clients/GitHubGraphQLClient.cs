@@ -134,7 +134,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
     //   return result.NodeId;
     //}
 
-    public async ValueTask<GraphQLLabel?> GetLabelAsync()
+    public async ValueTask<LocalLabel?> GetLabelAsync()
     {
         var name = "profane content 🤬";
 
@@ -142,10 +142,19 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
             new Query()
                 .Repository(_config.Repo, _config.Owner)
                 .Label(name)
-                .Select(label => label)
+                .Select(label => new
+                {
+                    label.Name,
+                    label.Color,
+                    label.Id,
+                    label.Description
+                })
                 .Compile();
 
-        return await _connection.Run(query);
+        var label = await _connection.Run(query);
+        return label is null
+            ? null
+            : new LocalLabel(label.Name, label.Color, label.Id, label.Description);
     }
 
     public async ValueTask<GraphQLLabel?> CreateLabelAsync(string clientId)

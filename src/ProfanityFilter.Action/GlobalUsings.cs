@@ -18,6 +18,7 @@ global using Octokit.GraphQL.Model;
 global using ProfanityFilter.Action;
 global using ProfanityFilter.Action.Clients;
 global using ProfanityFilter.Action.Extensions;
+global using ProfanityFilter.Action.Models;
 
 global using ProfanityFilter.Services;
 global using ProfanityFilter.Services.Extensions;
@@ -25,7 +26,6 @@ global using ProfanityFilter.Services.Extensions;
 global using Env = System.Environment;
 
 global using GraphQLConnection = Octokit.GraphQL.Connection;
-global using IGraphQLConnection = Octokit.GraphQL.IConnection;
 global using GraphQLLabel = Octokit.GraphQL.Model.Label;
 global using GraphQLIssue = Octokit.GraphQL.Model.Issue;
 global using GraphQLPullRequest = Octokit.GraphQL.Model.PullRequest;
