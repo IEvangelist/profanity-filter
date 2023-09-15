@@ -88,7 +88,7 @@ internal sealed class ActionProcessor(
                 return;
             }
 
-            if (issue.Editor.Login is
+            if (issue.EditorLogin is
                     "dependabot" or
                     "github-actions" or
                     "github-actions[bot]" or
@@ -105,7 +105,7 @@ internal sealed class ActionProcessor(
 
             if (filterResult.IsFiltered)
             {
-                var existingLabels = issue.Labels()?.Nodes?.Select(l => l.Id).ToList();
+                var existingLabels = issue.Labels?.Select(l => l.Id).ToList();
 
                 _ = await gitHubGraphQLClient.UpdateIssueAsync(new()
                 {
@@ -140,7 +140,7 @@ internal sealed class ActionProcessor(
                 return;
             }
 
-            if (pullRequest.Editor.Login is
+            if (pullRequest.EditorLogin is
                     "dependabot" or
                     "github-actions" or
                     "github-actions[bot]" or
@@ -157,7 +157,7 @@ internal sealed class ActionProcessor(
 
             if (filterResult.IsFiltered)
             {
-                var existingLabels = pullRequest.Labels()?.Nodes?.Select(l => l.Id).ToList();
+                var existingLabels = pullRequest.Labels?.Select(l => l.Id).ToList();
 
                 _ = await gitHubGraphQLClient.UpdatePullRequestAsync(new()
                 {

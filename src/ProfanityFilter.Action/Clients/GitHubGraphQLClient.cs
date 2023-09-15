@@ -134,7 +134,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
     //   return result.NodeId;
     //}
 
-    public async ValueTask<LocalLabel?> GetLabelAsync()
+    public async ValueTask<LabelModel?> GetLabelAsync()
     {
         var name = "profane content 🤬";
 
@@ -154,7 +154,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
         var label = await _connection.Run(query);
         return label is null
             ? null
-            : new LocalLabel(label.Name, label.Color, label.Id, label.Description);
+            : new LabelModel(label.Name, label.Id, label.Color, label.Description);
     }
 
     public async ValueTask<GraphQLLabel?> CreateLabelAsync(string clientId)
@@ -199,29 +199,77 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
         return newLabel;
     }
 
-    public async ValueTask<GraphQLIssue?> GetIssueAsync(int issueNumber)
+    public async ValueTask<IssueOrPullRequestModel?> GetIssueAsync(int issueNumber)
     {
        var query =
            new Query()
                .Repository(_config.Repo, _config.Owner)
                .Issue(issueNumber)
-               .Select(issue => issue)
+               .Select(issue => new
+               {
+                   issue.Id,
+                   issue.Title,
+                   issue.Body,
+                   issue.Editor.Login,
+                   issue.Number,
+                   Labels = issue.Labels(10, null, null, null, null).Nodes.Select(label => new
+                   {
+                       label.Id,
+                       label.Name
+                   })
+                   .ToList()
+               })
                .Compile();
 
        var issue = await _connection.Run(query);
-       return issue;
+       return issue is null
+           ? null
+           : new IssueOrPullRequestModel
+           {
+               Id = issue.Id,
+               Title = issue.Title,
+               Body = issue.Body,
+               EditorLogin = issue.Login,
+               Number = issue.Number,
+               Labels = issue.Labels.Select(label => new LabelModel(label.Name, label.Id)).ToList()
+           };
     }
 
-    public async ValueTask<GraphQLPullRequest?> GetPullRequestAsync(int pullRequestNumber)
+    public async ValueTask<IssueOrPullRequestModel?> GetPullRequestAsync(int pullRequestNumber)
     {
-       var query =
-           new Query()
-               .Repository(_config.Repo, _config.Owner)
-               .PullRequest(pullRequestNumber)
-               .Select(pr => pr)
-               .Compile();
+        var query =
+            new Query()
+                .Repository(_config.Repo, _config.Owner)
+                .PullRequest(pullRequestNumber)
+                .Select(pullRequest => new
+                {
+                    pullRequest.Id,
+                    pullRequest.Title,
+                    pullRequest.Body,
+                    pullRequest.Editor.Login,
+                    pullRequest.Number,
+                    pullRequest.BaseRefName,
+                    Labels = pullRequest.Labels(10, null, null, null, null).Nodes.Select(label => new
+                    {
+                        label.Id,
+                        label.Name
+                    })
+                    .ToList()
+                })
+                .Compile();
 
-       var pullRequest = await _connection.Run(query);
-        return pullRequest;
+        var pullRequest = await _connection.Run(query);
+        return pullRequest is null
+            ? null
+            : new IssueOrPullRequestModel
+            {
+                Id = pullRequest.Id,
+                Title = pullRequest.Title,
+                Body = pullRequest.Body,
+                EditorLogin = pullRequest.Login,
+                Number = pullRequest.Number,
+                BaseRefName = pullRequest.BaseRefName,
+                Labels = pullRequest.Labels.Select(label => new LabelModel(label.Name, label.Id)).ToList()
+            };
     }
 }
