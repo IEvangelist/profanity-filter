@@ -104,6 +104,10 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
         var evaluator = replacementType switch
         {
             ReplacementType.Asterisk => MatchEvaluators.AsteriskEvaluator,
+            ReplacementType.RandomAsterisk => MatchEvaluators.RandomAsteriskEvaluator,
+            ReplacementType.MiddleAsterisk => MatchEvaluators.MiddleAsteriskEvaluator,
+            ReplacementType.MiddleSwearEmoji => MatchEvaluators.MiddleSwearEmojiEvaluator,
+
             _ => MatchEvaluators.EmojiEvaluator,
         };
 

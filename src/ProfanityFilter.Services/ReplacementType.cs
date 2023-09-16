@@ -18,5 +18,22 @@ public enum ReplacementType
     /// </summary>
     Emoji,
 
-    // TODO: Consider additional replacement types/match evaluator pairs...
+    /// <summary>
+    /// Represents a replacement type where the profanity is replaced 
+    /// with a random number of asterisks.
+    /// </summary>
+    RandomAsterisk,
+
+    /// <summary>
+    /// Represents the middle asterisk replacement type, which replaces the 
+    /// characters in the middle of the profanity with asterisks.
+    /// </summary>
+    MiddleAsterisk,
+
+    
+    /// <summary>
+    /// Represents a replacement type where the middle of the swear word 
+    /// is replaced with an emoji.
+    /// </summary>
+    MiddleSwearEmoji,
 }
