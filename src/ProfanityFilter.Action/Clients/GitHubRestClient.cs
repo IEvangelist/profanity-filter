@@ -18,12 +18,15 @@ internal sealed class GitHubRestClient(string owner, string repo, string token)
     public async ValueTask UpdateIssueAsync(int number, IssueUpdate input) =>
         await _client.Issue.Update(_config.Owner, _config.Repo, number, input);
 
-    public async ValueTask UpdatePullRequestAsync(int number, PullRequestUpdate input, string label)
+    public async ValueTask UpdatePullRequestAsync(int number, PullRequestUpdate input, string? label)
     {
         await _client.PullRequest.Update(_config.Owner, _config.Repo, number, input);
 
-        // Add a label to the pull request
-        await _client.Issue.Labels.AddToIssue(
-            _config.Owner, _config.Repo, number, [label]);
+        if (label is not null)
+        {
+            // Add a label to the pull request
+            await _client.Issue.Labels.AddToIssue(
+                _config.Owner, _config.Repo, number, [label]);
+        }
     }
 }

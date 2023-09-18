@@ -32,6 +32,7 @@ jobs:
 
     runs-on: ubuntu-latest
     permissions:
+      # Required permissions.
       issues: write
       pull-requests: write
 
@@ -43,7 +44,7 @@ jobs:
       id: profanity-filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        replacement-type: Emoji # Asterisk or Emoji
+        replacement-type: Emoji # See Replacement types
 ```
 
 If you already have an existing workflow that is triggered `on/issues|pull_request/types/opened|edited|reopened` feel free to simply add a step to the existing job:
@@ -55,7 +56,7 @@ If you already have an existing workflow that is triggered `on/issues|pull_reque
   id: profanity-filter
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
-    replacement-type: Emoji # Asterisk or Emoji
+    replacement-type: Emoji # See Replacement types
 ```
 
 ## 👀 Inputs
@@ -77,3 +78,7 @@ Each replacement type corresponds to a different way of replacing profane conten
 | `ReplacementType.MiddleAsterisk` | `"MiddleAsterisk"` | Replaces profane content with asterisks, but only in the middle of the word. For example, a swear word with four letters could look like this `f**k`. |
 | `ReplacementType.MiddleSwearEmoji` | `"MiddleSwearEmoji"` | Replaces profane content with a random swear emoji, but only in the middle of the word. For example, a swear word with four letters could look like this `f🤬k`. |
 | `ReplacementType.VowelAsterisk` | `"VowelAsterisk"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh*t`. |
+
+## Label requirements
+
+This action will look for a label with the following verbatim name `"profane content 🤬"`, if found this label is applied to any issue or pull request where profane content filteration occurs.

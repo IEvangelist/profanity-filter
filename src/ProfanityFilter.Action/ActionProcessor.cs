@@ -23,7 +23,7 @@ internal sealed class ActionProcessor(
             var (isIssue, isPullRequest) =
                 (context?.Payload?.Issue is not null, context?.Payload?.PullRequest is not null);
 
-            Func<long, LabelModel, Task> handler = (isIssue, isPullRequest) switch
+            Func<long, LabelModel?, Task> handler = (isIssue, isPullRequest) switch
             {
                 (true, _) => HandleIssueAsync,
                 (_, true) => HandlePullRequestAsync,
@@ -35,12 +35,10 @@ internal sealed class ActionProcessor(
             var label = await gitHubGraphQLClient.GetLabelAsync();
             if (label is null)
             {
-                core.Error("""
-                    The required label isn't present, a label with the following name is required to work.
+                core.Warning("""
+                    The expected label isn't present, a label with the following name is would have been applied if found.
                         'profane content 🤬'
                     """);
-
-                return;
             }
 
             var number = (context?.Payload?.Issue ?? context?.Payload?.PullRequest)!.Number;
@@ -102,7 +100,7 @@ internal sealed class ActionProcessor(
         return true;
     }
 
-    private async Task HandleIssueAsync(long issueNumber, LabelModel label)
+    private async Task HandleIssueAsync(long issueNumber, LabelModel? label)
     {
         var clientId = Guid.NewGuid().ToString();
         core.StartGroup($"Evaluating issue #{issueNumber} for profanity (Client mutation: {clientId})");
@@ -129,7 +127,10 @@ internal sealed class ActionProcessor(
                     Title = filterResult.Title
                 };
 
-                issueUpdate.AddLabel(label.Name);
+                if (label is not null)
+                {
+                    issueUpdate.AddLabel(label.Name);
+                }
 
                 await gitHubRestClient.UpdateIssueAsync(issue.Number, issueUpdate);
 
@@ -143,7 +144,7 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandlePullRequestAsync(long pullRequestNumber, LabelModel label)
+    private async Task HandlePullRequestAsync(long pullRequestNumber, LabelModel? label)
     {
         var clientId = Guid.NewGuid().ToString();
         core.StartGroup($"Evaluating pull request #{pullRequestNumber} for profanity (Client mutation: {clientId})");
@@ -171,7 +172,7 @@ internal sealed class ActionProcessor(
                 };
 
                 await gitHubRestClient.UpdatePullRequestAsync(
-                    pullRequest.Number, issueUpdate, label.Name);
+                    pullRequest.Number, issueUpdate, label?.Name);
 
                 await gitHubGraphQLClient.AddReactionAsync(
                     pullRequest.Id.Value, ReactionContent.Confused, clientId);
