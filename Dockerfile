@@ -1,19 +1,30 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/runtime:8.0.0-rc.1-jammy AS base
+FROM mcr.microsoft.com/dotnet/runtime:8.0.0-rc.1-alpine3.18 AS base
 USER app
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100-rc.1-jammy AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.100-rc.1-alpine3.18 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY . .
-RUN dotnet build ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet restore ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj \
+  -c $BUILD_CONFIGURATION \
+  -r linux-musl-x64 \
+  -o /app/build
 
 FROM build AS publish
-RUN dotnet publish ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj -c $BUILD_CONFIGURATION -o /app/publish
+RUN dotnet publish ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj \
+  --no-restore \
+  --self-contained true \
+  -r linux-musl-x64 \
+  -c $BUILD_CONFIGURATION \
+  -o /app/publish \
+  /p:PublishTrimmed=true \
+  /p:PublishSingleFile=true
 
-FROM mcr.microsoft.com/dotnet/runtime:8.0.0-rc.1-jammy AS final
+# Upgrade musl to remove potential vulnerability
+RUN apk upgrade musl
+
+FROM mcr.microsoft.com/dotnet/runtime:8.0.0-rc.1-alpine3.18 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["/app/ProfanityFilter.Action"]
