@@ -36,7 +36,7 @@ jobs:
             -p ContainerFamily=alpine3.18 \
             -p ContainerRegistry=ghcr.io \
             -p ContainerEnvironmentVariable=GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} \
-            -p ContainerTag=latest;${{ env.RELEASE_VERSION }} \
+            -p ContainerImageTags=latest;${{ env.RELEASE_VERSION }} \
             -p ContainerRepository=${{ env.IMAGE_NAME }} -bl
 
       - uses: actions/upload-artifact@v3
