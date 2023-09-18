@@ -36,7 +36,8 @@ jobs:
             -p ContainerFamily=alpine3.18 \
             -p ContainerRegistry=ghcr.io \
             -p ContainerImageTags=latest;${{ env.RELEASE_VERSION }} \
-            -p ContainerRepository=${{ env.IMAGE_NAME }} -bl
+            -p ContainerRepository=${{ env.IMAGE_NAME }} \
+            -bl
 
       - uses: actions/upload-artifact@v3
         if: always()
