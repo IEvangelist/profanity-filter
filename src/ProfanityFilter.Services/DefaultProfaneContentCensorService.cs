@@ -9,19 +9,6 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
     private static TimeSpan? s_readAllWordsTimeSpan;
 
     private static readonly TimeSpan s_emitDebugIfLongerThan = TimeSpan.FromMilliseconds(100);
-    private static readonly string[] s_resourceNames =
-    [
-        "ArabicSwearWords",
-        "BritishSwearWords",
-        "ChineseSwearWords",
-        "FrenchSwearWords",
-        "GermanSwearWords",
-        "GoogleBannedWords",
-        "IndonesianSwearWords",
-        "ItalianSwearWords",
-        "SpanishSwearWords",
-    ];
-
     private static readonly AsyncLazy<HashSet<string>> s_profaneWords = new(factory: ReadAllProfaneWordsAsync);
 
     /// <summary>
@@ -33,15 +20,13 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
     {
         var startingTimestamp = Stopwatch.GetTimestamp();
 
+        var resourceNames = EmbeddedResourceReader.GetResourceNames();
+
         ConcurrentBag<string> words = [];
 
-        await Parallel.ForEachAsync(s_resourceNames,
-            async (resourceName, cancellationToken) =>
+        await Parallel.ForEachAsync(resourceNames,
+            async (qualifiedResourceName, cancellationToken) =>
             {
-                var qualifiedResourceName = $"""
-                    ProfanityFilter.Services.Data.{resourceName}.txt
-                    """;
-
                 var content = await EmbeddedResourceReader.ReadAsync(
                     qualifiedResourceName, cancellationToken);
 
