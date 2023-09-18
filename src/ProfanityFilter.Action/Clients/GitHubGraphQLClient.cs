@@ -139,7 +139,6 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
                     issue.Id,
                     issue.Title,
                     issue.Body,
-                    issue.Editor.Login,
                     issue.Number
                 })
                 .Compile();
