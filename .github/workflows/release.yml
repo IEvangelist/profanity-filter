@@ -38,7 +38,7 @@ jobs:
             -r linux-musl-x64 \
             -p ContainerFamily=alpine3.18 \
             -p ContainerRegistry=ghcr.io \
-            -p ContainerImageTag=${{ env.RELEASE_VERSION }} \
+            -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
             -p ContainerRepository=${{ env.IMAGE_NAME }} \
             -bl
 
