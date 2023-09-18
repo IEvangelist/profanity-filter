@@ -81,4 +81,12 @@ Each replacement type corresponds to a different way of replacing profane conten
 
 ## Label requirements
 
-This action will look for a label with the following verbatim name `"profane content 🤬"`, if found this label is applied to any issue or pull request where profane content filteration occurs.
+This action will look for a label with the following verbatim name `"profane content 🤬"`, if found this label is applied to any issue or pull request where profane content filtration occurs.
+
+## What happens?
+
+When profane content is detected, the action will update the issue or pull request by:
+
+- replacing any found profane content with the configured replacement type
+- reacting to the issue or pull request with the [confused 😕 reaction](https://docs.github.com/rest/reactions/reactions)
+- and conditionally applying the `profane content 🤬` label if found in the repository.
