@@ -66,7 +66,7 @@ If you already have an existing workflow that is triggered `on/issues|pull_reque
 | `token` | The GitHub token used to update the issues or pull requests with. Example, `secrets.GITHUB_TOKEN`. | `true` |
 | `replacement-type` | The type of replacement method to use when profane content is filtered. Valid values are, `Asterisk` or `Emoji`. | `false` (default: `Asterisk`) |
 
-### Replacement types
+### 😵 Replacement types
 
 Each replacement type corresponds to a different way of replacing profane content. The following represents the available replacement types:
 
@@ -79,11 +79,11 @@ Each replacement type corresponds to a different way of replacing profane conten
 | `ReplacementType.MiddleSwearEmoji` | `"MiddleSwearEmoji"` | Replaces profane content with a random swear emoji, but only in the middle of the word. For example, a swear word with four letters could look like this `f🤬k`. |
 | `ReplacementType.VowelAsterisk` | `"VowelAsterisk"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh*t`. |
 
-## Label requirements
+## 🏷️ Label requirements
 
 This action will look for a label with the following verbatim name `"profane content 🤬"`, if found this label is applied to any issue or pull request where profane content filtration occurs.
 
-## What happens?
+## 🎬 What happens?
 
 When profane content is detected, the action will update the issue or pull request by:
 
