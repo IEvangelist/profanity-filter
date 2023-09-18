@@ -29,4 +29,17 @@ internal sealed class GitHubRestClient(string owner, string repo, string token)
                 _config.Owner, _config.Repo, number, [label]);
         }
     }
+
+    public async ValueTask<RestIssueComment> GetIssueCommentAsync(long issueCommentId) =>
+        await _client.Issue.Comment.Get(_config.Owner, _config.Repo, (int)issueCommentId);
+
+    public async ValueTask UpdateIssueCommentAsync(long issueCommentId, string updatedComment)
+    {
+        await _client.Issue.Comment.Update(
+            _config.Owner, _config.Repo, (int)issueCommentId, updatedComment);
+
+        // Add a reaction to the issue comment
+        await _client.Reaction.IssueComment.Create(
+            _config.Owner, _config.Repo, (int)issueCommentId, new NewReaction(ReactionType.Confused));
+    }
 }

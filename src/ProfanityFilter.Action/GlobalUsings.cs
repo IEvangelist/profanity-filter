@@ -26,6 +26,7 @@ global using ProfanityFilter.Services.Extensions;
 
 global using Env = System.Environment;
 
+global using RestIssueComment = Octokit.IssueComment;
 global using RestConnection = Octokit.Connection;
 global using GraphQLConnection = Octokit.GraphQL.Connection;
 global using GraphQLLabel = Octokit.GraphQL.Model.Label;

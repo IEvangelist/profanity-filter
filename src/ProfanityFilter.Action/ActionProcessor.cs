@@ -1,6 +1,8 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Text.RegularExpressions;
+
 namespace ProfanityFilter.Action;
 
 internal sealed class ActionProcessor(
@@ -20,20 +22,22 @@ internal sealed class ActionProcessor(
                 return;
             }
 
-            var (isIssue, isPullRequest) =
-                (context?.Payload?.Issue is not null, context?.Payload?.PullRequest is not null);
+            var isIssueComment = context?.Payload?.Comment is not null;
+            var isIssue = context?.Payload?.Issue is not null;
+            var isPullRequest = context?.Payload?.PullRequest is not null;
 
-            Func<long, LabelModel?, Task> handler = (isIssue, isPullRequest) switch
+            Func<long, LabelModel?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
             {
-                (true, _) => HandleIssueAsync,
-                (_, true) => HandlePullRequestAsync,
+                (true, _, _) => HandleIssueCommentAsync,
+                (_, true, _) => HandleIssueAsync,
+                (_, _, true) => HandlePullRequestAsync,
 
                 _ => throw new Exception(
                     "The profanity filter GitHub Action only works with issues or pull requests.")
             };
 
-            var label = await gitHubGraphQLClient.GetLabelAsync();
-            if (label is null)
+            var label = isIssueComment ? null : await gitHubGraphQLClient.GetLabelAsync();
+            if (label is null && isIssueComment is false)
             {
                 core.Warning("""
                     The expected label isn't present, a label with the following name is would have been applied if found.
@@ -41,9 +45,12 @@ internal sealed class ActionProcessor(
                     """);
             }
 
-            var number = (context?.Payload?.Issue ?? context?.Payload?.PullRequest)!.Number;
+            var numberOrId = (context?.Payload?.Comment?.Id
+                ?? context?.Payload?.Issue?.Number
+                ?? context?.Payload?.PullRequest?.Number
+                ?? 0L)!;
 
-            await handler(number, label);
+            await handler(numberOrId, label);
         }
         catch (Exception ex)
         {
@@ -69,7 +76,11 @@ internal sealed class ActionProcessor(
 
         var isValidAction = context.Action switch
         {
-            "profanity-filter" or "opened" or "edited" or "reopened" => true,
+            "profanity-filter" or
+            "opened" or "reopened" or
+            "created" or "edited" => true,
+
+            _ when (context.Action ?? "").StartsWith("__run") => true,
 
             _ => false
         };
@@ -98,6 +109,38 @@ internal sealed class ActionProcessor(
         }
 
         return true;
+    }
+
+    private async Task HandleIssueCommentAsync(long issueCommentId, LabelModel? label)
+    {
+        // We don't apply labels to issue comments...
+        _ = label;
+
+        var clientId = Guid.NewGuid().ToString();
+        core.StartGroup($"Evaluating issue comment id #{issueCommentId} for profanity (Client mutation: {clientId})");
+
+        try
+        {
+            var issueComment = await gitHubRestClient.GetIssueCommentAsync(issueCommentId);
+            if (issueComment is null)
+            {
+                core.Error($"Unable to get issue comment with id: {issueCommentId}");
+                return;
+            }
+
+            var replacementType = GetInputReplacementType();
+
+            var (text, isFiltered) = await TryApplyFilterAsync(issueComment.Body, replacementType);
+
+            if (isFiltered)
+            {
+                await gitHubRestClient.UpdateIssueCommentAsync(issueCommentId, text);
+            }
+        }
+        finally
+        {
+            core.EndGroup();
+        }
     }
 
     private async Task HandleIssueAsync(long issueNumber, LabelModel? label)
