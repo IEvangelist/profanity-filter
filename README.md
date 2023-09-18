@@ -64,3 +64,14 @@ If you already have an existing workflow that is triggered `on/issues|pull_reque
 |--|--|--|
 | `token` | The GitHub token used to update the issues or pull requests with. Example, `secrets.GITHUB_TOKEN`. | `true` |
 | `replacement-type` | The type of replacement method to use when profane content is filtered. Valid values are, `Asterisk` or `Emoji`. | `false` (default: `Asterisk`) |
+
+### Replacement types
+
+Each replacement type corresponds to a different way of replacing profane content. The following represents the available replacement types:
+
+- `ReplacementType.Asterisk`: Replaces profane content with asterisks. For example, a swear word with four letters would look like this `****`.
+- `ReplacementType.Emoji`: Replaces profane content with a random swear emoji. For example, a swear word with four letters could look like this `💩`.
+- `ReplacementType.RandomAsterisk`: Replaces profane content with a random number of asterisks. For example, a swear word with four letters could look like any value between `*` and `****`.
+- `ReplacementType.MiddleAsterisk`: Replaces profane content with asterisks, but only in the middle of the word. For example, a swear word with four letters could look like this `f**k`.
+- `ReplacementType.MiddleSwearEmoji`: Replaces profane content with a random swear emoji, but only in the middle of the word. For example, a swear word with four letters could look like this `f🤬k`.
+- `ReplacementType.VowelAsterisk`: Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh*t`.

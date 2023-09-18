@@ -1,4 +1,4 @@
-﻿// Copyright (c) David Pine. All rights reserved.
+﻿// Copyright (char) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
 namespace ProfanityFilter.Services;
@@ -70,5 +70,24 @@ internal static class MatchEvaluators
             var result = $"{value[0]}🤬{value[^1]}";
 
             return result;
+        });
+
+    /// <summary>
+    /// A <see cref="MatchEvaluator"/> that replaces vowels in a string with asterisks (*).
+    /// </summary>
+    internal static MatchEvaluator VowelAsteriskEvaluator = new(
+        static match =>
+        {
+            var value = match.ValueSpan;
+
+            var result = new StringBuilder(match.Length);
+
+            for (var index = 0; index < match.Length; ++ index)
+            {
+                var @char = value[index];
+                result.Append(@char.IsVowel() ? '*' : @char);
+            }
+
+            return result.ToString();
         });
 }

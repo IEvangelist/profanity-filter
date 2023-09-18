@@ -12,7 +12,7 @@ public enum ReplacementType
     /// Replaces the profanity word with asterisks.
     /// </summary>
     Asterisk,
-    
+
     /// <summary>
     /// Replaces the profanity word with an emoji.
     /// </summary>
@@ -30,10 +30,15 @@ public enum ReplacementType
     /// </summary>
     MiddleAsterisk,
 
-    
     /// <summary>
     /// Represents a replacement type where the middle of the swear word 
     /// is replaced with an emoji.
     /// </summary>
     MiddleSwearEmoji,
+
+    /// <summary>
+    /// Represents a replacement type where vowels in a profane word
+    /// are replaced with asterisks.
+    /// </summary>
+    VowelAsterisk,
 }
