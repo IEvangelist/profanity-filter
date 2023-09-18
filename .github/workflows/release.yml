@@ -30,8 +30,8 @@ jobs:
       - name: Publish app
         working-directory: ./src/ProfanityFilter.Action
         run: |
-          dotnet publish /t:PublishContainer -c Release \
-            -o ./publish \
+          dotnet publish
+            /t:PublishContainer \
             -r linux-musl-x64 \
             -p ContainerFamily=alpine3.18 \
             -p ContainerRegistry=ghcr.io \
