@@ -65,6 +65,7 @@ internal sealed class ActionProcessor(
     private bool TryGetContext(out Context context)
     {
         context = Context.Current;
+        core.Info(context.ToString() ?? "Unknown context");
 
         var isValidAction = context.Action switch
         {
@@ -75,7 +76,6 @@ internal sealed class ActionProcessor(
 
         if (isValidAction is false)
         {
-            core.Info(context.ToString() ?? "Unknown context");
             core.Warning($"The action '{context.Action}' is not supported.");
 
             return false;

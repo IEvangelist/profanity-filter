@@ -17,6 +17,7 @@
     <PackageReference Include="GitHub.Actions.Octokit" Version="8.0.0-rc.1.23419.4" />
     <PackageReference Include="Octokit" Version="7.1.0" />
     <PackageReference Include="Octokit.GraphQL" Version="0.2.1-beta" />
+    <PackageReference Include="Microsoft.NET.Build.Containers" Version="8.0.100-rc.1.23462.41" />
   </ItemGroup>
 
   <ItemGroup>

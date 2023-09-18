@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+env:
+  IMAGE_NAME: ievangelist/profanity-filter
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-dotnet@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish app
+        # TODO: tags
+        working-directory: ./src/ProfanityFilter.Action
+        run: |
+          dotnet publish /t:PublishContainer -c Release \
+            -o ./publish \
+            -r linux-musl-x64 \
+            -p ContainerFamily=alpine3.18 \
+            -p ContainerRegistry=ghcr.io \
+            -p ContainerRepository=${{ env.IMAGE_NAME }} -bl
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: msbuild.binlog
+          path: src/ProfanityFilter.Action/msbuild.binlog

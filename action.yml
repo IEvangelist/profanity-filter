@@ -12,10 +12,10 @@ inputs:
     required: true
   replacement-type:
     description:
-      'The type of replacement method to use when profane content is filtered. Valid values are, Asterisk or Emoji.'
+      'The type of replacement method to use when profane content is filtered. See https://github.com/IEvangelist/profanity-filter#-replacement-types.'
     required: false
     default: 'Asterisk'
 
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'docker://ghcr.io/ievangelist/profanity-filter:latest'
