@@ -2,24 +2,14 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0.0-rc.1-alpine3.18 AS base
 USER app
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100-rc.1-alpine3.18 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.100-rc.1-alpine3.18 AS publish
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY . .
-RUN dotnet restore ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj \
-  -c $BUILD_CONFIGURATION \
-  -r linux-musl-x64 \
-  -o /app/build
-
-FROM build AS publish
 RUN dotnet publish ./src/ProfanityFilter.Action/ProfanityFilter.Action.csproj \
-  --no-restore \
-  --self-contained true \
   -r linux-musl-x64 \
   -c $BUILD_CONFIGURATION \
-  -o /app/publish \
-  /p:PublishTrimmed=true \
-  /p:PublishSingleFile=true
+  -o /app/publish
 
 # Upgrade musl to remove potential vulnerability
 RUN apk upgrade musl
