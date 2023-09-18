@@ -69,9 +69,11 @@ If you already have an existing workflow that is triggered `on/issues|pull_reque
 
 Each replacement type corresponds to a different way of replacing profane content. The following represents the available replacement types:
 
-- `ReplacementType.Asterisk`: Replaces profane content with asterisks. For example, a swear word with four letters would look like this `****`.
-- `ReplacementType.Emoji`: Replaces profane content with a random swear emoji. For example, a swear word with four letters could look like this `💩`.
-- `ReplacementType.RandomAsterisk`: Replaces profane content with a random number of asterisks. For example, a swear word with four letters could look like any value between `*` and `****`.
-- `ReplacementType.MiddleAsterisk`: Replaces profane content with asterisks, but only in the middle of the word. For example, a swear word with four letters could look like this `f**k`.
-- `ReplacementType.MiddleSwearEmoji`: Replaces profane content with a random swear emoji, but only in the middle of the word. For example, a swear word with four letters could look like this `f🤬k`.
-- `ReplacementType.VowelAsterisk`: Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh*t`.
+| `ReplacementType` | Valid string value | Description |
+| --- | --- | --- |
+| `ReplacementType.Asterisk` | `"Asterisk"` | Replaces profane content with asterisks. For example, a swear word with four letters would look like this `****`. |
+| `ReplacementType.Emoji` | `"Emoji"` | Replaces profane content with a random swear emoji. For example, a swear word with four letters could look like this `💩`. |
+| `ReplacementType.RandomAsterisk` | `"RandomAsterisk"` | Replaces profane content with a random number of asterisks. For example, a swear word with four letters could look like any value between `*` and `****`. |
+| `ReplacementType.MiddleAsterisk` | `"MiddleAsterisk"` | Replaces profane content with asterisks, but only in the middle of the word. For example, a swear word with four letters could look like this `f**k`. |
+| `ReplacementType.MiddleSwearEmoji` | `"MiddleSwearEmoji"` | Replaces profane content with a random swear emoji, but only in the middle of the word. For example, a swear word with four letters could look like this `f🤬k`. |
+| `ReplacementType.VowelAsterisk` | `"VowelAsterisk"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh*t`. |
