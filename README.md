@@ -2,7 +2,7 @@
 
 [![.NET](https://github.com/IEvangelist/profanity-filter/actions/workflows/dotnet.yml/badge.svg)](https://github.com/IEvangelist/profanity-filter/actions/workflows/dotnet.yml) [![Dogfood](https://github.com/IEvangelist/profanity-filter/actions/workflows/dogfood.yml/badge.svg)](https://github.com/IEvangelist/profanity-filter/actions/workflows/dogfood.yml)
 
-The GitHub Action: Profane content filter maintains over 4,970 swear words from nine different languages. This tool can be used to scan issues and pull requests for profanity. It can be configured to replace any profane content with either asterisks or emojis. This action can be useful for maintaining a professional and respectful environment in your GitHub repository.
+The GitHub Action: Profane content filter maintains over 4,970 swear words from nine different languages. For a list of all supported languages and swear words, [see the data directory](https://github.com/IEvangelist/profanity-filter/tree/main/src/ProfanityFilter.Services/Data). This tool can be used to scan issues and pull requests for profanity. It can be configured to replace any profane content with either asterisks or emojis. This action can be useful for maintaining a professional and respectful environment in your GitHub repository.
 
 ## ⁉️ Why
 
