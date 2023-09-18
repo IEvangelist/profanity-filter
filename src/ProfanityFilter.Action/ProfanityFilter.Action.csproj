@@ -8,7 +8,6 @@
     <LangVersion>preview</LangVersion>
     <InvariantGlobalization>true</InvariantGlobalization>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <ContainerFamily>alpine</ContainerFamily>
   </PropertyGroup>
 
   <ItemGroup>
