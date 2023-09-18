@@ -13,8 +13,10 @@ But why is this important? Let's be honest, not everyone who creates issues or p
 The following is an example of how to use the action as a standalone workflow:
 
 ```yml
+# The name of the workflow
 name: Profanity filter
 
+# Trigger on issue or pull requests, that are opened, edited, or reopened
 on:
   issues:
     types:
@@ -28,7 +30,8 @@ on:
       - reopened
 
 jobs:
-  eat:
+  # Name the job whatever you'd like
+  filter:
 
     runs-on: ubuntu-latest
     permissions:
@@ -38,7 +41,9 @@ jobs:
 
     steps:
 
+    # Name the step anything that makes sense to you
     - name: Scan issue or pull request for profanity
+      # Conditionally run the step if the actor isn't a bot
       if: ${{ github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]' }}
       uses: IEvangelist/profanity-filter@main
       id: profanity-filter
@@ -60,6 +65,10 @@ If you already have an existing workflow that is triggered `on/issues|pull_reque
 ```
 
 ## 👀 Inputs
+
+This action has two inputs, `token` and `replacement-type`. Only the `token` is required, and the `replacement-type` defaults to `Asterisk` when not specified.
+
+The following table describes each input:
 
 | Input | Description | Required |
 |--|--|--|
