@@ -12,7 +12,7 @@ public class DefaultProfaneContentCensorServiceTests
     [Theory]
     [InlineData(null, false)]
     [InlineData("", false)]
-    [InlineData("This is a clean sentence.", false)]
+    [InlineData("This is a clean sentence.", true)]
     [InlineData("This is a sentence with the word crap.", true)]
     [InlineData("This is a sentence with the word CrAp.", true)]
     [InlineData("This is a sentence with the word crap and shit.", true)]

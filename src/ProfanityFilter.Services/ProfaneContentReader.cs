@@ -42,7 +42,10 @@ internal sealed class ProfaneContentReader
             return ProfaneContent.Empty;
         }
 
-        return await JsonSerializer.DeserializeAsync<ProfaneContent>(
-            resourceStream, cancellationToken: cancellationToken);
+        var json = await new StreamReader(resourceStream)
+            .ReadToEndAsync(cancellationToken);
+
+        return json?.FromJson<ProfaneContent>()
+            ?? ProfaneContent.Empty;
     }
 }
