@@ -61,7 +61,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             return false;
         }
 
-        var pattern = $"\\b({string.Join('|', wordSet)})\\b";
+        var pattern = $"({string.Join('|', wordSet)})";
 
         return Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase);
     }
@@ -82,7 +82,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             return content;
         }
 
-        var pattern = $"\\b({string.Join('|', wordSet)})\\b";
+        var pattern = $"({string.Join('|', wordSet)})";
 
         var evaluator = replacementType switch
         {
