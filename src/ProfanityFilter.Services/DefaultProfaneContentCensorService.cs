@@ -54,6 +54,12 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
         var profaneWordList = await s_profaneWords.Task;
 
+        if (profaneWordList.Count is 0)
+        {
+            Console.WriteLine("Unable to read profane word lists.");
+            return false;
+        }
+
         var pattern = $"\\b({string.Join('|', profaneWordList)})\\b";
 
         return Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase);
@@ -68,6 +74,12 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
         }
 
         var profaneWordList = await s_profaneWords.Task;
+
+        if (profaneWordList.Count is 0)
+        {
+            Console.WriteLine("Unable to read profane word lists.");
+            return content;
+        }
 
         var pattern = $"\\b({string.Join('|', profaneWordList)})\\b";
 

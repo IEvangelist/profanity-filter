@@ -20,25 +20,37 @@ internal sealed class ProfaneContentReader
 
     /// <summary>
     /// Reads the contents of the embedded resource as a <c>string</c>
-    /// corresponding to the given <paramref name="resourceName"/>.
+    /// corresponding to the given <paramref name="fileName"/>.
     /// </summary>
-    /// <param name="resourceName">The name of the embedded resource to read.</param>
+    /// <param name="fileName">The name of the embedded resource to read.</param>
     /// <param name="cancellationToken">The token used to manage async cancellations.</param>
     /// <returns>Returns a <c>string</c> representation of the embedded resource.
-    /// If there isn't a resource matching the given <paramref name="resourceName"/>,
+    /// If there isn't a resource matching the given <paramref name="fileName"/>,
     /// an empty <c>string</c> is returned.</returns>
     public static async ValueTask<ProfaneContent> ReadAsync(
-        string resourceName, CancellationToken cancellationToken = default)
+        string fileName, CancellationToken cancellationToken = default)
     {
-        if (File.Exists(resourceName) is false)
+        Console.WriteLine($"""
+            Trying to read {fileName}.
+            """);
+
+        if (File.Exists(fileName) is false)
         {
+            Console.WriteLine($"""
+                The {fileName} doesn't exist.
+                """);
+
             return ProfaneContent.Empty;
         }
 
-        using var resourceStream = File.OpenRead(resourceName);
+        using var resourceStream = File.OpenRead(fileName);
 
         if (resourceStream is null)
         {
+            Console.WriteLine($"""
+                Unable to open {fileName} stream for reading.
+                """);
+
             return ProfaneContent.Empty;
         }
 
