@@ -59,6 +59,21 @@ internal sealed class ProfaneContentReader
         var json = await reader.ReadToEndAsync(cancellationToken)
             .ConfigureAwait(false);
 
+        if (json is null or { Length: 0 })
+        {
+            Console.WriteLine($"""
+                Unable to read the file contents, either null or empty.
+                  {fileName}
+                """);
+        }
+        else
+        {
+            Console.WriteLine($"""
+                File contents: {fileName}
+                {json}
+                """);
+        }
+
         return json?.FromJson(ProfaneContentContext.Default.ProfaneContent)
             ?? ProfaneContent.Empty;
     }
