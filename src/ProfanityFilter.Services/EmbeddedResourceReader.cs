@@ -5,9 +5,14 @@ namespace ProfanityFilter.Services;
 
 internal sealed class EmbeddedResourceReader
 {
-    static readonly Assembly s_assembly = typeof(EmbeddedResourceReader).Assembly;
+    private static readonly Lazy<Matcher> s_matcher = new(() =>
+    {
+        var matcher = new Matcher();
 
-    public static string[] GetResourceNames() => s_assembly.GetManifestResourceNames();
+        return matcher;
+    });
+
+    public static string[] GetResourceNames() => []; // s_assembly.GetManifestResourceNames();
 
     /// <summary>
     /// Reads the contents of the embedded resource as a <c>string</c>
@@ -21,7 +26,12 @@ internal sealed class EmbeddedResourceReader
     public static async ValueTask<string> ReadAsync(
         string resourceName, CancellationToken cancellationToken = default)
     {
-        using var resourceStream = s_assembly.GetManifestResourceStream(resourceName);
+        if (File.Exists(resourceName) is false)
+        {
+            return "";
+        }
+
+        using var resourceStream = File.OpenRead(resourceName);
 
         if (resourceStream is null)
         {
