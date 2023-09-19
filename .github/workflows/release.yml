@@ -35,6 +35,7 @@ jobs:
         run: |
           dotnet publish \
             /t:PublishContainer \
+            /p:UseAppHost=true \
             -r linux-musl-x64 \
             -p ContainerFamily=alpine3.18 \
             -p ContainerRegistry=ghcr.io \
