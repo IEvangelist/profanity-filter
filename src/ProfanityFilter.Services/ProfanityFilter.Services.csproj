@@ -8,31 +8,50 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\ArabicSwearWords.txt" />
-    <None Remove="Data\BritishSwearWords.txt" />
-    <None Remove="Data\ChineseSwearWords.txt" />
-    <None Remove="Data\FrenchSwearWords.txt" />
-    <None Remove="Data\GermanSwearWords.txt" />
-    <None Remove="Data\GoogleBannedWords.txt" />
-    <None Remove="Data\IndonesianSwearWords.txt" />
-    <None Remove="Data\ItalianSwearWords.txt" />
-    <None Remove="Data\SpanishSwearWords.txt" />
+    <None Remove="Data\ArabicSwearWords.json" />
+    <None Remove="Data\BritishSwearWords.json" />
+    <None Remove="Data\ChineseSwearWords.json" />
+    <None Remove="Data\FrenchSwearWords.json" />
+    <None Remove="Data\GermanSwearWords.json" />
+    <None Remove="Data\GoogleBannedWords.json" />
+    <None Remove="Data\IndonesianSwearWords.json" />
+    <None Remove="Data\ItalianSwearWords.json" />
+    <None Remove="Data\SpanishSwearWords.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Data\ArabicSwearWords.txt" />
-    <EmbeddedResource Include="Data\BritishSwearWords.txt" />
-    <EmbeddedResource Include="Data\ChineseSwearWords.txt" />
-    <EmbeddedResource Include="Data\FrenchSwearWords.txt" />
-    <EmbeddedResource Include="Data\GermanSwearWords.txt" />
-    <EmbeddedResource Include="Data\GoogleBannedWords.txt" />
-    <EmbeddedResource Include="Data\IndonesianSwearWords.txt" />
-    <EmbeddedResource Include="Data\ItalianSwearWords.txt" />
-    <EmbeddedResource Include="Data\SpanishSwearWords.txt" />
+    <Content Include="Data\ArabicSwearWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\BritishSwearWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\ChineseSwearWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\FrenchSwearWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\GermanSwearWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\GoogleBannedWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\IndonesianSwearWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\ItalianSwearWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\SpanishSwearWords.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0-preview.7.23375.6" />
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" Version="8.0.0-rc.1.23419.4" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
   </ItemGroup>
 
