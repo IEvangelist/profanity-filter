@@ -54,10 +54,11 @@ internal sealed class ProfaneContentReader
             return ProfaneContent.Empty;
         }
 
-        var json = await new StreamReader(resourceStream)
-            .ReadToEndAsync(cancellationToken);
+        using var readStream = new StreamReader(resourceStream);
 
-        return json?.FromJson<ProfaneContent>(ProfaneContentContext.Default.ProfaneContent)
+        var json = await readStream.ReadToEndAsync(cancellationToken);
+
+        return json?.FromJson(ProfaneContentContext.Default.ProfaneContent)
             ?? ProfaneContent.Empty;
     }
 }
