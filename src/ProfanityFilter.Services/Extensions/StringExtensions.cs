@@ -1,8 +1,6 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using ProfanityFilter.Services.Serialization;
-
 namespace ProfanityFilter.Services.Extensions;
 
 internal static class StringExtensions
@@ -12,19 +10,14 @@ internal static class StringExtensions
     /// </summary>
     /// <typeparam name="T">The type to deserialize the JSON string to.</typeparam>
     /// <param name="json">The JSON string to deserialize.</param>
-    /// <param name="options">The <see cref="JsonSerializerOptions"/>
+    /// <param name="typeInfo">The <see cref="JsonTypeInfo"/>
     /// instance to use when deserializing.</param>
     /// <returns>The deserialized object of type <typeparamref name="T"/>.</returns>
-    internal static T FromJson<T>(this string json, JsonSerializerOptions? options = default)
+    internal static T FromJson<T>(this string json, JsonTypeInfo<T> typeInfo)
     {
         try
         {
-            if (options is default(JsonSerializerOptions))
-            {
-                options = JsonSerializationPreferences.Default;
-            }
-
-            if (JsonSerializer.Deserialize<T>(json, options) is T value)
+            if (JsonSerializer.Deserialize<T>(json, typeInfo) is T value)
             {
                 Debug.WriteLine($"""
                     Successfully deserialized JSON to {typeof(T).Name}:
@@ -63,19 +56,14 @@ internal static class StringExtensions
     /// </summary>
     /// <typeparam name="T">The type of the object to serialize.</typeparam>
     /// <param name="value">The object to serialize.</param>
-    /// <param name="options">The <see cref="JsonSerializerOptions"/>
+    /// <param name="typeInfo">The <see cref="JsonTypeInfo"/>
     /// instance to use when deserializing.</param>
     /// <returns>A JSON string representation of the object.</returns>
-    internal static string ToJson<T>(this T value, JsonSerializerOptions? options = default)
+    internal static string ToJson<T>(this T value, JsonTypeInfo<T> typeInfo)
     {
         try
         {
-            if (options is default(JsonSerializerOptions))
-            {
-                options = JsonSerializationPreferences.Default;
-            }
-
-            var json = JsonSerializer.Serialize(value, options);
+            var json = JsonSerializer.Serialize(value, typeInfo);
 
             Debug.WriteLine($"""
                 Successfully serialized {typeof(T).Name} to JSON:

@@ -18,7 +18,7 @@ public sealed class StringExtensionsTests
             """;
 
         // Act
-        var ada = json.FromJson<Person>();
+        var ada = json.FromJson<Person>(PersonContext.Default.Person!);
 
         // Assert
         Assert.Equal("Ada", ada.Name);
@@ -33,7 +33,7 @@ public sealed class StringExtensionsTests
         var json = "null";
 
         // Act
-        var person = json.FromJson<Person>();
+        var person = json.FromJson<Person>(PersonContext.Default.Person!);
 
         // Assert
         Assert.Null(person);
@@ -58,7 +58,7 @@ public sealed class StringExtensionsTests
         }
 
         // Act
-        var json = ada.ToJson();
+        var json = ada.ToJson(PersonContext.Default.Person!);
 
         // Assert
         Assert.Equal(
@@ -79,16 +79,24 @@ public sealed class StringExtensionsTests
         Person? person = null;
 
         // Act
-        var json = person.ToJson();
+        var json = person.ToJson(PersonContext.Default.Person!);
 
         // Assert
         Assert.Equal("null", json);
     }
-
-    private class Person
-    {
-        public string Name { get; set; } = default!;
-        public int Age { get; set; }
-        public string Location { get; set; } = default!;
-    }
 }
+
+internal sealed class Person
+{
+    public string Name { get; set; } = default!;
+    public int Age { get; set; }
+    public string Location { get; set; } = default!;
+}
+
+
+[JsonSourceGenerationOptions(
+    WriteIndented = true,
+    PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
+    PropertyNameCaseInsensitive = true)]
+[JsonSerializable(typeof(Person))]
+internal partial class PersonContext : JsonSerializerContext { }
