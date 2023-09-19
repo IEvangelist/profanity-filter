@@ -5,7 +5,7 @@ namespace ProfanityFilter.Services;
 
 internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensorService
 {
-    private static readonly AsyncLazy<HashSet<string>> s_profaneWords =
+    private static readonly AsyncLazy<HashSet<string>> s_getProfaneWords =
         new(factory: ReadAllProfaneWordsAsync);
 
     /// <summary>
@@ -37,7 +37,8 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
                         allWords.Add(escapedWord);
                     }
                 }
-            });
+            })
+            .ConfigureAwait(false);
 
         var set = allWords.ToHashSet();
 
@@ -52,15 +53,15 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             return false;
         }
 
-        var profaneWordList = await s_profaneWords.Task;
+        var wordSet = await s_getProfaneWords.Task;
 
-        if (profaneWordList.Count is 0)
+        if (wordSet.Count is 0)
         {
             Console.WriteLine("Unable to read profane word lists.");
             return false;
         }
 
-        var pattern = $"\\b({string.Join('|', profaneWordList)})\\b";
+        var pattern = $"\\b({string.Join('|', wordSet)})\\b";
 
         return Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase);
     }
@@ -73,15 +74,15 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             return content;
         }
 
-        var profaneWordList = await s_profaneWords.Task;
+        var wordSet = await s_getProfaneWords.Task;
 
-        if (profaneWordList.Count is 0)
+        if (wordSet.Count is 0)
         {
             Console.WriteLine("Unable to read profane word lists.");
             return content;
         }
 
-        var pattern = $"\\b({string.Join('|', profaneWordList)})\\b";
+        var pattern = $"\\b({string.Join('|', wordSet)})\\b";
 
         var evaluator = replacementType switch
         {

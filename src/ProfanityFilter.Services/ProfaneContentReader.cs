@@ -43,9 +43,9 @@ internal sealed class ProfaneContentReader
             return ProfaneContent.Empty;
         }
 
-        using var resourceStream = File.OpenRead(fileName);
+        using var stream = File.OpenRead(fileName);
 
-        if (resourceStream is null)
+        if (stream is null)
         {
             Console.WriteLine($"""
                 Unable to open {fileName} stream for reading.
@@ -54,9 +54,10 @@ internal sealed class ProfaneContentReader
             return ProfaneContent.Empty;
         }
 
-        using var readStream = new StreamReader(resourceStream);
+        using var reader = new StreamReader(stream);
 
-        var json = await readStream.ReadToEndAsync(cancellationToken);
+        var json = await reader.ReadToEndAsync(cancellationToken)
+            .ConfigureAwait(false);
 
         return json?.FromJson(ProfaneContentContext.Default.ProfaneContent)
             ?? ProfaneContent.Empty;
