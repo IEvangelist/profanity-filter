@@ -10,7 +10,7 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PublishAot>true</PublishAot>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+    <JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
     <NoWarn>NU5104</NoWarn>
   </PropertyGroup>
 
