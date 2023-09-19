@@ -8,8 +8,10 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
     // Been averaging around 50ms on my machine...
     private static TimeSpan? s_readAllWordsTimeSpan;
 
-    private static readonly TimeSpan s_emitDebugIfLongerThan = TimeSpan.FromMilliseconds(100);
-    private static readonly AsyncLazy<HashSet<string>> s_profaneWords = new(factory: ReadAllProfaneWordsAsync);
+    private static readonly TimeSpan s_emitDebugIfLongerThan =
+        TimeSpan.FromMilliseconds(1_000);
+    private static readonly AsyncLazy<HashSet<string>> s_profaneWords =
+        new(factory: ReadAllProfaneWordsAsync);
 
     /// <summary>
     /// Reads all profane words from embedded resources asynchronously.
@@ -97,6 +99,6 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             _ => MatchEvaluators.EmojiEvaluator,
         };
 
-        return Regex.Replace(content, pattern, evaluator, RegexOptions.IgnoreCase);
+        return Regex.Replace(content, pattern, evaluator, options: RegexOptions.IgnoreCase);
     }
 }
