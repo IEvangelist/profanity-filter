@@ -19,7 +19,6 @@ internal static class MatchEvaluators
             return result;
         };
 
-    
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random emoji from 
     /// a predefined list of hand-selected replacements.
@@ -43,7 +42,6 @@ internal static class MatchEvaluators
 
             return result;
         };
-    
     
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces the characters between the first and last 
