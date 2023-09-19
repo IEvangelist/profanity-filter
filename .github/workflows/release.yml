@@ -6,6 +6,7 @@ on:
 
 env:
   IMAGE_NAME: ievangelist/profanity-filter
+  BASE_IMAGE: mcr.microsoft.com/dotnet/runtime-deps:8.0-jammy-chiseled-extra
 
 jobs:
   deploy:
@@ -36,7 +37,7 @@ jobs:
           dotnet publish \
             /t:PublishContainer \
             -p DebugType=none \
-            -p ContainerBaseImage=mcr.microsoft.com/dotnet/runtime:8.0-jammy-chiseled-aot \
+            -p ContainerBaseImage=${{ env.BASE_IMAGE }} \
             -p ContainerRegistry=ghcr.io \
             -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
             -p ContainerRepository=${{ env.IMAGE_NAME }} \
