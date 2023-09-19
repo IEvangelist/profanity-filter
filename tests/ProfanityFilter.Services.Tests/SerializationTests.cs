@@ -40,5 +40,5 @@ public class SerializationTests
 public sealed class Example : Dictionary<string, object>
 {
     [JsonPropertyName("title")]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 }
