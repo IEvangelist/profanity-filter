@@ -9,7 +9,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
     private static TimeSpan? s_readAllWordsTimeSpan;
 
     private static readonly TimeSpan s_emitDebugIfLongerThan =
-        TimeSpan.FromMilliseconds(1_000);
+        TimeSpan.FromMilliseconds(250);
     private static readonly AsyncLazy<HashSet<string>> s_profaneWords =
         new(factory: ReadAllProfaneWordsAsync);
 
@@ -65,7 +65,10 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
         Debug.Assert(
             s_readAllWordsTimeSpan.GetValueOrDefault() < s_emitDebugIfLongerThan,
-            "Loading all of the embedded resources too longer than 100ms.");
+            $"""
+                Loading all of the word JSON content too longer than {s_emitDebugIfLongerThan.Milliseconds}ms.
+                The total time was {s_readAllWordsTimeSpan.GetValueOrDefault().TotalMilliseconds}ms.
+                """);
 
         var pattern = $"\\b({string.Join('|', profaneWordList)})\\b";
 
@@ -84,7 +87,10 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
         Debug.Assert(
             s_readAllWordsTimeSpan.GetValueOrDefault() < s_emitDebugIfLongerThan,
-            "Loading all of the embedded resources too longer than 100ms.");
+            $"""
+                Loading all of the word JSON content too longer than {s_emitDebugIfLongerThan.Milliseconds}ms.
+                The total time was {s_readAllWordsTimeSpan.GetValueOrDefault().TotalMilliseconds}ms.
+                """);
 
         var pattern = $"\\b({string.Join('|', profaneWordList)})\\b";
 
