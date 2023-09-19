@@ -25,9 +25,9 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
                 var content = await ProfaneContentReader.ReadAsync(
                     fileName, cancellationToken);
 
-                if (content.Words?.Length > 0)
+                if (string.IsNullOrWhiteSpace(content) is false)
                 {
-                    var words = content.Words;
+                    var words = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
                     for (var index = 0; index < words.Length; ++index)
                     {
                         var word = words[index];
@@ -53,15 +53,12 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             return false;
         }
 
-        var wordSet = await s_getProfaneWords.Task;
+        var pattern = await GetProfaneWordListRegexPatternAsync();
 
-        if (wordSet.Count is 0)
+        if (pattern is null)
         {
-            Console.WriteLine("Unable to read profane word lists.");
             return false;
         }
-
-        var pattern = $"({string.Join('|', wordSet)})";
 
         return Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase);
     }
@@ -74,15 +71,12 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             return content;
         }
 
-        var wordSet = await s_getProfaneWords.Task;
+        var pattern = await GetProfaneWordListRegexPatternAsync();
 
-        if (wordSet.Count is 0)
+        if (pattern is null)
         {
-            Console.WriteLine("Unable to read profane word lists.");
             return content;
         }
-
-        var pattern = $"({string.Join('|', wordSet)})";
 
         var evaluator = replacementType switch
         {
@@ -96,5 +90,20 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
         };
 
         return Regex.Replace(content, pattern, evaluator, options: RegexOptions.IgnoreCase);
+    }
+
+    private static async ValueTask<string?> GetProfaneWordListRegexPatternAsync()
+    {
+        var wordSet = await s_getProfaneWords.Task;
+
+        if (wordSet.Count is 0)
+        {
+            Console.WriteLine("Unable to read profane word lists.");
+            return null;
+        }
+
+        var pattern = $"\\b({string.Join('|', wordSet)})\\b";
+
+        return pattern;
     }
 }
