@@ -4,4 +4,7 @@
 namespace ProfanityFilter.Services;
 
 internal readonly record struct ProfaneContent(
-    [property: JsonPropertyName("words")] string[] Words);
+    [property: JsonPropertyName("words")] string[] Words)
+{
+    internal static ProfaneContent Empty = new([]);
+}

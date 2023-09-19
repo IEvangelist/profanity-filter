@@ -20,31 +20,31 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
     {
         var startingTimestamp = Stopwatch.GetTimestamp();
 
-        var resourceNames = EmbeddedResourceReader.GetResourceNames();
+        var fileNames = ProfaneContentReader.GetFileNames();
 
-        ConcurrentBag<string> words = [];
+        ConcurrentBag<string> allWords = [];
 
-        await Parallel.ForEachAsync(resourceNames,
-            async (qualifiedResourceName, cancellationToken) =>
+        await Parallel.ForEachAsync(fileNames,
+            async (fileName, cancellationToken) =>
             {
-                var content = await EmbeddedResourceReader.ReadAsync(
-                    qualifiedResourceName, cancellationToken);
+                var content = await ProfaneContentReader.ReadAsync(
+                    fileName, cancellationToken);
 
-                if (string.IsNullOrWhiteSpace(content) is false)
+                if (content.Words?.Length > 0)
                 {
-                    var wordList = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-                    for (var index = 0; index < wordList.Length; ++index)
+                    var words = content.Words;
+                    for (var index = 0; index < words.Length; ++index)
                     {
-                        var word = wordList[index];
+                        var word = words[index];
 
                         var escapedWord = Regex.Escape(word);
 
-                        words.Add(escapedWord);
+                        allWords.Add(escapedWord);
                     }
                 }
             });
 
-        var set = words.ToHashSet();
+        var set = allWords.ToHashSet();
 
         s_readAllWordsTimeSpan = Stopwatch.GetElapsedTime(startingTimestamp);
 

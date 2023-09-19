@@ -3,16 +3,20 @@
 
 namespace ProfanityFilter.Services;
 
-internal sealed class EmbeddedResourceReader
+internal sealed class ProfaneContentReader
 {
     private static readonly Lazy<Matcher> s_matcher = new(() =>
     {
         var matcher = new Matcher();
+        matcher.AddInclude("Data/*.json");
 
         return matcher;
     });
 
-    public static string[] GetResourceNames() => []; // s_assembly.GetManifestResourceNames();
+    public static string[] GetFileNames() =>
+        s_matcher.Value
+            .GetResultsInFullPath(".")
+            .ToArray();
 
     /// <summary>
     /// Reads the contents of the embedded resource as a <c>string</c>
@@ -23,23 +27,22 @@ internal sealed class EmbeddedResourceReader
     /// <returns>Returns a <c>string</c> representation of the embedded resource.
     /// If there isn't a resource matching the given <paramref name="resourceName"/>,
     /// an empty <c>string</c> is returned.</returns>
-    public static async ValueTask<string> ReadAsync(
+    public static async ValueTask<ProfaneContent> ReadAsync(
         string resourceName, CancellationToken cancellationToken = default)
     {
         if (File.Exists(resourceName) is false)
         {
-            return "";
+            return ProfaneContent.Empty;
         }
 
         using var resourceStream = File.OpenRead(resourceName);
 
         if (resourceStream is null)
         {
-            return "";
+            return ProfaneContent.Empty;
         }
 
-        using var reader = new StreamReader(resourceStream);
-
-        return await reader.ReadToEndAsync(cancellationToken);
+        return await JsonSerializer.DeserializeAsync<ProfaneContent>(
+            resourceStream, cancellationToken: cancellationToken);
     }
 }
