@@ -11,43 +11,43 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\ArabicSwearWords.json" />
-    <None Remove="Data\BritishSwearWords.json" />
-    <None Remove="Data\ChineseSwearWords.json" />
-    <None Remove="Data\FrenchSwearWords.json" />
-    <None Remove="Data\GermanSwearWords.json" />
-    <None Remove="Data\GoogleBannedWords.json" />
-    <None Remove="Data\IndonesianSwearWords.json" />
-    <None Remove="Data\ItalianSwearWords.json" />
-    <None Remove="Data\SpanishSwearWords.json" />
+    <None Remove="Data\ArabicSwearWords.txt" />
+    <None Remove="Data\BritishSwearWords.txt" />
+    <None Remove="Data\ChineseSwearWords.txt" />
+    <None Remove="Data\FrenchSwearWords.txt" />
+    <None Remove="Data\GermanSwearWords.txt" />
+    <None Remove="Data\GoogleBannedWords.txt" />
+    <None Remove="Data\IndonesianSwearWords.txt" />
+    <None Remove="Data\ItalianSwearWords.txt" />
+    <None Remove="Data\SpanishSwearWords.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data\ArabicSwearWords.json">
+    <Content Include="Data\ArabicSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\BritishSwearWords.json">
+    <Content Include="Data\BritishSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\ChineseSwearWords.json">
+    <Content Include="Data\ChineseSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\FrenchSwearWords.json">
+    <Content Include="Data\FrenchSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\GermanSwearWords.json">
+    <Content Include="Data\GermanSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\GoogleBannedWords.json">
+    <Content Include="Data\GoogleBannedWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\IndonesianSwearWords.json">
+    <Content Include="Data\IndonesianSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\ItalianSwearWords.json">
+    <Content Include="Data\ItalianSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\SpanishSwearWords.json">
+    <Content Include="Data\SpanishSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

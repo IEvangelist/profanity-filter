@@ -8,7 +8,7 @@ internal sealed class ProfaneContentReader
     private static readonly Lazy<Matcher> s_matcher = new(() =>
     {
         var matcher = new Matcher();
-        matcher.AddInclude("Data/*.json");
+        matcher.AddInclude("Data/*.txt");
 
         return matcher;
     });
@@ -27,7 +27,7 @@ internal sealed class ProfaneContentReader
     /// <returns>Returns a <c>string</c> representation of the embedded resource.
     /// If there isn't a resource matching the given <paramref name="fileName"/>,
     /// an empty <c>string</c> is returned.</returns>
-    public static async ValueTask<ProfaneContent> ReadAsync(
+    public static async ValueTask<string> ReadAsync(
         string fileName, CancellationToken cancellationToken = default)
     {
         Console.WriteLine($"""
@@ -40,7 +40,7 @@ internal sealed class ProfaneContentReader
                 The {fileName} doesn't exist.
                 """);
 
-            return ProfaneContent.Empty;
+            return "";
         }
 
         using var stream = File.OpenRead(fileName);
@@ -51,15 +51,15 @@ internal sealed class ProfaneContentReader
                 Unable to open {fileName} stream for reading.
                 """);
 
-            return ProfaneContent.Empty;
+            return "";
         }
 
         using var reader = new StreamReader(stream);
 
-        var json = await reader.ReadToEndAsync(cancellationToken)
+        var text = await reader.ReadToEndAsync(cancellationToken)
             .ConfigureAwait(false);
 
-        if (json is null or { Length: 0 })
+        if (text is null or { Length: 0 })
         {
             Console.WriteLine($"""
                 Unable to read the file contents, either null or empty.
@@ -70,11 +70,10 @@ internal sealed class ProfaneContentReader
         {
             Console.WriteLine($"""
                 File contents: {fileName}
-                {json}
+                {text}
                 """);
         }
 
-        return json?.FromJson(ProfaneContentContext.Default.ProfaneContent)
-            ?? ProfaneContent.Empty;
+        return text ?? "";
     }
 }
