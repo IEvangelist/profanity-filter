@@ -13,6 +13,10 @@ internal sealed class ProfaneContentReader
         return matcher;
     });
 
+    /// <summary>
+    /// Gets an array of file names that match the profanity content file pattern.
+    /// </summary>
+    /// <returns>An array of file names.</returns>
     public static string[] GetFileNames() =>
         s_matcher.Value
             .GetResultsInFullPath(".")

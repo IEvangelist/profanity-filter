@@ -35,9 +35,7 @@ jobs:
         run: |
           dotnet publish \
             /t:PublishContainer \
-            /p:UseAppHost=true \
-            -r linux-musl-x64 \
-            -p ContainerFamily=alpine3.18 \
+            -p DebugType=none \
             -p ContainerRegistry=ghcr.io \
             -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
             -p ContainerRepository=${{ env.IMAGE_NAME }} \
