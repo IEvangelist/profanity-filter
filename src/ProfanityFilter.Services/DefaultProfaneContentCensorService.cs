@@ -5,11 +5,6 @@ namespace ProfanityFilter.Services;
 
 internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensorService
 {
-    // Been averaging around 50ms on my machine...
-    private static TimeSpan? s_readAllWordsTimeSpan;
-
-    private static readonly TimeSpan s_emitDebugIfLongerThan =
-        TimeSpan.FromMilliseconds(250);
     private static readonly AsyncLazy<HashSet<string>> s_profaneWords =
         new(factory: ReadAllProfaneWordsAsync);
 
@@ -20,8 +15,6 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
     /// returns a <see cref="HashSet{T}"/> of all profane words.</returns>
     private static async Task<HashSet<string>> ReadAllProfaneWordsAsync()
     {
-        var startingTimestamp = Stopwatch.GetTimestamp();
-
         var fileNames = ProfaneContentReader.GetFileNames();
 
         ConcurrentBag<string> allWords = [];
@@ -48,8 +41,6 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
         var set = allWords.ToHashSet();
 
-        s_readAllWordsTimeSpan = Stopwatch.GetElapsedTime(startingTimestamp);
-
         return set;
     }
 
@@ -62,13 +53,6 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
         }
 
         var profaneWordList = await s_profaneWords.Task;
-
-        Debug.Assert(
-            s_readAllWordsTimeSpan.GetValueOrDefault() < s_emitDebugIfLongerThan,
-            $"""
-                Loading all of the word JSON content too longer than {s_emitDebugIfLongerThan.Milliseconds}ms.
-                The total time was {s_readAllWordsTimeSpan.GetValueOrDefault().TotalMilliseconds}ms.
-                """);
 
         var pattern = $"\\b({string.Join('|', profaneWordList)})\\b";
 
@@ -84,13 +68,6 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
         }
 
         var profaneWordList = await s_profaneWords.Task;
-
-        Debug.Assert(
-            s_readAllWordsTimeSpan.GetValueOrDefault() < s_emitDebugIfLongerThan,
-            $"""
-                Loading all of the word JSON content too longer than {s_emitDebugIfLongerThan.Milliseconds}ms.
-                The total time was {s_readAllWordsTimeSpan.GetValueOrDefault().TotalMilliseconds}ms.
-                """);
 
         var pattern = $"\\b({string.Join('|', profaneWordList)})\\b";
 
