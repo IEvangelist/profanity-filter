@@ -36,6 +36,7 @@ jobs:
           dotnet publish \
             /t:PublishContainer \
             -p DebugType=none \
+            -p ContainerBaseImage=mcr.microsoft.com/dotnet/runtime:8.0-jammy-chiseled-aot \
             -p ContainerRegistry=ghcr.io \
             -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
             -p ContainerRepository=${{ env.IMAGE_NAME }} \
