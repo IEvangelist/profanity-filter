@@ -24,6 +24,11 @@
     <PackageReference Include="Microsoft.NET.Build.Containers" Version="8.0.100-rc.1.23462.41" />
   </ItemGroup>
 
+  <ItemGroup Label="Publish Optimization Configs" Condition="'$(RuntimeIdentifier)' != ''">
+    <TrimmerRootDescriptor Include="..\..\Trimmer.Descriptors.xml" />
+    <RdXmlFile Include="..\..\Aot.Directives.xml" />
+  </ItemGroup>
+    
   <ItemGroup>
     <ProjectReference Include="..\ProfanityFilter.Services\ProfanityFilter.Services.csproj" />
   </ItemGroup>

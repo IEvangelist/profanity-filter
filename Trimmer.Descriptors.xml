@@ -1,0 +1,6 @@
+﻿<linker>
+    <assembly fullname="System.Linq.Expressions" preserve="all" />
+    <assembly fullname="Newtonsoft.Json" preserve="all" />
+    <assembly fullname="Octokit.GraphQL" preserve="all" />
+    <assembly fullname="Octokit.GraphQL.Core" preserve="all" />
+</linker>
