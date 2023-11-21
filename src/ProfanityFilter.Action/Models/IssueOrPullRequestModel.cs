@@ -13,5 +13,5 @@ public sealed class IssueOrPullRequestModel
 
     public int Number { get; set; }
 
-    public List<LabelModel> Labels { get; set; } = new();
+    public List<LabelModel> Labels { get; set; } = [];
 }

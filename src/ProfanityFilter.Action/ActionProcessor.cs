@@ -115,7 +115,8 @@ internal sealed class ActionProcessor(
         _ = label;
 
         var clientId = Guid.NewGuid().ToString();
-        core.StartGroup($"Evaluating issue comment id #{issueCommentId} for profanity (Client mutation: {clientId})");
+        core.StartGroup(
+            $"Evaluating issue comment id #{issueCommentId} for profanity (Client mutation: {clientId})");
 
         try
         {
@@ -144,7 +145,8 @@ internal sealed class ActionProcessor(
     private async Task HandleIssueAsync(long issueNumber, LabelModel? label)
     {
         var clientId = Guid.NewGuid().ToString();
-        core.StartGroup($"Evaluating issue #{issueNumber} for profanity (Client mutation: {clientId})");
+        core.StartGroup(
+            $"Evaluating issue #{issueNumber} for profanity (Client mutation: {clientId})");
 
         try
         {
@@ -188,7 +190,8 @@ internal sealed class ActionProcessor(
     private async Task HandlePullRequestAsync(long pullRequestNumber, LabelModel? label)
     {
         var clientId = Guid.NewGuid().ToString();
-        core.StartGroup($"Evaluating pull request #{pullRequestNumber} for profanity (Client mutation: {clientId})");
+        core.StartGroup(
+            $"Evaluating pull request #{pullRequestNumber} for profanity (Client mutation: {clientId})");
 
         try
         {
@@ -269,16 +272,4 @@ internal sealed class ActionProcessor(
         Enum.TryParse<ReplacementType>(value, out var type)
             ? type
             : ReplacementType.Asterisk;
-}
-
-internal readonly record struct FilterResult(
-    string Title,
-    bool IsTitleFiltered,
-    string Body,
-    bool IsBodyFiltered)
-{
-    internal static FilterResult NotFiltered { get; } =
-        new(string.Empty, false, string.Empty, false);
-
-    internal bool IsFiltered => IsTitleFiltered || IsBodyFiltered;
 }

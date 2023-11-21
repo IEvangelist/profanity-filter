@@ -17,10 +17,10 @@ public class DefaultProfaneContentCensorServiceTests
     [InlineData("This is a sentence with the word crap and shit.", true)]
     [InlineData("This is a sentence with the word crap and shit and fuck.", true)]
     [InlineData("This is a sentence with the word crap and shit and fuck and ass.", true)]
-    public async Task ContainsProfanityAsync_Returns_Expected_Result(string input, bool expectedResult)
+    public async Task ContainsProfanityAsync_Returns_Expected_Result(string? input, bool expectedResult)
     {
         // Act
-        var result = await _sut.ContainsProfanityAsync(input);
+        var result = await _sut.ContainsProfanityAsync(input!);
 
         // Assert
         Assert.Equal(expectedResult, result);
@@ -35,10 +35,10 @@ public class DefaultProfaneContentCensorServiceTests
     [InlineData("This is a sentence with the word crap and shit.", "This is a sentence with the word **** and ****.")]
     [InlineData("This is a sentence with the word crap and shit and fuck.", "This is a sentence with the word **** and **** and ****.")]
     [InlineData("This is a sentence with the word crap and shit and fuck and ass.", "This is a sentence with the word **** and **** and **** and ***.")]
-    public async Task CensorProfanityAsync_Returns_Expected_Result(string input, string expectedResult)
+    public async Task CensorProfanityAsync_Returns_Expected_Result(string? input, string? expectedResult)
     {
         // Act
-        var result = await _sut.CensorProfanityAsync(input, ReplacementType.Asterisk);
+        var result = await _sut.CensorProfanityAsync(input!, ReplacementType.Asterisk);
 
         // Assert
         Assert.Equal(expectedResult, result);

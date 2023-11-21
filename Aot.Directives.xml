@@ -1,0 +1,28 @@
+﻿<Directives xmlns="http://schemas.microsoft.com/netfx/2013/01/metadata">
+  <Application>
+    <Assembly Name="Newtonsoft.Json">
+      <Type Name="Newtonsoft.Json.Linq.JToken">
+        <Method Name="ToObject">
+          <GenericParameter Name="Octokit.GraphQL.ID, OctoKit.GraphQL.Core" />
+        </Method>
+        <Method Name="ToObject">
+          <GenericParameter Name="System.Int32, System.Private.Corelib" />
+        </Method>
+        <Method Name="ToObject">
+          <GenericParameter Name="System.Boolean, System.Private.Corelib" />
+        </Method>
+        <Method Name="ToObject">
+          <GenericParameter Name="Octokit.GraphQL.Model.CommentAuthorAssociation, OctoKit.GraphQL" />
+        </Method>
+        <Method Name="ToObject">
+          <GenericParameter Name="Octokit.GraphQL.Model.RepositoryPermission, OctoKit.GraphQL" />
+        </Method>
+      </Type>
+    </Assembly>
+    <Assembly Name="System.Private.Corelib">
+      <Type Name="System.Func`1[[System.Nullable`1[[Octokit.GraphQL.Core.Arg`1[[Octokit.GraphQL.Model.LabelOrder, OctoKit.GraphQL]], OctoKit.GraphQL.Core]], System.Private.Corelib]]" Dynamic="Required All" />
+      <Type Name="System.Func`1[[Octokit.GraphQL.Core.Arg`1[[System.String, System.Private.Corelib]], OctoKit.GraphQL.Core]]" Dynamic="Required All" />
+      <Type Name="System.Func`1[[Octokit.GraphQL.Core.Arg`1[[System.Int32, System.Private.Corelib]], OctoKit.GraphQL.Core]]" Dynamic="Required All" />
+    </Assembly>
+  </Application>
+</Directives>

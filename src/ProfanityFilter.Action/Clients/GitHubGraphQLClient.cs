@@ -45,7 +45,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
 
         var issue = await _connection.Run(query);
         return issue?.Select(label => new LabelModel(label.Name, label.Id))
-               ?.ToList() ?? new();
+               ?.ToList() ?? [];
     }
 
     private async ValueTask<List<LabelModel>> GetPullRequestLabelsAsync(int pullRequestNumber)
@@ -64,7 +64,7 @@ internal sealed class GitHubGraphQLClient(string owner, string repo, string toke
 
         var issue = await _connection.Run(query);
         return issue?.Select(label => new LabelModel(label.Name, label.Id))
-               ?.ToList() ?? new();
+               ?.ToList() ?? [];
     }
 
     public async ValueTask<LabelModel?> GetLabelAsync()

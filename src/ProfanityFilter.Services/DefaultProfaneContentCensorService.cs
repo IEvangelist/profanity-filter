@@ -55,12 +55,11 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
         var pattern = await GetProfaneWordListRegexPatternAsync();
 
-        if (pattern is null)
+        return pattern switch
         {
-            return false;
-        }
-
-        return Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase);
+            null => false,
+            _ => Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase)
+        };
     }
 
     /// <inheritdoc />
