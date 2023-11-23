@@ -5,7 +5,6 @@ namespace ProfanityFilter.Action;
 
 internal sealed class ActionProcessor(
     GitHubRestClient gitHubRestClient,
-    GitHubGraphQLClient gitHubGraphQLClient,
     IProfaneContentCensorService profaneContentCensor,
     ICoreService core)
 {
@@ -24,7 +23,7 @@ internal sealed class ActionProcessor(
             var isIssue = context?.Payload?.Issue is not null;
             var isPullRequest = context?.Payload?.PullRequest is not null;
 
-            Func<long, LabelModel?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
+            Func<long, Label?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
             {
                 (true, _, _) => HandleIssueCommentAsync,
                 (_, true, _) => HandleIssueAsync,
@@ -34,7 +33,7 @@ internal sealed class ActionProcessor(
                     "The profanity filter GitHub Action only works with issues or pull requests.")
             };
 
-            var label = isIssueComment ? null : await gitHubGraphQLClient.GetLabelAsync();
+            var label = isIssueComment ? null : await gitHubRestClient.GetOrCreatedDefaultLabelAsync();
             if (label is null && isIssueComment is false)
             {
                 core.Warning("""
@@ -48,7 +47,7 @@ internal sealed class ActionProcessor(
                 ?? context?.Payload?.PullRequest?.Number
                 ?? 0L)!;
 
-            await handler(numberOrId, label);
+            await handler(numberOrId, label ?? null);
         }
         catch (Exception ex)
         {
@@ -109,7 +108,7 @@ internal sealed class ActionProcessor(
         return true;
     }
 
-    private async Task HandleIssueCommentAsync(long issueCommentId, LabelModel? label)
+    private async Task HandleIssueCommentAsync(long issueCommentId, Label? label)
     {
         // We don't apply labels to issue comments...
         _ = label;
@@ -142,7 +141,7 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandleIssueAsync(long issueNumber, LabelModel? label)
+    private async Task HandleIssueAsync(long issueNumber, Label? label)
     {
         var clientId = Guid.NewGuid().ToString();
         core.StartGroup(
@@ -150,7 +149,7 @@ internal sealed class ActionProcessor(
 
         try
         {
-            var issue = await gitHubGraphQLClient.GetIssueAsync((int)issueNumber);
+            var issue = await gitHubRestClient.GetIssueAsync((int)issueNumber);
             if (issue is null)
             {
                 core.Error($"Unable to get issue with number: {issueNumber}");
@@ -176,9 +175,6 @@ internal sealed class ActionProcessor(
                 }
 
                 await gitHubRestClient.UpdateIssueAsync(issue.Number, issueUpdate);
-
-                await gitHubGraphQLClient.AddReactionAsync(
-                    issue.Id.Value, ReactionContent.Confused, clientId);
             }
         }
         finally
@@ -187,7 +183,7 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandlePullRequestAsync(long pullRequestNumber, LabelModel? label)
+    private async Task HandlePullRequestAsync(long pullRequestNumber, Label? label)
     {
         var clientId = Guid.NewGuid().ToString();
         core.StartGroup(
@@ -195,7 +191,7 @@ internal sealed class ActionProcessor(
 
         try
         {
-            var pullRequest = await gitHubGraphQLClient.GetPullRequestAsync((int)pullRequestNumber);
+            var pullRequest = await gitHubRestClient.GetPullRequestAsync((int)pullRequestNumber);
             if (pullRequest is null)
             {
                 core.Error($"Unable to get PR with number: {pullRequestNumber}");
@@ -217,9 +213,6 @@ internal sealed class ActionProcessor(
 
                 await gitHubRestClient.UpdatePullRequestAsync(
                     pullRequest.Number, issueUpdate, label?.Name);
-
-                await gitHubGraphQLClient.AddReactionAsync(
-                    pullRequest.Id.Value, ReactionContent.Confused, clientId);
             }
         }
         finally

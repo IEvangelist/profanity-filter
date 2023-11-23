@@ -36,18 +36,11 @@ internal static class ServiceCollectionExtensions
             return (repository.Owner, repository.Repo, token);
         }
 
-        services.AddSingleton(static provider =>
+        services.AddSingleton<GitHubRestClient>(static provider =>
         {
-            var (owner, repo, token) = GetRepositoryConfiguration(provider);
+            var config = GetRepositoryConfiguration(provider);
 
-            return new GitHubRestClient(owner, repo, token);
-        });
-
-        services.AddSingleton(static provider =>
-        {
-            var (owner, repo, token) = GetRepositoryConfiguration(provider);
-
-            return new GitHubGraphQLClient(owner, repo, token);
+            return new(GitHub.Client, config);
         });
 
         return services;
