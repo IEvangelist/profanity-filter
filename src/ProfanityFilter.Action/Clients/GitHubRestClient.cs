@@ -67,25 +67,32 @@ internal sealed class GitHubRestClient(GitHubClient client, RepoConfig config)
         return labels;
     }
 
-    public async ValueTask<Label> GetOrCreatedDefaultLabelAsync()
+    public async ValueTask<string> GetOrCreateDefaultLabelAsync()
     {
-        var labels = await client.Issue.Labels.GetAllForRepository(
-            config.Owner, config.Repo);
-
-        foreach (var existingLabel in labels)
+        try
         {
-            if (existingLabel is { Name: DefaultLabel.Name, Color: DefaultLabel.Color })
+            var labels = await client.Issue.Labels.GetAllForRepository(
+                config.Owner, config.Repo);
+
+            foreach (var existingLabel in labels ?? [])
             {
-                return existingLabel;
+                if (existingLabel is { Name: DefaultLabel.Name, Color: DefaultLabel.Color })
+                {
+                    return existingLabel.Name;
+                }
             }
+
+            var label = await client.Issue.Labels.Create(
+                config.Owner, config.Repo, new(DefaultLabel.Name, DefaultLabel.Color)
+                {
+                    Description = DefaultLabel.Description
+                });
+
+            return label.Name;
         }
-
-        var label = await client.Issue.Labels.Create(
-            config.Owner, config.Repo, new(DefaultLabel.Name, DefaultLabel.Color)
-            {
-                Description = DefaultLabel.Description
-            });
-
-        return label;
+        catch
+        {
+            return DefaultLabel.Name;
+        }
     }
 }

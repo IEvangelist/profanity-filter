@@ -19,11 +19,11 @@ internal sealed class ActionProcessor(
                 return;
             }
 
-            var isIssueComment = context?.Payload?.Comment is not null;
-            var isIssue = context?.Payload?.Issue is not null;
-            var isPullRequest = context?.Payload?.PullRequest is not null;
+            var isIssueComment = context.Payload?.Comment is not null;
+            var isIssue = context.Payload?.Issue is not null;
+            var isPullRequest = context.Payload?.PullRequest is not null;
 
-            Func<long, Label?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
+            Func<long, string?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
             {
                 (true, _, _) => HandleIssueCommentAsync,
                 (_, true, _) => HandleIssueAsync,
@@ -33,7 +33,7 @@ internal sealed class ActionProcessor(
                     "The profanity filter GitHub Action only works with issues or pull requests.")
             };
 
-            var label = isIssueComment ? null : await gitHubRestClient.GetOrCreatedDefaultLabelAsync();
+            var label = isIssueComment ? null : await gitHubRestClient.GetOrCreateDefaultLabelAsync();
             if (label is null && isIssueComment is false)
             {
                 core.Warning("""
@@ -42,9 +42,9 @@ internal sealed class ActionProcessor(
                     """);
             }
 
-            var numberOrId = (context?.Payload?.Comment?.Id
-                ?? context?.Payload?.Issue?.Number
-                ?? context?.Payload?.PullRequest?.Number
+            var numberOrId = (context.Payload?.Comment?.Id
+                ?? context.Payload?.Issue?.Number
+                ?? context.Payload?.PullRequest?.Number
                 ?? 0L)!;
 
             await handler(numberOrId, label ?? null);
@@ -66,51 +66,65 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private bool TryGetContext(out Context context)
+    private bool TryGetContext([NotNullWhen(true)] out Context? context)
     {
-        context = Context.Current;
-        core.Info(context.ToString() ?? "Unknown context");
-
-        var isValidAction = context.Action switch
+        try
         {
-            "profanity-filter" or
-            "opened" or "reopened" or
-            "created" or "edited" => true,
+            context = Context.Current;
+            core.Info(context.ToString() ?? "Unknown context");
 
-            _ when (context.Action ?? "").StartsWith("__run") => true,
+            var isValidAction = context.Action switch
+            {
+                "profanity-filter" or
+                "opened" or "reopened" or
+                "created" or "edited" => true,
 
-            _ => false
-        };
+                _ when (context.Action ?? "").StartsWith("__run") => true,
 
-        if (isValidAction is false)
+                _ => false
+            };
+
+            if (isValidAction is false)
+            {
+                core.Warning($"The action '{context.Action}' is not supported.");
+
+                return false;
+            }
+
+            var isValidActor = context.Actor switch
+            {
+                "bot" or
+                "dependabot" or "dependabot[bot]" or
+                "github-actions" or "github-actions[bot]" => false,
+
+                _ => true
+            };
+
+            if (isValidActor is false)
+            {
+                core.Info($"Ignored as {context.Actor} triggered this...");
+
+                return false;
+            }
+
+            return true;
+        }
+        catch (Exception ex)
         {
-            core.Warning($"The action '{context.Action}' is not supported.");
+            core.Error($"""
+                Error attempting to get the context:
+                  {ex}
+                """);
+
+            context = null;
 
             return false;
         }
-
-        var isValidActor = context.Actor switch
-        {
-            "bot" or
-            "dependabot" or "dependabot[bot]" or
-            "github-actions" or "github-actions[bot]" => false,
-
-            _ => true
-        };
-
-        if (isValidActor is false)
-        {
-            core.Info($"Ignored as {context.Actor} triggered this...");
-
-            return false;
-        }
-
-        return true;
     }
 
-    private async Task HandleIssueCommentAsync(long issueCommentId, Label? label)
+    private async Task HandleIssueCommentAsync(long issueCommentId, string? label)
     {
-        // We don't apply labels to issue comments...
+        // We don't apply labels to issue comments, discard it...
         _ = label;
 
         var clientId = Guid.NewGuid().ToString();
@@ -141,7 +155,7 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandleIssueAsync(long issueNumber, Label? label)
+    private async Task HandleIssueAsync(long issueNumber, string? label)
     {
         var clientId = Guid.NewGuid().ToString();
         core.StartGroup(
@@ -171,7 +185,7 @@ internal sealed class ActionProcessor(
 
                 if (label is not null)
                 {
-                    issueUpdate.AddLabel(label.Name);
+                    issueUpdate.AddLabel(label);
                 }
 
                 await gitHubRestClient.UpdateIssueAsync(issue.Number, issueUpdate);
@@ -183,7 +197,7 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandlePullRequestAsync(long pullRequestNumber, Label? label)
+    private async Task HandlePullRequestAsync(long pullRequestNumber, string? label)
     {
         var clientId = Guid.NewGuid().ToString();
         core.StartGroup(
@@ -212,7 +226,7 @@ internal sealed class ActionProcessor(
                 };
 
                 await gitHubRestClient.UpdatePullRequestAsync(
-                    pullRequest.Number, issueUpdate, label?.Name);
+                    pullRequest.Number, issueUpdate, label);
             }
         }
         finally
