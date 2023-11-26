@@ -5,10 +5,12 @@ namespace ProfanityFilter.Action.Tests;
 
 public class ServiceCollectionExtensionsTests
 {
+    private const string INPUT_TOKEN = nameof(INPUT_TOKEN);
+
     [Fact]
     public void AddProfanityFilter_AddsServices()
     {
-        Environment.SetEnvironmentVariable(Keys.GITHUB_TOKEN, "TEST");
+        Environment.SetEnvironmentVariable(INPUT_TOKEN, "TEST");
 
         try
         {
@@ -27,7 +29,7 @@ public class ServiceCollectionExtensionsTests
         }
         finally
         {
-            Environment.SetEnvironmentVariable(Keys.GITHUB_TOKEN, null);
+            Environment.SetEnvironmentVariable(INPUT_TOKEN, null);
         }
     }
 }

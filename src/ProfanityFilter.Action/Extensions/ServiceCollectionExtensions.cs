@@ -13,7 +13,11 @@ internal static class ServiceCollectionExtensions
 
         services.AddGitHubActionsCore();
 
-        services.AddGitHubClientServices();
+        var inputToken = Env.GetEnvironmentVariable("INPUT_TOKEN");
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(inputToken);
+
+        services.AddGitHubClientServices(inputToken);
 
         services.AddSingleton(static provider =>
         {
@@ -23,6 +27,7 @@ internal static class ServiceCollectionExtensions
             {
                 core.StartGroup("Initializing context");
 
+                var client = provider.GetRequiredService<GitHubClient>();
                 var context = provider.GetRequiredService<Context>();
 
                 var repository = context.Repo;
@@ -31,7 +36,7 @@ internal static class ServiceCollectionExtensions
 
                 core.Info($"Repository: {config.Owner}/{config.Repo}");
 
-                return new GitHubRestClient(GitHub.Client, core, config);
+                return new GitHubRestClient(client, core, config);
             }
             finally
             {
