@@ -127,9 +127,8 @@ internal sealed class ActionProcessor(
         // We don't apply labels to issue comments, discard it...
         _ = label;
 
-        var clientId = Guid.NewGuid().ToString();
         core.StartGroup(
-            $"Evaluating issue comment id #{issueCommentId} for profanity (Client mutation: {clientId})");
+            $"Evaluating issue comment id #{issueCommentId} for profanity");
 
         try
         {
@@ -157,9 +156,8 @@ internal sealed class ActionProcessor(
 
     private async Task HandleIssueAsync(long issueNumber, string? label)
     {
-        var clientId = Guid.NewGuid().ToString();
         core.StartGroup(
-            $"Evaluating issue #{issueNumber} for profanity (Client mutation: {clientId})");
+            $"Evaluating issue #{issueNumber} for profanity");
 
         try
         {
@@ -199,9 +197,8 @@ internal sealed class ActionProcessor(
 
     private async Task HandlePullRequestAsync(long pullRequestNumber, string? label)
     {
-        var clientId = Guid.NewGuid().ToString();
         core.StartGroup(
-            $"Evaluating pull request #{pullRequestNumber} for profanity (Client mutation: {clientId})");
+            $"Evaluating pull request #{pullRequestNumber} for profanity");
 
         try
         {
