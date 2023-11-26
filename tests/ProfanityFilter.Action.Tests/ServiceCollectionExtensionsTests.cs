@@ -8,17 +8,26 @@ public class ServiceCollectionExtensionsTests
     [Fact]
     public void AddProfanityFilter_AddsServices()
     {
-        // Arrange
-        var services = new ServiceCollection();
+        Environment.SetEnvironmentVariable(Keys.GITHUB_TOKEN, "TEST");
 
-        // Act
-        services.AddActionProcessorServices();
+        try
+        {
+            // Arrange
+            var services = new ServiceCollection();
 
-        // Assert
-        var provider = services.BuildServiceProvider();
-        var censorService = provider.GetService<IProfaneContentCensorService>();
+            // Act
+            services.AddActionProcessorServices();
 
-        Assert.NotNull(censorService);
-        Assert.IsType<DefaultProfaneContentCensorService>(censorService);
+            // Assert
+            var provider = services.BuildServiceProvider();
+            var censorService = provider.GetService<IProfaneContentCensorService>();
+
+            Assert.NotNull(censorService);
+            Assert.IsType<DefaultProfaneContentCensorService>(censorService);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(Keys.GITHUB_TOKEN, null);
+        }
     }
 }
