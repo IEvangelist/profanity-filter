@@ -3,12 +3,12 @@
 
 namespace ProfanityFilter.Action;
 
-internal sealed class ActionProcessor(
-    GitHubRestClient gitHubRestClient,
+internal sealed class ProfanityProcessor(
+    CustomGitHubClient client,
     IProfaneContentCensorService profaneContentCensor,
     ICoreService core)
 {
-    public async Task ProcessAsync()
+    public async Task ProcessProfanityAsync()
     {
         var success = true;
 
@@ -23,7 +23,7 @@ internal sealed class ActionProcessor(
             var isIssue = context.Payload?.Issue is not null;
             var isPullRequest = context.Payload?.PullRequest is not null;
 
-            Func<long, string?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
+            Func<long, Label?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
             {
                 (true, _, _) => HandleIssueCommentAsync,
                 (_, true, _) => HandleIssueAsync,
@@ -33,7 +33,7 @@ internal sealed class ActionProcessor(
                     "The profanity filter GitHub Action only works with issues or pull requests.")
             };
 
-            var label = isIssueComment ? null : await gitHubRestClient.GetOrCreateDefaultLabelAsync();
+            var label = isIssueComment ? null : await client.GetLabelAsync();
             if (label is null && isIssueComment is false)
             {
                 core.Warning("""
@@ -116,23 +116,16 @@ internal sealed class ActionProcessor(
                   {ex}
                 """);
 
-            context = null;
-
-            return false;
-        }
-    }
-
-    private async Task HandleIssueCommentAsync(long issueCommentId, string? label)
+    private async Task HandleIssueCommentAsync(long issueCommentId, Label? label)
     {
         // We don't apply labels to issue comments, discard it...
         _ = label;
 
-        core.StartGroup(
-            $"Evaluating issue comment id #{issueCommentId} for profanity");
+        core.StartGroup($"Evaluating issue comment id #{issueCommentId} for profanity");
 
         try
         {
-            var issueComment = await gitHubRestClient.GetIssueCommentAsync(issueCommentId);
+            var issueComment = await client.GetIssueCommentAsync(issueCommentId);
             if (issueComment is null)
             {
                 core.Error($"Unable to get issue comment with id: {issueCommentId}");
@@ -141,11 +134,11 @@ internal sealed class ActionProcessor(
 
             var replacementType = GetInputReplacementType();
 
-            var (text, isFiltered) = await TryApplyFilterAsync(issueComment.Body, replacementType);
+            var (text, isFiltered) = await TryApplyFilterAsync(issueComment.Body ?? "", replacementType);
 
             if (isFiltered)
             {
-                await gitHubRestClient.UpdateIssueCommentAsync(issueCommentId, text);
+                await client.UpdateIssueCommentAsync(issueCommentId, text);
             }
         }
         finally
@@ -154,14 +147,13 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandleIssueAsync(long issueNumber, string? label)
+    private async Task HandleIssueAsync(long issueNumber, Label? label)
     {
-        core.StartGroup(
-            $"Evaluating issue #{issueNumber} for profanity");
+        core.StartGroup($"Evaluating issue #{issueNumber} for profanity");
 
         try
         {
-            var issue = await gitHubRestClient.GetIssueAsync((int)issueNumber);
+            var issue = await client.GetIssueAsync((int)issueNumber);
             if (issue is null)
             {
                 core.Error($"Unable to get issue with number: {issueNumber}");
@@ -171,22 +163,35 @@ internal sealed class ActionProcessor(
             var replacementType = GetInputReplacementType();
 
             var filterResult = await ApplyProfanityFilterAsync(
-                issue.Title, issue.Body, replacementType);
+                issue.Title ?? "", issue.Body ?? "", replacementType);
 
             if (filterResult.IsFiltered)
             {
                 var issueUpdate = new IssueUpdate
                 {
                     Body = filterResult.Body,
-                    Title = filterResult.Title
+                    Title = new()
+                    {
+                        String = filterResult.Title
+                    }
                 };
 
-                if (label is not null)
+                if (label is not null and { Name.Length: > 0 })
                 {
-                    issueUpdate.AddLabel(label);
+                    if (issueUpdate.Labels is not null)
+                    {
+                        issueUpdate.Labels.Add(label.Name);
+                    }
+                    else
+                    {
+                        issueUpdate.Labels = [label.Name];
+                    }
                 }
 
-                await gitHubRestClient.UpdateIssueAsync(issue.Number, issueUpdate);
+                await client.UpdateIssueAsync(issue.Number.GetValueOrDefault(), issueUpdate);
+
+                await client.AddReactionAsync(
+                    issue.Id.GetValueOrDefault(), ReactionContent.Confused);
             }
         }
         finally
@@ -195,14 +200,13 @@ internal sealed class ActionProcessor(
         }
     }
 
-    private async Task HandlePullRequestAsync(long pullRequestNumber, string? label)
+    private async Task HandlePullRequestAsync(long pullRequestNumber, Label? label)
     {
-        core.StartGroup(
-            $"Evaluating pull request #{pullRequestNumber} for profanity");
+        core.StartGroup($"Evaluating pull request #{pullRequestNumber} for profanity");
 
         try
         {
-            var pullRequest = await gitHubRestClient.GetPullRequestAsync((int)pullRequestNumber);
+            var pullRequest = await client.GetPullRequestAsync((int)pullRequestNumber);
             if (pullRequest is null)
             {
                 core.Error($"Unable to get PR with number: {pullRequestNumber}");
@@ -212,7 +216,7 @@ internal sealed class ActionProcessor(
             var replacementType = GetInputReplacementType();
 
             var filterResult = await ApplyProfanityFilterAsync(
-                pullRequest.Title, pullRequest.Body, replacementType);
+                pullRequest.Title ?? "", pullRequest.Body ?? "", replacementType);
 
             if (filterResult.IsFiltered)
             {
@@ -222,8 +226,11 @@ internal sealed class ActionProcessor(
                     Title = filterResult.Title
                 };
 
-                await gitHubRestClient.UpdatePullRequestAsync(
-                    pullRequest.Number, issueUpdate, label);
+                await client.UpdatePullRequestAsync(
+                    pullRequest.Number.GetValueOrDefault(), issueUpdate, label?.Name);
+
+                await client.AddReactionAsync(
+                    pullRequest.Id.GetValueOrDefault(), ReactionContent.Confused);
             }
         }
         finally

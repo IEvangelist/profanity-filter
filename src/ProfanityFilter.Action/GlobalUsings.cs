@@ -12,18 +12,21 @@ global using Actions.Octokit;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 
-global using Octokit;
+global using GitHub;
+global using GitHub.Models;
 
 global using ProfanityFilter.Action;
 global using ProfanityFilter.Action.Clients;
 global using ProfanityFilter.Action.Extensions;
-global using ProfanityFilter.Action.Models;
+
 global using ProfanityFilter.Services;
 global using ProfanityFilter.Services.Extensions;
 
 global using Env = System.Environment;
 
-global using RestIssueComment = Octokit.IssueComment;
+global using IssueUpdate = GitHub.Repos.Item.Item.Issues.Item.WithIssue_numberPatchRequestBody;
+global using PullRequestUpdate = GitHub.Repos.Item.Item.Pulls.Item.WithPull_numberPatchRequestBody;
+global using ReactionContent = GitHub.Repos.Item.Item.Issues.Item.Reactions.ReactionsPostRequestBody_content;
 
 global using RepoConfig = (string Owner, string Repo);
 

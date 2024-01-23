@@ -7,8 +7,8 @@ builder.Services.AddActionProcessorServices();
 
 var app = builder.Build();
 
-var processor = app.Services.GetRequiredService<ActionProcessor>();
+var processor = app.Services.GetRequiredService<ProfanityProcessor>();
 
-await processor.ProcessAsync();
+await processor.ProcessProfanityAsync();
 
 await app.RunAsync();

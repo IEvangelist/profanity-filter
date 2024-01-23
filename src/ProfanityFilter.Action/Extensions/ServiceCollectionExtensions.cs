@@ -5,7 +5,18 @@ namespace ProfanityFilter.Action.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
-    internal static IServiceCollection AddActionProcessorServices(this IServiceCollection services)
+    internal static IServiceCollection AddActionProcessorServices(
+        this IServiceCollection services)
+    {
+        services.AddSingleton<ProfanityProcessor>();
+        services.AddProfanityFilter();
+        services.AddOctokitServices();
+
+        return services;
+    }
+
+    private static IServiceCollection AddProfanityFilter(
+        this IServiceCollection services)
     {
         services.AddSingleton<ActionProcessor>();
 
@@ -13,13 +24,16 @@ internal static class ServiceCollectionExtensions
 
         services.AddGitHubActionsCore();
 
-        var inputToken = Env.GetEnvironmentVariable("INPUT_TOKEN");
-
-        ArgumentException.ThrowIfNullOrWhiteSpace(inputToken);
-
-        services.AddGitHubClientServices(inputToken);
-
         services.AddSingleton(static provider =>
+        {
+            var (owner, repo, token) = GetRepositoryConfiguration(provider);
+
+            return new CustomGitHubClient(owner, repo, token);
+        });
+
+        return services;
+
+        static RepoConfig GetRepositoryConfiguration(IServiceProvider provider)
         {
             var core = provider.GetRequiredService<ICoreService>();
 
@@ -30,20 +44,7 @@ internal static class ServiceCollectionExtensions
                 var client = provider.GetRequiredService<GitHubClient>();
                 var context = provider.GetRequiredService<Context>();
 
-                var repository = context.Repo;
-
-                var config = (repository.Owner, repository.Repo);
-
-                core.Info($"Repository: {config.Owner}/{config.Repo}");
-
-                return new GitHubRestClient(client, core, config);
-            }
-            finally
-            {
-                core.EndGroup();
-            }
-        });
-
-        return services;
+            return (repository.Owner, repository.Repo, token);
+        }
     }
 }
