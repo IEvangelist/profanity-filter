@@ -18,6 +18,12 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
     {
         var fileNames = ProfaneContentReader.GetFileNames();
 
+        Console.WriteLine("Source word list for profane content:");
+        foreach (var fileName in fileNames)
+        {
+            Console.WriteLine(fileName);
+        }
+
         ConcurrentBag<string> allWords = [];
 
         await Parallel.ForEachAsync(fileNames,
@@ -41,7 +47,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             })
             .ConfigureAwait(false);
 
-        var set = allWords.ToHashSet();
+        var set = allWords.ToFrozenSet();
 
         return set.ToFrozenSet();
     }
@@ -94,12 +100,17 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
     private static async ValueTask<string?> GetProfaneWordListRegexPatternAsync()
     {
-        var wordSet = await s_getProfaneWords.Task;
+        var wordSet =
+            await s_getProfaneWords.Task.ConfigureAwait(false);
 
         if (wordSet.Count is 0)
         {
             Console.WriteLine("Unable to read profane word lists.");
             return null;
+        }
+        else
+        {
+            Console.WriteLine($"Found {wordSet.Count:#,#} profane source words.");
         }
 
         var pattern = $"\\b({string.Join('|', wordSet)})\\b";
