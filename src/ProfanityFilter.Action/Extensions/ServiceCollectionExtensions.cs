@@ -5,32 +5,21 @@ namespace ProfanityFilter.Action.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
-    internal static IServiceCollection AddActionProcessorServices(
-        this IServiceCollection services)
+    internal static IServiceCollection AddActionProcessorServices(this IServiceCollection services)
     {
         services.AddSingleton<ProfanityProcessor>();
-        services.AddProfanityFilter();
 
-        return services;
-    }
-
-    private static IServiceCollection AddProfanityFilter(
-        this IServiceCollection services)
-    {
         services.AddProfanityFilterServices();
 
         services.AddGitHubActionsCore();
 
+        var inputToken = Env.GetEnvironmentVariable("INPUT_TOKEN");
+
+        ArgumentException.ThrowIfNullOrWhiteSpace(inputToken);
+
+        services.AddGitHubClientServices(inputToken);
+
         services.AddSingleton(static provider =>
-        {
-            var (owner, repo, token) = GetRepositoryConfiguration(provider);
-
-            return new CustomGitHubClient(owner, repo, token);
-        });
-
-        return services;
-
-        static RepoConfig GetRepositoryConfiguration(IServiceProvider provider)
         {
             var core = provider.GetRequiredService<ICoreService>();
 
@@ -38,6 +27,7 @@ internal static class ServiceCollectionExtensions
             {
                 core.StartGroup("Initializing context");
 
+                var client = provider.GetRequiredService<GitHubClient>();
                 var context = provider.GetRequiredService<Context>();
 
                 var repository = context.Repo;
@@ -46,14 +36,14 @@ internal static class ServiceCollectionExtensions
 
                 core.Info($"Repository: {owner}/{repo}");
 
-                var token = core.GetInput("token");
-
-                return (owner, repo, token);
+                return new CustomGitHubClient(client, owner, repo);
             }
             finally
             {
                 core.EndGroup();
             }
-        }
+        });
+
+        return services;
     }
 }
