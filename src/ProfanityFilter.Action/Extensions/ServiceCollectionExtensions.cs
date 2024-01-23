@@ -38,7 +38,6 @@ internal static class ServiceCollectionExtensions
             {
                 core.StartGroup("Initializing context");
 
-                var client = provider.GetRequiredService<GitHubClient>();
                 var context = provider.GetRequiredService<Context>();
 
                 var repository = context.Repo;
