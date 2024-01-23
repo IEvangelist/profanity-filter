@@ -1,19 +1,20 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+
 namespace ProfanityFilter.Services;
 
 internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensorService
 {
-    private static readonly AsyncLazy<HashSet<string>> s_getProfaneWords =
+    private static readonly AsyncLazy<FrozenSet<string>> s_getProfaneWords =
         new(factory: ReadAllProfaneWordsAsync);
 
     /// <summary>
     /// Reads all profane words from embedded resources asynchronously.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that 
-    /// returns a <see cref="HashSet{T}"/> of all profane words.</returns>
-    private static async Task<HashSet<string>> ReadAllProfaneWordsAsync()
+    /// returns a <see cref="FrozenSet{T}"/> of all profane words.</returns>
+    private static async Task<FrozenSet<string>> ReadAllProfaneWordsAsync()
     {
         var fileNames = ProfaneContentReader.GetFileNames();
 
@@ -42,7 +43,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
         var set = allWords.ToHashSet();
 
-        return set;
+        return set.ToFrozenSet();
     }
 
     /// <inheritdoc />

@@ -5,18 +5,23 @@ namespace ProfanityFilter.Services;
 
 internal sealed class ProfaneContentReader
 {
-    private static readonly Lazy<string[]> s_globMatches = new(
-        valueFactory: () =>
-        [
-            ..new Glob(".").GetMatches("Data/*.txt")
-        ]);
+    private static readonly Lazy<GlobOptions> s_globOptions = new(() =>
+    {
+        var builder = new GlobOptionsBuilder()
+            .WithPattern("Data/*.txt");
+
+        return builder.Build();
+    });
 
     /// <summary>
     /// Gets an array of file names that match the profanity content file pattern.
     /// </summary>
     /// <returns>An array of file names.</returns>
     public static string[] GetFileNames() =>
-        s_globMatches.Value;
+        s_globOptions.Value
+            .GetGlobMatches()
+            .Select(static m => m.Path)
+            .ToArray();
 
     /// <summary>
     /// Reads the contents of the embedded resource as a <c>string</c>
