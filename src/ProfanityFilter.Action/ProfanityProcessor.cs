@@ -115,6 +115,11 @@ internal sealed class ProfanityProcessor(
                 Error attempting to get the context:
                   {ex}
                 """);
+        }
+
+        context = null;
+        return false;
+    }
 
     private async Task HandleIssueCommentAsync(long issueCommentId, Label? label)
     {

@@ -10,7 +10,6 @@ internal static class ServiceCollectionExtensions
     {
         services.AddSingleton<ProfanityProcessor>();
         services.AddProfanityFilter();
-        services.AddOctokitServices();
 
         return services;
     }
@@ -18,8 +17,6 @@ internal static class ServiceCollectionExtensions
     private static IServiceCollection AddProfanityFilter(
         this IServiceCollection services)
     {
-        services.AddSingleton<ActionProcessor>();
-
         services.AddProfanityFilterServices();
 
         services.AddGitHubActionsCore();
@@ -44,7 +41,20 @@ internal static class ServiceCollectionExtensions
                 var client = provider.GetRequiredService<GitHubClient>();
                 var context = provider.GetRequiredService<Context>();
 
-            return (repository.Owner, repository.Repo, token);
+                var repository = context.Repo;
+
+                var (owner, repo) = (repository.Owner, repository.Repo);
+
+                core.Info($"Repository: {owner}/{repo}");
+
+                var token = core.GetInput("token");
+
+                return (owner, repo, token);
+            }
+            finally
+            {
+                core.EndGroup();
+            }
         }
     }
 }
