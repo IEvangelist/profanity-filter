@@ -19,6 +19,14 @@ internal sealed class ProfaneContentReader
     /// <returns>An array of file names.</returns>
     public static string[] GetFileNames()
     {
+        var currentDirectory = Directory.GetCurrentDirectory();
+
+        // When running as a GitHub Action, we need to change the current directory.
+        if (currentDirectory is "/github/workspace")
+        {
+            Directory.SetCurrentDirectory("/app");
+        }
+
         // Log the current working directory.
         Console.WriteLine($"Current working directory: {Directory.GetCurrentDirectory()}");
 
@@ -78,13 +86,6 @@ internal sealed class ProfaneContentReader
             Console.WriteLine($"""
                 Unable to read the file contents, either null or empty.
                   {fileName}
-                """);
-        }
-        else
-        {
-            Console.WriteLine($"""
-                File contents: {fileName}
-                {text}
                 """);
         }
 
