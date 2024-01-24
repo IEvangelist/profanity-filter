@@ -17,11 +17,23 @@ internal sealed class ProfaneContentReader
     /// Gets an array of file names that match the profanity content file pattern.
     /// </summary>
     /// <returns>An array of file names.</returns>
-    public static string[] GetFileNames() =>
-        s_globOptions.Value
+    public static string[] GetFileNames()
+    {
+        // Log the current working directory.
+        Console.WriteLine($"Current working directory: {Directory.GetCurrentDirectory()}");
+
+        // Log other files in the current working directory.
+        Console.WriteLine("Files in current working directory:");
+        foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory()))
+        {
+            Console.WriteLine(file);
+        }
+
+        return s_globOptions.Value
             .GetMatchingFileInfos()
             .Select(static file => file.FullName)
             .ToArray();
+    }
 
     /// <summary>
     /// Reads the contents of the embedded resource as a <c>string</c>
