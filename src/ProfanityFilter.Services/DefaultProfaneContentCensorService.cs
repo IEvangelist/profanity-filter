@@ -5,15 +5,15 @@ namespace ProfanityFilter.Services;
 
 internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensorService
 {
-    private static readonly AsyncLazy<FrozenSet<string>> s_getProfaneWords =
+    private static readonly AsyncLazy<IEnumerable<string>> s_getProfaneWords =
         new(factory: ReadAllProfaneWordsAsync);
 
     /// <summary>
     /// Reads all profane words from embedded resources asynchronously.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that 
-    /// returns a <see cref="FrozenSet{T}"/> of all profane words.</returns>
-    private static async Task<FrozenSet<string>> ReadAllProfaneWordsAsync()
+    /// returns a <see cref="IEnumerable{T}"/> of all profane words.</returns>
+    private static async Task<IEnumerable<string>> ReadAllProfaneWordsAsync()
     {
         var fileNames = ProfaneContentReader.GetFileNames();
 
@@ -46,9 +46,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             })
             .ConfigureAwait(false);
 
-        var set = allWords.ToFrozenSet();
-
-        return set.ToFrozenSet();
+        return allWords;
     }
 
     /// <inheritdoc />
@@ -99,20 +97,29 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
     private static async ValueTask<string?> GetProfaneWordListRegexPatternAsync()
     {
-        var wordSet =
+        var wordList =
             await s_getProfaneWords.Task.ConfigureAwait(false);
 
-        if (wordSet.Count is 0)
+        var set = wordList.Distinct().ToFrozenSet();
+
+        //await ValueTask.CompletedTask;
+        //
+        //var wordSet = ProfaneWords.AllSwearWords
+        //    .SelectMany(kvp => kvp.Value.Select(word => Regex.Escape(word)))
+        //    .ToHashSet(StringComparer.OrdinalIgnoreCase)
+        //    .ToFrozenSet();
+
+        if (set.Count is 0)
         {
             Console.WriteLine("Unable to read profane word lists.");
             return null;
         }
         else
         {
-            Console.WriteLine($"Found {wordSet.Count:#,#} profane source words.");
+            Console.WriteLine($"Found {set.Count:#,#} profane source words.");
         }
 
-        var pattern = $"\\b({string.Join('|', wordSet)})\\b";
+        var pattern = $"\\b({string.Join('|', set)})\\b";
 
         return pattern;
     }
