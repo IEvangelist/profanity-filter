@@ -5,23 +5,13 @@ namespace ProfanityFilter.Services;
 
 internal sealed class ProfaneContentReader
 {
-    private static readonly Lazy<GlobOptions> s_globOptions = new(() =>
-    {
-        var builder = new GlobOptionsBuilder()
-            .WithPattern("Data/*.txt");
-
-        return builder.Build();
-    });
+    private static readonly Assembly s_assembly = Assembly.GetCallingAssembly();
 
     /// <summary>
     /// Gets an array of file names that match the profanity content file pattern.
     /// </summary>
     /// <returns>An array of file names.</returns>
-    public static string[] GetFileNames() =>
-        s_globOptions.Value
-            .GetGlobMatches()
-            .Select(static m => m.Path)
-            .ToArray();
+    public static string[] GetFileNames() => s_assembly.GetManifestResourceNames();
 
     /// <summary>
     /// Reads the contents of the embedded resource as a <c>string</c>
@@ -35,31 +25,34 @@ internal sealed class ProfaneContentReader
     public static async ValueTask<string> ReadAsync(
         string fileName, CancellationToken cancellationToken = default)
     {
-        Console.WriteLine($"""
-            Trying to read {fileName}.
-            """);
+        return await ReadResourceAsync(fileName, cancellationToken);
+    }
 
-        if (File.Exists(fileName) is false)
+    private static async Task<string> ReadResourceAsync(
+        string name, CancellationToken cancellationToken)
+    {
+        if (name.EndsWith(".txt") is false)
         {
             Console.WriteLine($"""
-                The {fileName} doesn't exist.
+                Unable to read: '{name}'.
+                The file name must end with '.txt', no attempt was made to read it.
                 """);
 
             return "";
         }
 
-        using var stream = File.OpenRead(fileName);
+        await using var stream = s_assembly.GetManifestResourceStream(name);
 
         if (stream is null)
         {
             Console.WriteLine($"""
-                Unable to open {fileName} stream for reading.
+                Unable to open {name} stream for reading.
                 """);
 
             return "";
         }
 
-        using var reader = new StreamReader(stream);
+        using StreamReader reader = new(stream);
 
         var text = await reader.ReadToEndAsync(cancellationToken)
             .ConfigureAwait(false);
@@ -68,13 +61,13 @@ internal sealed class ProfaneContentReader
         {
             Console.WriteLine($"""
                 Unable to read the file contents, either null or empty.
-                  {fileName}
+                  {name}
                 """);
         }
         else
         {
             Console.WriteLine($"""
-                File contents: {fileName}
+                File contents: {name}
                 {text}
                 """);
         }

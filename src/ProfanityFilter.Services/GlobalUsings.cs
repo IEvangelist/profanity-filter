@@ -3,15 +3,13 @@
 
 global using System.Collections.Concurrent;
 global using System.Collections.Frozen;
+global using System.Reflection;
 global using System.Text;
 global using System.Text.RegularExpressions;
 
 global using Microsoft.Extensions.DependencyInjection;
 
 global using Nito.AsyncEx;
-
-global using Pathological.Globbing.Extensions;
-global using Pathological.Globbing.Options;
 
 global using ProfanityFilter.Services.Extensions;
 

@@ -8,45 +8,39 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\ArabicSwearWords.txt" />
-    <None Remove="Data\BritishSwearWords.txt" />
-    <None Remove="Data\ChineseSwearWords.txt" />
-    <None Remove="Data\FrenchSwearWords.txt" />
-    <None Remove="Data\GermanSwearWords.txt" />
-    <None Remove="Data\GoogleBannedWords.txt" />
-    <None Remove="Data\IndonesianSwearWords.txt" />
-    <None Remove="Data\ItalianSwearWords.txt" />
-    <None Remove="Data\SpanishSwearWords.txt" />
+    <RuntimeHostConfigurationOption 
+        Include="Switch.System.Reflection.Assembly.SimulatedCallingAssembly" 
+        Value="true" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Data\ArabicSwearWords.txt">
+    <EmbeddedResource Include="Data\ArabicSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\BritishSwearWords.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\BritishSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\ChineseSwearWords.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\ChineseSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\FrenchSwearWords.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\FrenchSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\GermanSwearWords.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\GermanSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\GoogleBannedWords.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\GoogleBannedWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\IndonesianSwearWords.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\IndonesianSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\ItalianSwearWords.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\ItalianSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\SpanishSwearWords.txt">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Data\SpanishSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
