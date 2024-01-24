@@ -11,6 +11,9 @@ global using Microsoft.Extensions.DependencyInjection;
 
 global using Nito.AsyncEx;
 
+global using Pathological.Globbing.Extensions;
+global using Pathological.Globbing.Options;
+
 global using ProfanityFilter.Services.Extensions;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo(

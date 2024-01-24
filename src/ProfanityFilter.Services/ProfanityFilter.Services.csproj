@@ -8,39 +8,33 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <RuntimeHostConfigurationOption 
-        Include="Switch.System.Reflection.Assembly.SimulatedCallingAssembly" 
-        Value="true" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Data\ArabicSwearWords.txt">
+    <Content Include="Data\ArabicSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\BritishSwearWords.txt">
+    </Content>
+    <Content Include="Data\BritishSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\ChineseSwearWords.txt">
+    </Content>
+    <Content Include="Data\ChineseSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\FrenchSwearWords.txt">
+    </Content>
+    <Content Include="Data\FrenchSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\GermanSwearWords.txt">
+    </Content>
+    <Content Include="Data\GermanSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\GoogleBannedWords.txt">
+    </Content>
+    <Content Include="Data\GoogleBannedWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\IndonesianSwearWords.txt">
+    </Content>
+    <Content Include="Data\IndonesianSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\ItalianSwearWords.txt">
+    </Content>
+    <Content Include="Data\ItalianSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Data\SpanishSwearWords.txt">
+    </Content>
+    <Content Include="Data\SpanishSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
