@@ -6,7 +6,7 @@ on:
 
 env:
   IMAGE_NAME: ievangelist/profanity-filter
-  BASE_IMAGE: mcr.microsoft.com/dotnet/runtime-deps:8.0-jammy-chiseled-aot
+  BASE_IMAGE: mcr.microsoft.com/dotnet/nightly/runtime-deps:8.0-jammy-chiseled-aot
 
 jobs:
   deploy:
