@@ -39,7 +39,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
+    <PackageReference Include="Pathological.Globbing" />
     <PackageReference Include="Nito.AsyncEx.Coordination" />
   </ItemGroup>
 

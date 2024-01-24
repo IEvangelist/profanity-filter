@@ -5,11 +5,12 @@ namespace ProfanityFilter.Services;
 
 internal sealed class ProfaneContentReader
 {
-    private static readonly Lazy<Matcher> s_matcher = new(() =>
+    private static readonly Lazy<GlobOptions> s_globOptions = new(() =>
     {
-        var matcher = new Matcher();
-        matcher.AddInclude("Data/*.txt");
-        return matcher;
+        var builder = new GlobOptionsBuilder()
+            .WithPattern("Data/*.txt");
+
+        return builder.Build();
     });
 
     /// <summary>
@@ -17,8 +18,9 @@ internal sealed class ProfaneContentReader
     /// </summary>
     /// <returns>An array of file names.</returns>
     public static string[] GetFileNames() =>
-        s_matcher.Value
-            .GetResultsInFullPath(".")
+        s_globOptions.Value
+            .GetMatchingFileInfos()
+            .Select(static file => file.FullName)
             .ToArray();
 
     /// <summary>
@@ -32,12 +34,6 @@ internal sealed class ProfaneContentReader
     /// an empty <c>string</c> is returned.</returns>
     public static async ValueTask<string> ReadAsync(
         string fileName, CancellationToken cancellationToken = default)
-    {
-        return await ReadFileAsync(fileName, cancellationToken);
-    }
-
-    private static async ValueTask<string> ReadFileAsync(
-        string fileName, CancellationToken cancellationToken)
     {
         if (fileName.EndsWith(".txt") is false)
         {

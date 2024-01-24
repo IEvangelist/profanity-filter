@@ -6,7 +6,7 @@ on:
 
 env:
   IMAGE_NAME: ievangelist/profanity-filter
-  BASE_IMAGE: mcr.microsoft.com/dotnet/nightly/runtime-deps:8.0-jammy-chiseled-aot
+  BASE_IMAGE: mcr.microsoft.com/dotnet/runtime-deps:8.0-jammy
 
 jobs:
   deploy:
@@ -17,15 +17,15 @@ jobs:
 
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@main
 
       - name: Get the version
         run: echo "RELEASE_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
-      - uses: actions/setup-dotnet@v3
+      - uses: actions/setup-dotnet@main
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@main
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -43,7 +43,7 @@ jobs:
             -p ContainerRepository=${{ env.IMAGE_NAME }} \
             -bl
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@main
         if: always()
         with:
           name: msbuild.binlog
