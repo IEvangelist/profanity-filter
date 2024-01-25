@@ -50,6 +50,11 @@ internal sealed class ProfanityProcessor(
                 ?? 0L)!;
 
             await handler(numberOrId, summary, label ?? null);
+
+            if (!summary.IsBufferEmpty)
+            {
+                await summary.WriteAsync(new() { Overwrite = true });
+            }
         }
         catch (Exception ex)
         {
@@ -63,18 +68,6 @@ internal sealed class ProfanityProcessor(
             if (success)
             {
                 core.Info("Profanity filter completed successfully.");
-
-                try
-                {
-                    if (!summary.IsBufferEmpty)
-                    {
-                        await summary.WriteAsync(new() { Overwrite = true });
-                    }
-                }
-                catch
-                {
-                }
-
                 Env.Exit(0);
             }
         }

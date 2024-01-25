@@ -8,8 +8,8 @@
   <!-- TFM agnostic -->
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
-    <PackageVersion Include="GitHub.Actions.Core" Version="8.0.5" />
-    <PackageVersion Include="GitHub.Actions.Octokit" Version="8.0.5" />
+    <PackageVersion Include="GitHub.Actions.Core" Version="8.0.6" />
+    <PackageVersion Include="GitHub.Actions.Octokit" Version="8.0.6" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
