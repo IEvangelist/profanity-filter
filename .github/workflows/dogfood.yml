@@ -32,4 +32,4 @@ jobs:
       id: profanity-filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        replacement-type: MiddleAsterisk
+        replacement-type: Emoji

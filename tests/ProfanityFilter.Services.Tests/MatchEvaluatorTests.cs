@@ -6,8 +6,8 @@ namespace ProfanityFilter.Services.Tests;
 public partial class MatchEvaluatorTests
 {
     [Theory]
-    [InlineData("Test", "****")]
-    [InlineData("swear", "*****")]
+    [InlineData("Test", @"\*\*\*\*")]
+    [InlineData("swear", @"\*\*\*\*\*")]
     public void AsteriskEvaluator_Returns_Expected_Result(string input, string expected)
     {
         var regex = TestRegex();
@@ -30,7 +30,7 @@ public partial class MatchEvaluatorTests
         var actual = sut(match);
 
         Assert.NotEqual(input, actual);
-        Assert.True(actual.Length > 0 && actual.Length <= input.Length);
+        Assert.True(actual.Length > 0 && actual.Length <= input.Length * 2 /* escape characters */);
     }
 
     [Fact]
@@ -47,8 +47,8 @@ public partial class MatchEvaluatorTests
     }
 
     [Theory]
-    [InlineData("Test", "T*st")]
-    [InlineData("swear", "sw**r")]
+    [InlineData("Test", @"T\*st")]
+    [InlineData("swear", @"sw\*\*r")]
     public void VowelAsteriskEvaluator_Returns_Expected_Result(string input, string expected)
     {
         var regex = TestRegex();
@@ -61,8 +61,8 @@ public partial class MatchEvaluatorTests
     }
 
     [Theory]
-    [InlineData("Test", "T**t")]
-    [InlineData("swear", "s***r")]
+    [InlineData("Test", @"T\*\*t")]
+    [InlineData("swear", @"s\*\*\*r")]
     public void MiddleAsteriskEvaluator_Returns_Expected_Result(string input, string expected)
     {
         var regex = TestRegex();

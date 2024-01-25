@@ -12,6 +12,8 @@ internal sealed class ProfanityProcessor(
     {
         var success = true;
 
+        Summary summary = new();
+
         try
         {
             if (TryGetContext(out var context) is false)
@@ -287,5 +289,5 @@ internal sealed class ProfanityProcessor(
         core.GetInput("replacement-type") is string value &&
         Enum.TryParse<ReplacementType>(value, out var type)
             ? type
-            : ReplacementType.Asterisk;
+            : ReplacementType.Emoji;
 }

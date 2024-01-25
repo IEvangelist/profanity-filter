@@ -19,28 +19,23 @@ internal sealed class ProfaneContentReader
     /// <returns>An array of file names.</returns>
     public static string[] GetFileNames()
     {
-        var currentDirectory = Directory.GetCurrentDirectory();
-
-        // When running as a GitHub Action, we need to change the current directory.
-        if (currentDirectory is "/github/workspace")
-        {
-            Directory.SetCurrentDirectory("/app");
-        }
-
-        // Log the current working directory.
-        Console.WriteLine($"Current working directory: {Directory.GetCurrentDirectory()}");
-
-        // Log other files in the current working directory.
-        Console.WriteLine("Files in current working directory:");
-        foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory()))
-        {
-            Console.WriteLine(file);
-        }
+        EnsureWorkingDirectory();
 
         return s_globOptions.Value
             .GetMatchingFileInfos()
             .Select(static file => file.FullName)
             .ToArray();
+    }
+
+    private static void EnsureWorkingDirectory()
+    {
+        var currentDirectory = Directory.GetCurrentDirectory();
+
+        // When running as a GitHub Action, we need to be in the /app dir.
+        if (currentDirectory is "/github/workspace")
+        {
+            Directory.SetCurrentDirectory("/app");
+        }
     }
 
     /// <summary>

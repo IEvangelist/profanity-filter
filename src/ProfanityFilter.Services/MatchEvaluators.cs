@@ -14,7 +14,7 @@ internal static class MatchEvaluators
     internal static MatchEvaluator AsteriskEvaluator =
         static (Match match) =>
         {
-            var result = new string('*', match.Length);
+            var result = string.Join("", Enumerable.Repeat("\\*", match.Length));
 
             return result;
         };
@@ -38,7 +38,7 @@ internal static class MatchEvaluators
     internal static MatchEvaluator RandomAsteriskEvaluator =
         static (Match match) =>
         {
-            var result = new string('*', Random.Shared.Next(1, match.Length));
+            var result = string.Join("", Enumerable.Repeat("\\*", Random.Shared.Next(1, match.Length)));
 
             return result;
         };
@@ -52,7 +52,9 @@ internal static class MatchEvaluators
         {
             var value = match.ValueSpan;
 
-            var result = $"{value[0]}{new string('*', match.Length - 2)}{value[^1]}";
+            var middle = string.Join("", Enumerable.Repeat("\\*", match.Length - 2));
+
+            var result = $"{value[0]}{middle}{value[^1]}";
 
             return result;
         };
@@ -83,7 +85,15 @@ internal static class MatchEvaluators
             for (var index = 0; index < match.Length; ++ index)
             {
                 var @char = value[index];
-                result.Append(@char.IsVowel() ? '*' : @char);
+                if (@char.IsVowel())
+                {
+                    result.Append('\\');
+                    result.Append('*');
+                }
+                else
+                {
+                    result.Append(@char);
+                }                
             }
 
             return result.ToString();

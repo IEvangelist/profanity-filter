@@ -30,11 +30,11 @@ public class DefaultProfaneContentCensorServiceTests
     [InlineData(null, null)]
     [InlineData("", "")]
     [InlineData("This is a clean sentence.", "This is a clean sentence.")]
-    [InlineData("This is a sentence with the word crap.", "This is a sentence with the word ****.")]
-    [InlineData("This is a sentence with the word CrAp.", "This is a sentence with the word ****.")]
-    [InlineData("This is a sentence with the word crap and shit.", "This is a sentence with the word **** and ****.")]
-    [InlineData("This is a sentence with the word crap and shit and fuck.", "This is a sentence with the word **** and **** and ****.")]
-    [InlineData("This is a sentence with the word crap and shit and fuck and ass.", "This is a sentence with the word **** and **** and **** and ***.")]
+    [InlineData("This is a sentence with the word crap.", @"This is a sentence with the word \*\*\*\*.")]
+    [InlineData("This is a sentence with the word CrAp.", @"This is a sentence with the word \*\*\*\*.")]
+    [InlineData("This is a sentence with the word crap and shit.", @"This is a sentence with the word \*\*\*\* and \*\*\*\*.")]
+    [InlineData("This is a sentence with the word crap and shit and fuck.", @"This is a sentence with the word \*\*\*\* and \*\*\*\* and \*\*\*\*.")]
+    [InlineData("This is a sentence with the word crap and shit and fuck and ass.", @"This is a sentence with the word \*\*\*\* and \*\*\*\* and \*\*\*\* and \*\*\*.")]
     public async Task CensorProfanityAsync_Returns_Expected_Result(string? input, string? expectedResult)
     {
         // Act
