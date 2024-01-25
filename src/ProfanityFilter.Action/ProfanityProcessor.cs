@@ -296,9 +296,9 @@ internal sealed class ProfanityProcessor(
     }
 
     private static void SummarizeAppliedFilter(
-        string text, string resultingText, ReplacementType replacementType, Summary summary)
+        string text, string filteredText, ReplacementType replacementType, Summary summary)
     {
-        summary.AddHeading("🤬 Profanity filter applied", 4);
+        summary.AddHeading("🤬 Profanity filter applied", 2);
 
         var replacement = replacementType switch
         {
@@ -312,19 +312,29 @@ internal sealed class ProfanityProcessor(
 
         summary.AddRaw($"""
                 The following table details the _original_ text and the resulting
-                text after it was _filtered_ using the configured '{replacement}' type.
+                text after it was _filtered_ using the configured "{replacement}" replacement type.
                 """, true);
 
-        summary.AddRaw($"""
-                For more information, see <a target="_blank" href="https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-types">Profanity Filter: 😵 Replacement types</a>.
-                """);
+        summary.AddNewLine();
+
+        summary.AddTable([
+            new([
+                new("Source", true),
+                new("Values", true),
+            ]),
+            new([
+                new("<b>Original</b>"),
+                new(text),
+            ]),
+            new([
+                new("<b>Filtered</b>"),
+                new(filteredText),
+            ]),
+        ]);
 
         summary.AddRaw($"""
-            |              | Values          |
-            |--------------|-----------------|
-            | **Original** | {text}          |
-            | **Filtered** | {resultingText} |
-            """);
+                For more information on configuring replacement types, see <a target="_blank" href="https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-types">Profanity Filter: 😵 Replacement types</a>.
+                """);
     }
 
     private ReplacementType GetInputReplacementType() =>
