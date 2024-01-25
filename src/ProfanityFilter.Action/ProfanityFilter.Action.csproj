@@ -6,6 +6,7 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <PublishAot>true</PublishAot>
+    <ContainerUser>root</ContainerUser>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
     <NoWarn>NU5104</NoWarn>
