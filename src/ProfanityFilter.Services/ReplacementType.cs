@@ -19,6 +19,11 @@ public enum ReplacementType
     Emoji,
 
     /// <summary>
+    /// Replaces the profanity word with the one of the anger emoji.
+    /// </summary>
+    AngerEmoji,
+
+    /// <summary>
     /// Represents a replacement type where the profanity is replaced 
     /// with a random number of asterisks.
     /// </summary>

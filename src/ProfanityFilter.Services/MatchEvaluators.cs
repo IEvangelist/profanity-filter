@@ -20,6 +20,18 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
+    /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random anger emoji from 
+    /// a predefined list of hand-selected replacements.
+    /// </summary>
+    internal static MatchEvaluator AngerEmojiEvaluator =
+        static (Match match) =>
+        {
+            var emoji = Emoji.AngerEmoji;
+
+            return emoji[Random.Shared.Next(emoji.Length)];
+        };
+
+    /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random emoji from 
     /// a predefined list of hand-selected replacements.
     /// </summary>

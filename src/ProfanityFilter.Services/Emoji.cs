@@ -9,6 +9,17 @@ namespace ProfanityFilter.Services;
 internal static class Emoji
 {
     /// <summary>
+    /// An array of hand-selected anger emoji replacements for profanity words.
+    /// </summary>
+    internal static string[] AngerEmoji =
+    [
+        "🤬",
+        "😡",
+        "👿",
+        "😤"
+    ];
+
+    /// <summary>
     /// An array of hand-selected emoji replacements for profanity words.
     /// </summary>
     internal static string[] HandSelectedReplacements =

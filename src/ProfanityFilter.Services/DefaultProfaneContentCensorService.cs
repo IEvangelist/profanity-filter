@@ -88,6 +88,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             ReplacementType.MiddleAsterisk => MatchEvaluators.MiddleAsteriskEvaluator,
             ReplacementType.MiddleSwearEmoji => MatchEvaluators.MiddleSwearEmojiEvaluator,
             ReplacementType.VowelAsterisk => MatchEvaluators.VowelAsteriskEvaluator,
+            ReplacementType.AngerEmoji => MatchEvaluators.AngerEmojiEvaluator,
 
             _ => MatchEvaluators.EmojiEvaluator,
         };
