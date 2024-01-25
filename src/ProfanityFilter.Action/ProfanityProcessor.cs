@@ -25,7 +25,7 @@ internal sealed class ProfanityProcessor(
             var isIssue = context.Payload?.Issue is not null;
             var isPullRequest = context.Payload?.PullRequest is not null;
 
-            Func<long, Label?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
+            Func<long, Summary, Label?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
             {
                 (true, _, _) => HandleIssueCommentAsync,
                 (_, true, _) => HandleIssueAsync,
@@ -39,7 +39,7 @@ internal sealed class ProfanityProcessor(
             if (label is null && isIssueComment is false)
             {
                 core.Warning("""
-                    The expected label isn't present, a label with the following name is would have been applied if found.
+                    The expected label isn't present, a label with the following name would have been applied if found.
                         'profane content 🤬'
                     """);
             }
@@ -49,7 +49,7 @@ internal sealed class ProfanityProcessor(
                 ?? context.Payload?.PullRequest?.Number
                 ?? 0L)!;
 
-            await handler(numberOrId, label ?? null);
+            await handler(numberOrId, summary, label ?? null);
         }
         catch (Exception ex)
         {
@@ -62,6 +62,11 @@ internal sealed class ProfanityProcessor(
         {
             if (success)
             {
+                if (!summary.IsEmptyBuffer)
+                {
+                    await summary.WriteAsync(new() { Overwrite = true });
+                }
+
                 core.Info("Profanity filter completed successfully.");
                 Env.Exit(0);
             }
@@ -123,7 +128,7 @@ internal sealed class ProfanityProcessor(
         return false;
     }
 
-    private async Task HandleIssueCommentAsync(long issueCommentId, Label? label)
+    private async Task HandleIssueCommentAsync(long issueCommentId, Summary summary, Label? label)
     {
         // We don't apply labels to issue comments, discard it...
         _ = label;
@@ -141,7 +146,8 @@ internal sealed class ProfanityProcessor(
 
             var replacementType = GetInputReplacementType();
 
-            var (text, isFiltered) = await TryApplyFilterAsync(issueComment.Body ?? "", replacementType);
+            var (text, isFiltered) = await TryApplyFilterAsync(
+                issueComment.Body ?? "", replacementType, summary);
 
             if (isFiltered)
             {
@@ -154,7 +160,7 @@ internal sealed class ProfanityProcessor(
         }
     }
 
-    private async Task HandleIssueAsync(long issueNumber, Label? label)
+    private async Task HandleIssueAsync(long issueNumber, Summary summary, Label? label)
     {
         core.StartGroup($"Evaluating issue #{issueNumber} for profanity");
 
@@ -170,7 +176,7 @@ internal sealed class ProfanityProcessor(
             var replacementType = GetInputReplacementType();
 
             var filterResult = await ApplyProfanityFilterAsync(
-                issue.Title ?? "", issue.Body ?? "", replacementType);
+                issue.Title ?? "", issue.Body ?? "", replacementType, summary);
 
             if (filterResult.IsFiltered)
             {
@@ -207,7 +213,7 @@ internal sealed class ProfanityProcessor(
         }
     }
 
-    private async Task HandlePullRequestAsync(long pullRequestNumber, Label? label)
+    private async Task HandlePullRequestAsync(long pullRequestNumber, Summary summary, Label? label)
     {
         core.StartGroup($"Evaluating pull request #{pullRequestNumber} for profanity");
 
@@ -223,7 +229,7 @@ internal sealed class ProfanityProcessor(
             var replacementType = GetInputReplacementType();
 
             var filterResult = await ApplyProfanityFilterAsync(
-                pullRequest.Title ?? "", pullRequest.Body ?? "", replacementType);
+                pullRequest.Title ?? "", pullRequest.Body ?? "", replacementType, summary);
 
             if (filterResult.IsFiltered)
             {
@@ -247,7 +253,7 @@ internal sealed class ProfanityProcessor(
     }
 
     private async ValueTask<FilterResult> ApplyProfanityFilterAsync(
-        string title, string body, ReplacementType replacementType)
+        string title, string body, ReplacementType replacementType, Summary summary)
     {
         if (string.IsNullOrWhiteSpace(title) &&
             string.IsNullOrWhiteSpace(body))
@@ -255,8 +261,10 @@ internal sealed class ProfanityProcessor(
             return FilterResult.NotFiltered;
         }
 
-        var (resultingTitle, isTitleFiltered) = await TryApplyFilterAsync(title, replacementType);
-        var (resultingBody, isBodyFiltered) = await TryApplyFilterAsync(body, replacementType);
+        var (resultingTitle, isTitleFiltered) =
+            await TryApplyFilterAsync(title, replacementType, summary);
+        var (resultingBody, isBodyFiltered) =
+            await TryApplyFilterAsync(body, replacementType, summary);
 
         return new FilterResult(
             resultingTitle,
@@ -266,7 +274,7 @@ internal sealed class ProfanityProcessor(
     }
 
     private async ValueTask<(string text, bool isFiltered)> TryApplyFilterAsync(
-        string text, ReplacementType replacementType)
+        string text, ReplacementType replacementType, Summary summary)
     {
         var filterText = await profaneContentCensor.ContainsProfanityAsync(text);
         var resultingText =
@@ -276,6 +284,8 @@ internal sealed class ProfanityProcessor(
 
         if (filterText)
         {
+            SummarizeAppliedFilter(text, resultingText, replacementType, summary);
+
             core.Info($"""
                 Original text: {text}
                 Filtered text: {resultingText}
@@ -283,6 +293,38 @@ internal sealed class ProfanityProcessor(
         }
 
         return (resultingText, filterText);
+    }
+
+    private static void SummarizeAppliedFilter(
+        string text, string resultingText, ReplacementType replacementType, Summary summary)
+    {
+        summary.AddHeading("🤬 Profanity filter applied", 4);
+
+        var replacement = replacementType switch
+        {
+            ReplacementType.Emoji => "emoji",
+            ReplacementType.MiddleSwearEmoji => "middle swear emoji",
+            ReplacementType.RandomAsterisk => "random asterisk",
+            ReplacementType.MiddleAsterisk => "middle asterisk",
+            ReplacementType.VowelAsterisk => "vowel asterisk",
+            _ => "asterisk",
+        };
+
+        summary.AddRaw($"""
+                The following table details the _original_ text and the resulting
+                text after it was _filtered_ using the configured '{replacement}' type.
+                """, true);
+
+        summary.AddRaw($"""
+                For more information, see <a target="_blank" href="https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-types">Profanity Filter: 😵 Replacement types</a>.
+                """);
+
+        summary.AddRaw($"""
+            |              | Values          |
+            |--------------|-----------------|
+            | **Original** | {text}          |
+            | **Filtered** | {resultingText} |
+            """);
     }
 
     private ReplacementType GetInputReplacementType() =>
