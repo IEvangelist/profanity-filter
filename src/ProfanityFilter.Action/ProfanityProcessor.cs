@@ -311,8 +311,7 @@ internal sealed class ProfanityProcessor(
         };
 
         summary.AddRawMarkdown($"""
-                The following table details the _original_ text and the resulting
-                text after it was _filtered_ using the configured "{replacement}" replacement strategy:
+                The following table details the _original_ text and the resulting text after it was _filtered_ using the configured "{replacement}" replacement strategy:
                 """, true);
 
         List<SummaryTableRow> rows =
@@ -342,6 +341,8 @@ internal sealed class ProfanityProcessor(
             Rows: [..rows]);
 
         summary.AddMarkdownTable(table);
+
+        summary.AddNewLine();
 
         summary.AddRawMarkdown($"""
                 For more information on configuring replacement types, see [Profanity Filter: 😵 Replacement strategies](https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies).
