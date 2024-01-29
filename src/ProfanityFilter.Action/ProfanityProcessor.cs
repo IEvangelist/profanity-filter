@@ -349,8 +349,8 @@ internal sealed class ProfanityProcessor(
     }
 
     private ReplacementStrategy GetInputReplacementStrategy() =>
-        core.GetInput("replacement-type") is string value &&
-        Enum.TryParse<ReplacementStrategy>(value, out var type)
-            ? type
-            : ReplacementStrategy.Emoji;
+        core.GetInput("replacement-strategy") is string value &&
+        Enum.TryParse<ReplacementStrategy>(value, out var strategy)
+            ? strategy
+            : ReplacementStrategy.Asterisk;
 }

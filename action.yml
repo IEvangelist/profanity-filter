@@ -12,9 +12,9 @@ inputs:
     required: true
   replacement-strategy:
     description:
-      'The type of replacement method to use when profane content is filtered. See https://github.com/IEvangelist/profanity-filter#-replacement-strategies.'
+      'The type of replacement strategy to use when profane content is filtered. See https://github.com/IEvangelist/profanity-filter#-replacement-strategies.'
     required: false
-    default: 'Emoji'
+    default: 'Asterisk'
 
 runs:
   using: 'docker'

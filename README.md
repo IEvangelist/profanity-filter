@@ -75,7 +75,7 @@ The following table describes each input:
 | Input | Description | Required |
 |--|--|--|
 | `token` | The GitHub token used to update the issues or pull requests with. Example, `secrets.GITHUB_TOKEN`. | `true` |
-| `replacement-type` | The type of replacement method to use when profane content is filtered. | `false` (default: `Emoji`) |
+| `replacement-strategy` | The type of replacement method to use when profane content is filtered. | `false` (default: `Asterisk`) |
 
 ### 😵 Replacement strategies
 
