@@ -1,19 +1,21 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using ProfanityFilter.Services.Results;
+
 namespace ProfanityFilter.Services;
 
 internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensorService
 {
-    private static readonly AsyncLazy<IEnumerable<string>> s_getProfaneWords =
+    private static readonly AsyncLazy<IEnumerable<KeyValuePair<string, FrozenSet<string>>>> s_getProfaneWords =
         new(factory: ReadAllProfaneWordsAsync);
 
     /// <summary>
     /// Reads all profane words from embedded resources asynchronously.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that 
-    /// returns a <see cref="IEnumerable{T}"/> of all profane words.</returns>
-    private static async Task<IEnumerable<string>> ReadAllProfaneWordsAsync()
+    /// returns a readonly dictionary of all profane words.</returns>
+    private static async Task<IEnumerable<KeyValuePair<string, FrozenSet<string>>>> ReadAllProfaneWordsAsync()
     {
         var fileNames = ProfaneContentReader.GetFileNames();
 
@@ -23,7 +25,9 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             Console.WriteLine(fileName);
         }
 
-        ConcurrentBag<string> allWords = [];
+        ConcurrentDictionary<string, List<string>> allWords = new(
+            fileNames.Select(
+                static fileName => new KeyValuePair<string, List<string>>(fileName, [])));
 
         await Parallel.ForEachAsync(fileNames,
             async (fileName, cancellationToken) =>
@@ -40,13 +44,15 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
 
                         var escapedWord = Regex.Escape(word);
 
-                        allWords.Add(escapedWord);
+                        allWords[fileName].Add(escapedWord);
                     }
                 }
             })
             .ConfigureAwait(false);
 
-        return allWords;
+        return allWords.Select(
+            static kvp =>
+                new KeyValuePair<string, FrozenSet<string>>(kvp.Key, kvp.Value.ToFrozenSet()));
     }
 
     /// <inheritdoc />
@@ -67,33 +73,65 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
     }
 
     /// <inheritdoc />
-    async ValueTask<string> IProfaneContentCensorService.CensorProfanityAsync(string content, ReplacementType replacementType)
+    async ValueTask<CensorResult> IProfaneContentCensorService.CensorProfanityAsync(
+        string content,
+        ReplacementStrategy replacementStrategy)
     {
+        CensorResult result = new(content);
+
         if (string.IsNullOrWhiteSpace(content))
         {
-            return content;
+            return result;
         }
 
-        var pattern = await GetProfaneWordListRegexPatternAsync();
-
-        if (pattern is null)
+        var evaluator = replacementStrategy switch
         {
-            return content;
-        }
-
-        var evaluator = replacementType switch
-        {
-            ReplacementType.Asterisk => MatchEvaluators.AsteriskEvaluator,
-            ReplacementType.RandomAsterisk => MatchEvaluators.RandomAsteriskEvaluator,
-            ReplacementType.MiddleAsterisk => MatchEvaluators.MiddleAsteriskEvaluator,
-            ReplacementType.MiddleSwearEmoji => MatchEvaluators.MiddleSwearEmojiEvaluator,
-            ReplacementType.VowelAsterisk => MatchEvaluators.VowelAsteriskEvaluator,
-            ReplacementType.AngerEmoji => MatchEvaluators.AngerEmojiEvaluator,
+            ReplacementStrategy.Asterisk => MatchEvaluators.AsteriskEvaluator,
+            ReplacementStrategy.RandomAsterisk => MatchEvaluators.RandomAsteriskEvaluator,
+            ReplacementStrategy.MiddleAsterisk => MatchEvaluators.MiddleAsteriskEvaluator,
+            ReplacementStrategy.MiddleSwearEmoji => MatchEvaluators.MiddleSwearEmojiEvaluator,
+            ReplacementStrategy.VowelAsterisk => MatchEvaluators.VowelAsteriskEvaluator,
+            ReplacementStrategy.AngerEmoji => MatchEvaluators.AngerEmojiEvaluator,
 
             _ => MatchEvaluators.EmojiEvaluator,
         };
 
-        return Regex.Replace(content, pattern, evaluator, options: RegexOptions.IgnoreCase);
+        var wordList =
+            await s_getProfaneWords.Task.ConfigureAwait(false);
+
+        var stepContent = content;
+
+        foreach (var (source, set) in wordList)
+        {
+            var pattern = ToWordListRegexPattern(set);
+
+            if (result is { Steps: null } or { Steps.Count: 0 })
+            {
+                result = result with
+                {
+                    Steps = []
+                };
+            }
+
+            CensorStep step = new(stepContent, source);
+
+            var potentiallyReplacedContent =
+                Regex.Replace(stepContent, pattern, evaluator, options: RegexOptions.IgnoreCase);
+
+            if (string.Equals(stepContent, potentiallyReplacedContent, StringComparison.OrdinalIgnoreCase) is false)
+            {
+                stepContent = potentiallyReplacedContent;
+
+                step = step with
+                {
+                    Output = potentiallyReplacedContent
+                };
+            }
+
+            result.Steps.Add(step);
+        }
+
+        return result;
     }
 
     private static async ValueTask<string?> GetProfaneWordListRegexPatternAsync()
@@ -101,19 +139,21 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
         var wordList =
             await s_getProfaneWords.Task.ConfigureAwait(false);
 
-        var set = wordList.Distinct().ToFrozenSet();
+        var set = wordList.SelectMany(
+                static kvp => kvp.Value
+            )
+            .Distinct()
+            .ToFrozenSet();
 
-        //await ValueTask.CompletedTask;
-        //
-        //var wordSet = ProfaneWords.AllSwearWords
-        //    .SelectMany(kvp => kvp.Value.Select(word => Regex.Escape(word)))
-        //    .ToHashSet(StringComparer.OrdinalIgnoreCase)
-        //    .ToFrozenSet();
+        return ToWordListRegexPattern(set);
+    }
 
+    private static string ToWordListRegexPattern(FrozenSet<string> set)
+    {
         if (set.Count is 0)
         {
             Console.WriteLine("Unable to read profane word lists.");
-            return null;
+            return "";
         }
         else
         {

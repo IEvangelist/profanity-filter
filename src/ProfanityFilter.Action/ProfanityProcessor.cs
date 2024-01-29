@@ -1,6 +1,8 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using ProfanityFilter.Services.Results;
+
 namespace ProfanityFilter.Action;
 
 internal sealed class ProfanityProcessor(
@@ -144,7 +146,7 @@ internal sealed class ProfanityProcessor(
                 return;
             }
 
-            var replacementType = GetInputReplacementType();
+            var replacementType = GetInputReplacementStrategy();
 
             var (text, isFiltered) = await TryApplyFilterAsync(
                 issueComment.Body ?? "", replacementType, summary);
@@ -173,7 +175,7 @@ internal sealed class ProfanityProcessor(
                 return;
             }
 
-            var replacementType = GetInputReplacementType();
+            var replacementType = GetInputReplacementStrategy();
 
             var filterResult = await ApplyProfanityFilterAsync(
                 issue.Title ?? "", issue.Body ?? "", replacementType, summary);
@@ -203,8 +205,8 @@ internal sealed class ProfanityProcessor(
 
                 await client.UpdateIssueAsync(issue.Number.GetValueOrDefault(), issueUpdate);
 
-                await client.AddReactionAsync(
-                    issue.Id.GetValueOrDefault(), ReactionContent.Confused);
+                // await client.AddReactionAsync(
+                //     issue.Id.GetValueOrDefault(), ReactionContent.Confused);
             }
         }
         finally
@@ -226,7 +228,7 @@ internal sealed class ProfanityProcessor(
                 return;
             }
 
-            var replacementType = GetInputReplacementType();
+            var replacementType = GetInputReplacementStrategy();
 
             var filterResult = await ApplyProfanityFilterAsync(
                 pullRequest.Title ?? "", pullRequest.Body ?? "", replacementType, summary);
@@ -242,8 +244,8 @@ internal sealed class ProfanityProcessor(
                 await client.UpdatePullRequestAsync(
                     pullRequest.Number.GetValueOrDefault(), issueUpdate, label?.Name);
 
-                await client.AddReactionAsync(
-                    pullRequest.Id.GetValueOrDefault(), ReactionContent.Confused);
+                // await client.AddReactionAsync(
+                //     pullRequest.Id.GetValueOrDefault(), ReactionContent.Confused);
             }
         }
         finally
@@ -253,7 +255,7 @@ internal sealed class ProfanityProcessor(
     }
 
     private async ValueTask<FilterResult> ApplyProfanityFilterAsync(
-        string title, string body, ReplacementType replacementType, Summary summary)
+        string title, string body, ReplacementStrategy replacementStrategy, Summary summary)
     {
         if (string.IsNullOrWhiteSpace(title) &&
             string.IsNullOrWhiteSpace(body))
@@ -262,9 +264,9 @@ internal sealed class ProfanityProcessor(
         }
 
         var (resultingTitle, isTitleFiltered) =
-            await TryApplyFilterAsync(title, replacementType, summary);
+            await TryApplyFilterAsync(title, replacementStrategy, summary);
         var (resultingBody, isBodyFiltered) =
-            await TryApplyFilterAsync(body, replacementType, summary);
+            await TryApplyFilterAsync(body, replacementStrategy, summary);
 
         return new FilterResult(
             resultingTitle,
@@ -274,72 +276,81 @@ internal sealed class ProfanityProcessor(
     }
 
     private async ValueTask<(string text, bool isFiltered)> TryApplyFilterAsync(
-        string text, ReplacementType replacementType, Summary summary)
+        string text, ReplacementStrategy replacementStrategy, Summary summary)
     {
-        var filterText = await profaneContentCensor.ContainsProfanityAsync(text);
-        var resultingText =
-            filterText
-                ? await profaneContentCensor.CensorProfanityAsync(text, replacementType)
-                : text;
+        var result =
+            await profaneContentCensor.CensorProfanityAsync(text, replacementStrategy);
 
-        if (filterText)
+        if (result.IsCensored)
         {
-            SummarizeAppliedFilter(text, resultingText, replacementType, summary);
+            SummarizeAppliedFilter(result, replacementStrategy, summary);
 
             core.Info($"""
                 Original text: {text}
-                Filtered text: {resultingText}
+                Filtered text: {result.FinalOutput}
                 """);
         }
 
-        return (resultingText, filterText);
+        return (result.FinalOutput ?? result.Input, result.IsCensored);
     }
 
     private static void SummarizeAppliedFilter(
-        string text, string filteredText, ReplacementType replacementType, Summary summary)
+        CensorResult result, ReplacementStrategy replacementStrategy, Summary summary)
     {
         summary.AddHeading("🤬 Profanity filter applied", 2);
 
-        var replacement = replacementType switch
+        var replacement = replacementStrategy switch
         {
-            ReplacementType.Emoji => "emoji",
-            ReplacementType.MiddleSwearEmoji => "middle swear emoji",
-            ReplacementType.RandomAsterisk => "random asterisk",
-            ReplacementType.MiddleAsterisk => "middle asterisk",
-            ReplacementType.VowelAsterisk => "vowel asterisk",
+            ReplacementStrategy.Emoji => "emoji",
+            ReplacementStrategy.MiddleSwearEmoji => "middle swear emoji",
+            ReplacementStrategy.RandomAsterisk => "random asterisk",
+            ReplacementStrategy.MiddleAsterisk => "middle asterisk",
+            ReplacementStrategy.VowelAsterisk => "vowel asterisk",
+            ReplacementStrategy.AngerEmoji => "anger emoji",
             _ => "asterisk",
         };
 
-        summary.AddRaw($"""
+        summary.AddRawMarkdown($"""
                 The following table details the _original_ text and the resulting
-                text after it was _filtered_ using the configured "{replacement}" replacement type.
+                text after it was _filtered_ using the configured "{replacement}" replacement strategy:
                 """, true);
 
-        summary.AddNewLine();
+        List<SummaryTableRow> rows =
+        [
+            new SummaryTableRow(Cells: [
+                new(Data: "Original text"),
+                new(Data: result.Input)
+            ]),
+        ];
 
-        summary.AddTable([
-            new([
-                new("Source", true),
-                new("Values", true),
-            ]),
-            new([
-                new("<b>Original</b>"),
-                new(text),
-            ]),
-            new([
-                new("<b>Filtered</b>"),
-                new(filteredText),
-            ]),
-        ]);
+        foreach (var step in result.Steps ?? [])
+        {
+            if (step.IsCensored)
+            {
+                rows.Add(new SummaryTableRow(Cells: [
+                    new(Data: $"After _{step.ProfaneSourceData}_ filter"),
+                    new(Data: step.Output)
+                ]));
+            }
+        }
 
-        summary.AddRaw($"""
-                For more information on configuring replacement types, see <a target="_blank" href="https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-types">Profanity Filter: 😵 Replacement types</a>.
+        var table = new SummaryTable(
+            Heading: new([
+                new("", Alignment: TableColumnAlignment.Right),
+                new("Values", Alignment: TableColumnAlignment.Left),
+            ]),
+            Rows: [..rows]);
+
+        summary.AddMarkdownTable(table);
+
+        summary.AddRawMarkdown($"""
+                For more information on configuring replacement types, see [Profanity Filter: 😵 Replacement strategies](https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies).
                 """);
     }
 
-    private ReplacementType GetInputReplacementType() =>
+    private ReplacementStrategy GetInputReplacementStrategy() =>
         core.GetInput("replacement-type") is string value &&
-        Enum.TryParse<ReplacementType>(value, out var type)
+        Enum.TryParse<ReplacementStrategy>(value, out var type)
             ? type
-            : ReplacementType.Emoji;
+            : ReplacementStrategy.Emoji;
 }

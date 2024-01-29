@@ -4,9 +4,9 @@
 namespace ProfanityFilter.Services;
 
 /// <summary>
-/// Specifies the type of replacement to use for a profanity word.
+/// Specifies the strategy to use when replacing a profane word.
 /// </summary>
-public enum ReplacementType
+public enum ReplacementStrategy
 {
     /// <summary>
     /// Replaces the profanity word with asterisks.

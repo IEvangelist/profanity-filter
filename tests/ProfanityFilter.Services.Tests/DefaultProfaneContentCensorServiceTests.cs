@@ -38,10 +38,10 @@ public class DefaultProfaneContentCensorServiceTests
     public async Task CensorProfanityAsync_Returns_Expected_Result(string? input, string? expectedResult)
     {
         // Act
-        var result = await _sut.CensorProfanityAsync(input!, ReplacementType.Asterisk);
+        var result = await _sut.CensorProfanityAsync(input!, ReplacementStrategy.Asterisk);
 
         // Assert
-        Assert.Equal(expectedResult, result);
+        Assert.Equal(expectedResult, result.FinalOutput ?? input);
     }
 
     [Fact]
@@ -50,9 +50,30 @@ public class DefaultProfaneContentCensorServiceTests
         var input = "This is fucking bullshit!";
 
         // Act
-        var result = await _sut.CensorProfanityAsync(input, ReplacementType.Emoji);
+        var result = await _sut.CensorProfanityAsync(input, ReplacementStrategy.Emoji);
 
         // Assert
-        Assert.NotEqual(input, result);
+        Assert.NotEqual(input, result.FinalOutput);
+    }
+
+    [Fact]
+    public async Task CensorProfanityAsyncWithMiddleAsterisk_ReturnsMultiStep_Result()
+    {
+        var input = "Lots of fucking words like manky and arrusa!";
+
+        // Act
+        var result = await _sut.CensorProfanityAsync(input, ReplacementStrategy.MiddleAsterisk);
+
+        // Assert
+        Assert.True(result.IsCensored);
+        Assert.Equal(@"Lots of f\*\*\*\*\*g words like m\*\*\*y and a\*\*\*\*a!", result.FinalOutput);
+        Assert.Equal(9, result.Steps.Count);
+        Assert.Equal(3, result.Steps.Count(static step => step.IsCensored));
+        Assert.Contains(result.Steps,
+            static step => step.ProfaneSourceData.EndsWith("GoogleBannedWords.txt"));
+        Assert.Contains(result.Steps,
+            static step => step.ProfaneSourceData.EndsWith("BritishSwearWords.txt"));
+        Assert.Contains(result.Steps,
+            static step => step.ProfaneSourceData.EndsWith("ItalianSwearWords.txt"));
     }
 }

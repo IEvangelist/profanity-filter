@@ -1,6 +1,8 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using ProfanityFilter.Services.Results;
+
 namespace ProfanityFilter.Services;
 
 /// <summary>
@@ -20,8 +22,8 @@ public interface IProfaneContentCensorService
     /// Censors any profanity in the specified content.
     /// </summary>
     /// <param name="content">The content to censor.</param>
-    /// <param name="replacementType">The type of replacement to use for censoring.</param>
+    /// <param name="replacementStrategy">The type of replacement to use for censoring.</param>
     /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous 
     /// operation, containing the censored content.</returns>
-    ValueTask<string> CensorProfanityAsync(string content, ReplacementType replacementType);
+    ValueTask<CensorResult> CensorProfanityAsync(string content, ReplacementStrategy replacementStrategy);
 }

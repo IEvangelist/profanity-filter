@@ -12,7 +12,7 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with asterisks.
     /// </summary>
     internal static MatchEvaluator AsteriskEvaluator =
-        static (Match match) =>
+        static (match) =>
         {
             var result = string.Join("", Enumerable.Repeat("\\*", match.Length));
 
@@ -24,7 +24,7 @@ internal static class MatchEvaluators
     /// a predefined list of hand-selected replacements.
     /// </summary>
     internal static MatchEvaluator AngerEmojiEvaluator =
-        static (Match match) =>
+        static (match) =>
         {
             var emoji = Emoji.AngerEmoji;
 
@@ -36,7 +36,7 @@ internal static class MatchEvaluators
     /// a predefined list of hand-selected replacements.
     /// </summary>
     internal static MatchEvaluator EmojiEvaluator =
-        static (Match match) =>
+        static (match) =>
         {
             var emoji = Emoji.HandSelectedReplacements;
 
@@ -48,19 +48,19 @@ internal static class MatchEvaluators
     /// The number of asterisks is between 1 and the length of the matched string.
     /// </summary>
     internal static MatchEvaluator RandomAsteriskEvaluator =
-        static (Match match) =>
+        static (match) =>
         {
             var result = string.Join("", Enumerable.Repeat("\\*", Random.Shared.Next(1, match.Length)));
 
             return result;
         };
-    
+
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces the characters between the first and last 
     /// characters of a match with asterisks.
     /// </summary>
     internal static MatchEvaluator MiddleAsteriskEvaluator =
-        static (Match match) =>
+        static (match) =>
         {
             var value = match.ValueSpan;
 
@@ -75,7 +75,7 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces the middle of a swear word with the 🤬 emoji.
     /// </summary>
     internal static MatchEvaluator MiddleSwearEmojiEvaluator =
-        static (Match match) =>
+        static (match) =>
         {
             var value = match.ValueSpan;
 
@@ -88,13 +88,13 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces vowels in a string with asterisks (*).
     /// </summary>
     internal static MatchEvaluator VowelAsteriskEvaluator =
-        static (Match match) =>
+        static (match) =>
         {
             var value = match.ValueSpan;
 
             var result = new StringBuilder(match.Length);
 
-            for (var index = 0; index < match.Length; ++ index)
+            for (var index = 0; index < match.Length; ++index)
             {
                 var @char = value[index];
                 if (@char.IsVowel())
@@ -105,7 +105,7 @@ internal static class MatchEvaluators
                 else
                 {
                     result.Append(@char);
-                }                
+                }
             }
 
             return result.ToString();

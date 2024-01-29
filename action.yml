@@ -1,5 +1,5 @@
 name: 'Profane content filter'
-description: 'When used on issues or pull requests, will automatically filter out profanity.'
+description: 'When used on issues or pull requests, automatically filters out profanity.'
 
 branding:
   icon: 'filter'
@@ -10,11 +10,11 @@ inputs:
     description:
       'The GitHub token used to update the issues or pull requests with. Example, secrets.GITHUB_TOKEN.'
     required: true
-  replacement-type:
+  replacement-strategy:
     description:
-      'The type of replacement method to use when profane content is filtered. See https://github.com/IEvangelist/profanity-filter#-replacement-types.'
+      'The type of replacement method to use when profane content is filtered. See https://github.com/IEvangelist/profanity-filter#-replacement-strategies.'
     required: false
-    default: 'Asterisk'
+    default: 'Emoji'
 
 runs:
   using: 'docker'

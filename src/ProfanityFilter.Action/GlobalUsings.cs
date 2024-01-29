@@ -6,6 +6,8 @@ global using System.Diagnostics.CodeAnalysis;
 global using Actions.Core.Extensions;
 global using Actions.Core.Summaries;
 global using Actions.Core.Services;
+global using Actions.Core.Markdown;
+
 global using Actions.Octokit;
 global using Actions.Octokit.Extensions;
 

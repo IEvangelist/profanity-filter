@@ -49,37 +49,39 @@ jobs:
       id: profanity-filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        replacement-type: Emoji # See Replacement types
+        replacement-strategy: Emoji # See Replacement strategy
 ```
 
 If you already have an existing workflow that is triggered `on/issues|pull_request/types/opened|edited|reopened` feel free to simply add a step to the existing job:
 
 ```yml
 - name: Scan issue or pull request for profanity
+  # Conditionally run the step if the actor isn't a bot
   if: ${{ github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]' }}
+  # Use the profanity filter action
   uses: IEvangelist/profanity-filter@main
   id: profanity-filter
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
-    replacement-type: Emoji # See Replacement types
+    replacement-strategy: Emoji # See Replacement strategy
 ```
 
 ## 👀 Inputs
 
-This action has two inputs, `token` and `replacement-type`. Only the `token` is required, and the `replacement-type` defaults to `Asterisk` when not specified.
+This action has two inputs, `token` and `replacement-strategy`. Only the `token` is required, and the `replacement-strategy` defaults to `Emoji` when not specified.
 
 The following table describes each input:
 
 | Input | Description | Required |
 |--|--|--|
 | `token` | The GitHub token used to update the issues or pull requests with. Example, `secrets.GITHUB_TOKEN`. | `true` |
-| `replacement-type` | The type of replacement method to use when profane content is filtered. Valid values are, `Asterisk` or `Emoji`. | `false` (default: `Asterisk`) |
+| `replacement-type` | The type of replacement method to use when profane content is filtered. | `false` (default: `Emoji`) |
 
-### 😵 Replacement types
+### 😵 Replacement strategies
 
-Each replacement type corresponds to a different way of replacing profane content. The following represents the available replacement types:
+Each replacement strategy corresponds to a different way of replacing profane content. The following represents the available replacement types:
 
-| `ReplacementType` | Valid string value | Description |
+| `ReplacementStrategy` | Valid string value | Description |
 | --- | --- | --- |
 | `ReplacementType.Asterisk` | `"Asterisk"` | Replaces profane content with asterisks. For example, a swear word with four letters would look like this `****`. |
 | `ReplacementType.Emoji` | `"Emoji"` | Replaces profane content with a random emoji. For example, a swear word with four letters could look like this `💩`. |
@@ -97,6 +99,7 @@ This action will look for a label with the following verbatim name `"profane con
 
 When profane content is detected, the action will update the issue or pull request by:
 
-- replacing any found profane content with the configured replacement type
-- reacting to the issue or pull request with the [confused 😕 reaction](https://docs.github.com/rest/reactions/reactions)
-- and conditionally applying the `profane content 🤬` label if found in the repository.
+- Replacing any found profane content with the configured replacement strategy.
+- ~~Reacting to the issue or pull request with the [confused 😕 reaction](https://docs.github.com/rest/reactions/reactions).~~
+- Conditionally applying the `profane content 🤬` label if found in the repository.
+- Reporting the profane content in the workflow summary as a detailed table.

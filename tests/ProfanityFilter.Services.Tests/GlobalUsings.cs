@@ -6,5 +6,6 @@ global using System.Text.RegularExpressions;
 global using Microsoft.Extensions.DependencyInjection;
 
 global using ProfanityFilter.Services.Extensions;
+global using ProfanityFilter.Services.Results;
 
 global using Xunit;
