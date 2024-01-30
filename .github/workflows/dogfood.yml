@@ -18,6 +18,9 @@ jobs:
     name: Apply profanity filter
     runs-on: ubuntu-latest
     permissions:
+      # If the profane content label 
+      # doesn't exist, this is required to create it.
+      contents: write
       issues: write
       pull-requests: write
 
