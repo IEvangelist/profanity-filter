@@ -37,7 +37,9 @@ internal sealed class ProfanityProcessor(
                     "The profanity filter GitHub Action only works with issues or pull requests.")
             };
 
-            var label = isIssueComment ? null : await client.GetLabelAsync();
+            var label = isIssueComment
+                ? null
+                : await client.GetLabelAsync() ?? await client.CreateLabelAsync();
             if (label is null && isIssueComment is false)
             {
                 core.Warning("""
