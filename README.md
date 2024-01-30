@@ -120,13 +120,15 @@ When profane content is detected, the action will update the issue or pull reque
 - Conditionally applying the `profane content 🤬` label if found in the repository.
 - Reporting the profane content in the workflow summary as a detailed table.
 
+Consider the following diagram, that represents the workflow of this GitHub action:
+
 ```mermaid
 flowchart TD
-    A(fab:fa-github Issue or Pull Request)
-      --> B[fas:fa-bolt Contains Profane Content?]
-    B -->|YES| C(fa:fa-filter Apply Filter)
-      --> E(fas:fa-question-circle &quot;Bad words become&quot;)
-      --> F(fas:fa-exclamation-circle &quot;Bad w\*\*\*s become&quot;)
-      --o G[fa:fa-save Job Summary]
-    B --o|NO| D{{fa:fa-stop Stop}} ~~~A
+    A(Issue or Pull Request)
+      --> B[Contains Profane Content?]
+    B -->|YES| C(Apply Filter)
+      --> E(Bad words become)
+      --> F(Filtered w\*\*\*s...)
+      --o G[Job Summary]
+    B --o|NO| D{{Stop}} ~~~A
 ```
