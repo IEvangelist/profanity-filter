@@ -20,6 +20,18 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
+    /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random emoji from 
+    /// a predefined list of hand-selected replacements.
+    /// </summary>
+    internal static MatchEvaluator EmojiEvaluator =
+        static (match) =>
+        {
+            var emoji = Emoji.HandSelectedReplacements;
+
+            return emoji[Random.Shared.Next(emoji.Length)];
+        };
+
+    /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random anger emoji from 
     /// a predefined list of hand-selected replacements.
     /// </summary>
@@ -32,15 +44,16 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
-    /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random emoji from 
-    /// a predefined list of hand-selected replacements.
+    /// A <see cref="MatchEvaluator"/> that replaces the everythingAfterFirstLetter of a swear word with the 🤬 emoji.
     /// </summary>
-    internal static MatchEvaluator EmojiEvaluator =
+    internal static MatchEvaluator MiddleSwearEmojiEvaluator =
         static (match) =>
         {
-            var emoji = Emoji.HandSelectedReplacements;
+            var value = match.ValueSpan;
 
-            return emoji[Random.Shared.Next(emoji.Length)];
+            var result = $"{value[0]}🤬{value[^1]}";
+
+            return result;
         };
 
     /// <summary>
@@ -72,14 +85,16 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
-    /// A <see cref="MatchEvaluator"/> that replaces the middle of a swear word with the 🤬 emoji.
+    /// A <see cref="MatchEvaluator"/> that replaces everything after the first letter in a string with asterisks (*).
     /// </summary>
-    internal static MatchEvaluator MiddleSwearEmojiEvaluator =
+    internal static MatchEvaluator FirstLetterThenAsteriskEvaluator =
         static (match) =>
         {
             var value = match.ValueSpan;
 
-            var result = $"{value[0]}🤬{value[^1]}";
+            var everythingAfterFirstLetter = string.Join("", Enumerable.Repeat("\\*", match.Length - 1));
+
+            var result = $"{value[0]}{everythingAfterFirstLetter}";
 
             return result;
         };

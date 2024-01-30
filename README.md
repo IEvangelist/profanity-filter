@@ -2,11 +2,14 @@
 
 [![.NET](https://github.com/IEvangelist/profanity-filter/actions/workflows/dotnet.yml/badge.svg)](https://github.com/IEvangelist/profanity-filter/actions/workflows/dotnet.yml) [![Dogfood](https://github.com/IEvangelist/profanity-filter/actions/workflows/dogfood.yml/badge.svg)](https://github.com/IEvangelist/profanity-filter/actions/workflows/dogfood.yml)
 
-The GitHub Action: Profane content filter maintains over 4,970 swear words from nine different languages. For a list of all supported languages and swear words, [see the data directory](https://github.com/IEvangelist/profanity-filter/tree/main/src/ProfanityFilter.Services/Data). This tool can be used to scan issues and pull requests for profanity. It can be configured to replace any profane content with either asterisks or emojis. This action can be useful for maintaining a professional and respectful environment in your GitHub repository.
+The GitHub Action: Profane content filter maintains over 4,900 swear words from nine different languages. For a list of all supported languages and swear words, [see the data directory](https://github.com/IEvangelist/profanity-filter/tree/main/src/ProfanityFilter.Services/Data) raw newline-delimited text files with each corresponding language's alphabetically sorted swear word list. This tool is used to scan issues, pull requests and comments in either for profanity. It can be configured to replace any profane content with a [strategy](#-replacement-strategies) and renders a complete job summary for tracking profanity filter results. This action can be useful for maintaining a professional and respectful environment in your GitHub repository.
 
 ## ⁉️ Why
 
-But why is this important? Let's be honest, not everyone who creates issues or pull requests use appropriate language (it's not always rainbows and ponies, am I right?) With this action in your repositories GitHub workflow, it can be 🌈 and 🐎.
+But why is this important?
+
+> [!TIP]
+> Let's be honest, not everyone who creates issues or pull requests use appropriate language (it's not always rainbows and ponies, am I right?) With this action in your repositories GitHub workflow, it can be 🌈 and 🐎.
 
 ## 🤓 Usage
 
@@ -49,6 +52,7 @@ jobs:
       id: profanity-filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        # See https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies
         replacement-strategy: Emoji # See Replacement strategy
 ```
 
@@ -63,18 +67,22 @@ If you already have an existing workflow that is triggered `on/issues|pull_reque
   id: profanity-filter
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
-    replacement-strategy: Emoji # See Replacement strategy
+    # See https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies
+    replacement-strategy: FirstLetterThenAsterisk
 ```
+
+> [!IMPORTANT]
+> You'll still need to ensure that the existing GitHub workflow has the appropriate `permissions`, with `issues: write` and `pull-requests: write` such that the profanity filter's `${{ secrets.GITHUB_TOKEN }}` will be capable of applying filters.
 
 ## 👀 Inputs
 
-This action has two inputs, `token` and `replacement-strategy`. Only the `token` is required, and the `replacement-strategy` defaults to `Emoji` when not specified.
+This action has two inputs, `token` and `replacement-strategy`. Only the `token` is required, and the `replacement-strategy` defaults to `FirstLetterAsterisk` when not specified.
 
 The following table describes each input:
 
 | Input | Description | Required |
 |--|--|--|
-| `token` | The GitHub token used to update the issues or pull requests with. Example, `secrets.GITHUB_TOKEN`. | `true` |
+| `token` | The GitHub token used to update the issues or pull requests with. Example, `${{ secrets.GITHUB_TOKEN }}`. | `true` |
 | `replacement-strategy` | The type of replacement method to use when profane content is filtered. | `false` (default: `Asterisk`) |
 
 ### 😵 Replacement strategies
@@ -83,13 +91,16 @@ Each replacement strategy corresponds to a different way of replacing profane co
 
 | `ReplacementStrategy` | Valid string value | Description |
 | --- | --- | --- |
-| `ReplacementType.Asterisk` | `"Asterisk"` | Replaces profane content with asterisks. For example, a swear word with four letters would look like this `****`. |
+| `ReplacementType.Asterisk` | `"Asterisk"` | Replaces profane content with asterisks. For example, a swear word with four letters would look like this `\*\*\*\*`. |
 | `ReplacementType.Emoji` | `"Emoji"` | Replaces profane content with a random emoji. For example, a swear word with four letters could look like this `💩`. |
 | `ReplacementType.AngerEmoji` | `"AngerEmoji"` | Replaces profane content with a random anger emoji. For example, a swear word it might `😡`. |
-| `ReplacementType.RandomAsterisk` | `"RandomAsterisk"` | Replaces profane content with a random number of asterisks. For example, a swear word with four letters could look like any value between `*` and `****`. |
-| `ReplacementType.MiddleAsterisk` | `"MiddleAsterisk"` | Replaces profane content with asterisks, but only in the middle of the word. For example, a swear word with four letters could look like this `f**k`. |
 | `ReplacementType.MiddleSwearEmoji` | `"MiddleSwearEmoji"` | Replaces profane content with a random swear emoji, but only in the middle of the word. For example, a swear word with four letters could look like this `f🤬k`. |
-| `ReplacementType.VowelAsterisk` | `"VowelAsterisk"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh*t`. |
+| `ReplacementType.RandomAsterisk` | `"RandomAsterisk"` | Replaces profane content with a random number of asterisks. For example, a swear word with four letters could look like any value between `\*` and `\*\*\*\*`. |
+| `ReplacementType.FirstLetterThenAsterisk` | `"FirstLetterThenAsterisk"` | Replaces profane content with asterisks after the first letter. For example, a swear word with four letters could look like this `f\*\*\*`. |
+| `ReplacementType.VowelAsterisk` | `"VowelAsterisk"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh\*t`. |
+
+> [!TIP]
+> All asterisk replacement strategies are escaped with a backslash `\` to prevent markdown from rendering the asterisks as bold text. No need for you the escape these values yourself.
 
 ## 🏷️ Label requirements
 
@@ -103,3 +114,14 @@ When profane content is detected, the action will update the issue or pull reque
 - ~~Reacting to the issue or pull request with the [confused 😕 reaction](https://docs.github.com/rest/reactions/reactions).~~
 - Conditionally applying the `profane content 🤬` label if found in the repository.
 - Reporting the profane content in the workflow summary as a detailed table.
+
+```mermaid
+flowchart TD
+    A(fab:fa-github Issue or Pull Request)
+      --> IsBad[fas:fa-bolt Contains Profane Content?]
+    IsBad -->|Yes| C(fa:fa-filter Apply Filter)
+      --> E(&quot;Bad words become&quot;)
+      --> F(&quot;Bad w\*\*\*s become&quot;)
+      --> G[(Job Summary Written)]
+    IsBad -->|No| D{{Reset}} -->A
+```
