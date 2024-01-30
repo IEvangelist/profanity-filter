@@ -39,8 +39,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Pathological.Globbing" />
-    <PackageReference Include="Nito.AsyncEx.Coordination" />
   </ItemGroup>
 
 </Project>

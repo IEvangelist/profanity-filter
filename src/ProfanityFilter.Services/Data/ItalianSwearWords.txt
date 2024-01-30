@@ -86,8 +86,8 @@ cagna
 cammello
 canacciodidio
 canagliadidio
-caned'allah
-caned'eva
+caned['|‘|’]allah
+caned['|‘|’]eva
 canedidio
 cappella
 carciofo
@@ -120,7 +120,7 @@ cazzute
 cazzuti
 cazzutissimo
 cazzuto
-ce l’hai piccolo
+ce l['|‘|’]hai piccolo
 ce un cibirut
 cesso
 che cavolo
@@ -182,7 +182,7 @@ cozzo
 credoana
 cretinetti
 cretino
-cristod'undio
+cristod['|‘|’]undio
 cristodecapitato
 cristoincroce
 culattina
@@ -200,7 +200,7 @@ dietaabc
 dietaana
 dietaanabootcamp
 dietabootcamp
-dietadell'abc
+dietadell['|‘|’]abc
 dio bastardo
 dio boia
 dio cane
@@ -375,7 +375,7 @@ gesùzozzo
 gnocca
 gnocche
 goldone
-gran’ disgraziato
+gran['|‘|’] disgraziato
 grilletto
 guanto
 guardone
@@ -399,8 +399,8 @@ inculate
 infrociato
 ingoio
 intro culo di mammata
-ir budello di tu ma’
-l'arte bolognese
+ir budello di tu ma['|‘|’]
+l['|‘|’]arte bolognese
 latrin
 leccacazzi
 leccaculi
@@ -420,7 +420,7 @@ loffare
 lui è proprio un bischero
 lui è un coglione
 lumaca
-ma’ va te ne a fanculo
+ma['|‘|’] va te ne a fanculo
 Madonna
 Madonna avvelenata
 Madonna bastarda
@@ -466,7 +466,7 @@ mannaggiadio
 mannaggiailbattesimo
 mannaggiailclero
 mannaggiaisanti
-mannaggial'arcangelo
+mannaggial['|‘|’]arcangelo
 mannaggialabibbia
 mannaggialadiocesi
 mannaggialamadonna
@@ -797,18 +797,18 @@ troione
 trombare
 trombata
 trombatona
-tu ma’ piscia in piedi
+tu ma['|‘|’] piscia in piedi
 tu piezza di merda
 tua mamma bocchinara
 uccello
 un pompino
-va’ a cacare
-va’ a farti fottere
+va['|‘|’] a cacare
+va['|‘|’] a farti fottere
 vacca
 vaccamadonna
 vada a bordo
 vaffanculo
-vaffanculo a chi t'è morto
+vaffanculo a chi t['|‘|’]è morto
 vaffonculo
 vai a cacare
 vai a cagare
@@ -816,7 +816,7 @@ vai a farti fottere
 vai a farti fottere, puttana
 vai a quel paese
 Vai a vendere il culo
-vai all’inferno
+vai all['|‘|’]inferno
 vangare
 vattela a pigliare in culo
 venire

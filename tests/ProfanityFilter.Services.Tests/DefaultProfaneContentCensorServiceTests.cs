@@ -7,7 +7,8 @@ public class DefaultProfaneContentCensorServiceTests
 {
     private readonly IProfaneContentCensorService _sut;
 
-    public DefaultProfaneContentCensorServiceTests() => _sut = new DefaultProfaneContentCensorService();
+    public DefaultProfaneContentCensorServiceTests() => _sut = new DefaultProfaneContentCensorService(
+        new MemoryCache(Options.Create<MemoryCacheOptions>(new())));
 
     [Theory]
     [InlineData(null, false)]
@@ -66,9 +67,12 @@ public class DefaultProfaneContentCensorServiceTests
 
         // Assert
         Assert.True(result.IsCensored);
+
         Assert.Equal(@"Lots of f\*\*\*\*\*g words like m\*\*\*y and a\*\*\*\*a!", result.FinalOutput);
+
         Assert.Equal(9, result.Steps.Count);
         Assert.Equal(3, result.Steps.Count(static step => step.IsCensored));
+
         Assert.Contains(result.Steps,
             static step => step.ProfaneSourceData.EndsWith("GoogleBannedWords.txt"));
         Assert.Contains(result.Steps,

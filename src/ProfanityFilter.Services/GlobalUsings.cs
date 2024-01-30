@@ -8,13 +8,13 @@ global using System.Text;
 global using System.Text.RegularExpressions;
 
 global using Microsoft.Extensions.DependencyInjection;
-
-global using Nito.AsyncEx;
+global using Microsoft.Extensions.Caching.Memory;
 
 global using Pathological.Globbing.Extensions;
 global using Pathological.Globbing.Options;
 
 global using ProfanityFilter.Services.Extensions;
+global using ProfanityFilter.Services.Results;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo(
     assemblyName: "ProfanityFilter.Services.Tests")]

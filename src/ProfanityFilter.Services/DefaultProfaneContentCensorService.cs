@@ -1,58 +1,58 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using ProfanityFilter.Services.Results;
-
 namespace ProfanityFilter.Services;
 
-internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensorService
+internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : IProfaneContentCensorService
 {
-    private static readonly AsyncLazy<IEnumerable<KeyValuePair<string, FrozenSet<string>>>> s_getProfaneWords =
-        new(factory: ReadAllProfaneWordsAsync);
+    private const string ProfaneListKey = nameof(ProfaneListKey);
 
     /// <summary>
-    /// Reads all profane words from embedded resources asynchronously.
+    /// Reads all profane words from their respective sources asynchronously.
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that 
     /// returns a readonly dictionary of all profane words.</returns>
-    private static async Task<IEnumerable<KeyValuePair<string, FrozenSet<string>>>> ReadAllProfaneWordsAsync()
+    private async Task<IEnumerable<KeyValuePair<string, FrozenSet<string>>>> ReadAllProfaneWordsAsync()
     {
-        var fileNames = ProfaneContentReader.GetFileNames();
-
-        Console.WriteLine("Source word list for profane content:");
-        foreach (var fileName in fileNames)
+        return await cache.GetOrCreateAsync(ProfaneListKey, static async entry =>
         {
-            Console.WriteLine(fileName);
-        }
+            var fileNames = ProfaneContentReader.GetFileNames();
 
-        ConcurrentDictionary<string, List<string>> allWords = new(
-            fileNames.Select(
-                static fileName => new KeyValuePair<string, List<string>>(fileName, [])));
-
-        await Parallel.ForEachAsync(fileNames,
-            async (fileName, cancellationToken) =>
+            Console.WriteLine("Source word list for profane content:");
+            foreach (var fileName in fileNames)
             {
-                var content = await ProfaneContentReader.ReadAsync(
-                    fileName, cancellationToken);
+                Console.WriteLine(fileName);
+            }
 
-                if (string.IsNullOrWhiteSpace(content) is false)
+            ConcurrentDictionary<string, List<string>> allWords = new(
+                fileNames.Select(
+                    static fileName => new KeyValuePair<string, List<string>>(fileName, [])));
+
+            await Parallel.ForEachAsync(fileNames,
+                async (fileName, cancellationToken) =>
                 {
-                    var words = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
-                    for (var index = 0; index < words.Length; ++index)
+                    var content = await ProfaneContentReader.ReadAsync(
+                        fileName, cancellationToken);
+
+                    if (string.IsNullOrWhiteSpace(content) is false)
                     {
-                        var word = words[index];
+                        var words = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                        for (var index = 0; index < words.Length; ++index)
+                        {
+                            var word = words[index];
 
-                        var escapedWord = Regex.Escape(word);
+                            var escapedWord = Regex.Escape(word);
 
-                        allWords[fileName].Add(escapedWord);
+                            allWords[fileName].Add(escapedWord);
+                        }
                     }
-                }
-            })
-            .ConfigureAwait(false);
+                })
+                .ConfigureAwait(false);
 
-        return allWords.Select(
-            static kvp =>
-                new KeyValuePair<string, FrozenSet<string>>(kvp.Key, kvp.Value.ToFrozenSet()));
+            return allWords.Select(
+                static kvp =>
+                    new KeyValuePair<string, FrozenSet<string>>(kvp.Key, kvp.Value.ToFrozenSet()));
+        }) ?? [];        
     }
 
     /// <inheritdoc />
@@ -97,7 +97,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
         };
 
         var wordList =
-            await s_getProfaneWords.Task.ConfigureAwait(false);
+            await ReadAllProfaneWordsAsync().ConfigureAwait(false);
 
         var stepContent = content;
 
@@ -118,7 +118,7 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
             var potentiallyReplacedContent =
                 Regex.Replace(stepContent, pattern, evaluator, options: RegexOptions.IgnoreCase);
 
-            if (string.Equals(stepContent, potentiallyReplacedContent, StringComparison.OrdinalIgnoreCase) is false)
+            if (stepContent != potentiallyReplacedContent)
             {
                 stepContent = potentiallyReplacedContent;
 
@@ -134,10 +134,10 @@ internal sealed class DefaultProfaneContentCensorService : IProfaneContentCensor
         return result;
     }
 
-    private static async ValueTask<string?> GetProfaneWordListRegexPatternAsync()
+    private async ValueTask<string?> GetProfaneWordListRegexPatternAsync()
     {
         var wordList =
-            await s_getProfaneWords.Task.ConfigureAwait(false);
+            await ReadAllProfaneWordsAsync().ConfigureAwait(false);
 
         var set = wordList.SelectMany(
                 static kvp => kvp.Value

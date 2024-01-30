@@ -1,6 +1,6 @@
 abruti
 aller se faire foutre
-allez, va t’en
+allez, va t['|‘|’]en
 amène ta mère pourque je te refasse
 avale mes couilles
 bachie coupe
@@ -32,18 +32,18 @@ branleuse
 brouter le cresson
 broutte-minou
 brûle en enfer
-brûle en l'enfer
-c'est des conneries
-c’est chiant
-c’est des conneries
-c’est le bordel ici
-c’est naze
-c’est quoi ce bordel
-c’est vraiment de ta faute
+brûle en l['|‘|’]enfer
+c['|‘|’]est des conneries
+c['|‘|’]est chiant
+c['|‘|’]est des conneries
+c['|‘|’]est le bordel ici
+c['|‘|’]est naze
+c['|‘|’]est quoi ce bordel
+c['|‘|’]est vraiment de ta faute
 ça casse les couilles
 ça craint
 ça fait shier
-ça m'emmerde
+ça m['|‘|’]emmerde
 ça me casse les couilles
 ça me fait chier
 ça me saoûle
@@ -60,8 +60,8 @@ casse-toi, idiot
 casse-toi, idiote
 casser les couilles
 cave
-ce putain d’embouteillage
-ce putain d’ordinateur
+ce putain d['|‘|’]embouteillage
+ce putain d['|‘|’]ordinateur
 cela me soûle
 charogne
 chatte
@@ -157,37 +157,37 @@ il est stupide
 il fait chaud ici, enculé
 il me fait chier
 imbécile
-j'en ai marre
-j'en ai plus rien à foutre
-j'en ai ral le bol
-j'en ai ral le cul
-j'en ai rien à cirer
-j'en ai rien à foutre
-j’ai baisé ta mère
-j’ai envie de chier
-j’en ai marre
-j’en ai plus rien à foutre
-j’en ai ral le bol
-j’en ai ral le cul
-j’en ai ras le bol
-j’en ai rien à cirer
-je m'en fiche
-je m'en fou
-je m'en fous
-je m'en sacre
-je m’emmerde
-Je m’en bats les couilles
-je m’en fiche
-je m’en fou
-je m’en fous
+j['|‘|’]en ai marre
+j['|‘|’]en ai plus rien à foutre
+j['|‘|’]en ai ral le bol
+j['|‘|’]en ai ral le cul
+j['|‘|’]en ai rien à cirer
+j['|‘|’]en ai rien à foutre
+j['|‘|’]ai baisé ta mère
+j['|‘|’]ai envie de chier
+j['|‘|’]en ai marre
+j['|‘|’]en ai plus rien à foutre
+j['|‘|’]en ai ral le bol
+j['|‘|’]en ai ral le cul
+j['|‘|’]en ai ras le bol
+j['|‘|’]en ai rien à cirer
+je m['|‘|’]en fiche
+je m['|‘|’]en fou
+je m['|‘|’]en fous
+je m['|‘|’]en sacre
+je m['|‘|’]emmerde
+Je m['|‘|’]en bats les couilles
+je m['|‘|’]en fiche
+je m['|‘|’]en fou
+je m['|‘|’]en fous
 je me fais chier
 je me fais chier ici
 je pis dans ta bouche
-je t'emmerde
-je t'encule
+je t['|‘|’]emmerde
+je t['|‘|’]encule
 je te déteste
 je te nique ta race sale fils de chien
-je veux faire l’amour avec toi
+je veux faire l['|‘|’]amour avec toi
 jouir
 la chatte
 la meme chose a toi
@@ -262,9 +262,9 @@ putain
 putain de bordel de merde
 putain de merde
 putain de temps
-putain t’es moche
+putain t['|‘|’]es moche
 pute
-qu’est-ce que tu branles
+qu['|‘|’]est-ce que tu branles
 quel bordel
 quel salaud
 queue
@@ -273,8 +273,8 @@ ramoner
 retourne enculer
 rien à branler
 rien à foutre
-s’en branler
-s’en foutre
+s['|‘|’]en branler
+s['|‘|’]en foutre
 sa mère
 sa mère la pute
 sa race
@@ -293,15 +293,15 @@ se taire
 stupide
 suce
 suceuse
-t'as pas de couilles
-t'es rien qu'un petit connard
-t'es un salaud
-t’as intérêt ne pas m’énervé
-t’as pas de couilles
-t’es débile
-t’es rien qu’un petit connard
-t’es un salaud
-t’es vraiment emmerdant, toi
+t['|‘|’]as pas de couilles
+t['|‘|’]es rien qu['|‘|’]un petit connard
+t['|‘|’]es un salaud
+t['|‘|’]as intérêt ne pas m['|‘|’]énervé
+t['|‘|’]as pas de couilles
+t['|‘|’]es débile
+t['|‘|’]es rien qu['|‘|’]un petit connard
+t['|‘|’]es un salaud
+t['|‘|’]es vraiment emmerdant, toi
 ta gueule
 ta mère elle suce des ours
 ta mere est francaise
@@ -329,13 +329,13 @@ trique
 troncher
 trou de cul
 trou du cul
-tu commence m’enmerder
+tu commence m['|‘|’]enmerder
 tu es con
 tu es très stupide
 tu es un putain
 tu et un ane
 tu fais chier
-tu m'emmerdes
+tu m['|‘|’]emmerdes
 tu me fais chier
 tu me fatigues
 tu me gonfles

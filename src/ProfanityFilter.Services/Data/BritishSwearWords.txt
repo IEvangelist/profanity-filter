@@ -13,7 +13,7 @@ bint
 bitch
 blighter
 blimey
-blimey o'reilly
+blimey o['|‘|’]reilly
 bloodclaat
 bloody
 bloody hell
@@ -72,11 +72,10 @@ goddam
 gorblimey
 gordon bennett
 gormless
-he’s a knob
+he['|‘|’]s a knob
 hell
-
 hobknocker
-I'd rather snort my own cum
+I['|‘|’]d rather snort my own cum
 jesus christ
 jizz
 knob
@@ -84,7 +83,7 @@ knobber
 knobend
 knobhead
 ligger
-like fucking a dying man's handshake
+like fucking a dying man['|‘|’]s handshake
 mad as a hatter
 manky
 minge
