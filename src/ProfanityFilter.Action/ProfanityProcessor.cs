@@ -205,8 +205,8 @@ internal sealed class ProfanityProcessor(
 
                 await client.UpdateIssueAsync(issue.Number.GetValueOrDefault(), issueUpdate);
 
-                // await client.AddReactionAsync(
-                //     issue.Id.GetValueOrDefault(), ReactionContent.Confused);
+                await client.AddReactionAsync(
+                    issue.Id.GetValueOrDefault(), ReactionContent.Confused);
             }
         }
         finally
@@ -244,8 +244,8 @@ internal sealed class ProfanityProcessor(
                 await client.UpdatePullRequestAsync(
                     pullRequest.Number.GetValueOrDefault(), issueUpdate, label?.Name);
 
-                // await client.AddReactionAsync(
-                //     pullRequest.Id.GetValueOrDefault(), ReactionContent.Confused);
+                await client.AddReactionAsync(
+                    pullRequest.Id.GetValueOrDefault(), ReactionContent.Confused);
             }
         }
         finally
@@ -349,9 +349,24 @@ internal sealed class ProfanityProcessor(
                 """);
     }
 
-    private ReplacementStrategy GetInputReplacementStrategy() =>
-        core.GetInput("replacement-strategy") is string value &&
-        Enum.TryParse<ReplacementStrategy>(value, out var strategy)
-            ? strategy
-            : ReplacementStrategy.Asterisk;
+    private ReplacementStrategy GetInputReplacementStrategy()
+    {
+        // The replacement-strategy input is optional, so we default to asterisk.
+        // An example valid values is:
+        //  - anger-asterisk
+        //  - AngerAsterisk
+        return core.GetInput("replacement-strategy") is string value
+            && Enum.TryParse<ReplacementStrategy>(
+                value: NormalizeEnumString(value),
+                ignoreCase: true,
+                result: out var strategy)
+                    ? strategy
+                    : ReplacementStrategy.Asterisk;
+
+        // The values are case-insensitive, and we normalize them to remove "-".
+        static string NormalizeEnumString(string enumValue)
+        {
+            return enumValue.Replace("-", "");
+        }
+    }
 }

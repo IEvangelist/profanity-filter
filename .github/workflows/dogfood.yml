@@ -14,8 +14,8 @@ on:
       - reopened
 
 jobs:
-  eat:
-
+  filter:
+    name: Apply profanity filter
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -32,4 +32,4 @@ jobs:
       id: profanity-filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        replacement-strategy: AngerEmoji
+        replacement-strategy: first-letter-then-asterisk
