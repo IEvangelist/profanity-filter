@@ -6,10 +6,10 @@ The GitHub Action: Profane content filter maintains over 4,900 swear words from 
 
 ## ⁉️ Why
 
-But why is this important?
+But why is this important? Let's be honest, not everyone who creates issues or pull requests use appropriate language (it's not always rainbows and ponies, am I right?)
 
-> [!TIP]
-> Let's be honest, not everyone who creates issues or pull requests use appropriate language (it's not always rainbows and ponies, am I right?) With this action in your repositories GitHub workflow, it can be 🌈 and 🐎.
+> [!NOTE]
+> With this action in your repositories GitHub workflow, it can be 🌈 and 🐎.
 
 ## 🤓 Usage
 
@@ -52,7 +52,7 @@ jobs:
       id: profanity-filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        # See https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies
+      # See https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies
         replacement-strategy: Emoji # See Replacement strategy
 ```
 
@@ -106,6 +106,11 @@ Each replacement strategy corresponds to a different way of replacing profane co
 
 This action will look for a label with the following verbatim name `"profane content 🤬"`, if found this label is applied to any issue or pull request where profane content filtration occurs.
 
+Consider the following automatically applied label to an issue that contains profane content:
+
+![A screenshot of a user experience where the GitHub Actions `bot` added the profane content label 6 hours ago.](assets/label-applied-lght.png#gh-light-mode-only)
+![A screenshot of a user experience where the GitHub Actions `bot` added the profane content label 6 hours ago.](assets/label-applied-dark.png#gh-dark-mode-only)
+
 ## 🎬 What happens?
 
 When profane content is detected, the action will update the issue or pull request by:
@@ -118,10 +123,10 @@ When profane content is detected, the action will update the issue or pull reque
 ```mermaid
 flowchart TD
     A(fab:fa-github Issue or Pull Request)
-      --> IsBad[fas:fa-bolt Contains Profane Content?]
-    IsBad -->|Yes| C(fa:fa-filter Apply Filter)
-      --> E(&quot;Bad words become&quot;)
-      --> F(&quot;Bad w\*\*\*s become&quot;)
-      --> G[(Job Summary Written)]
-    IsBad -->|No| D{{Reset}} -->A
+      --> B[fas:fa-bolt Contains Profane Content?]
+    B -->|YES| C(fa:fa-filter Apply Filter)
+      --> E(fas:fa-question-circle &quot;Bad words become&quot;)
+      --> F(fas:fa-exclamation-circle &quot;Bad w\*\*\*s become&quot;)
+      --o G[fa:fa-save Job Summary]
+    B --o|NO| D{{fa:fa-stop Stop}} ~~~A
 ```
