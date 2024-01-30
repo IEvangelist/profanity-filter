@@ -132,3 +132,10 @@ flowchart TD
       --o G[Job Summary]
     B --o|NO| D{{Stop}} ~~~A
 ```
+
+### Example job summary
+
+The following is an example of a job summary that is rendered when profane content is detected:
+
+![A screenshot of an example job summary, showing the application process of the profanity filter.](assets/job-summary-lght.png#gh-light-mode-only)
+![A screenshot of an example job summary, showing the application process of the profanity filter.](assets/job-summary-dark.png#gh-dark-mode-only)
