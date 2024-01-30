@@ -12,13 +12,14 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that 
     /// returns a readonly dictionary of all profane words.</returns>
-    private async Task<IEnumerable<KeyValuePair<string, FrozenSet<string>>>> ReadAllProfaneWordsAsync()
+    private async Task<Dictionary<string, ProfaneFilter>> ReadAllProfaneWordsAsync()
     {
-        return await cache.GetOrCreateAsync(ProfaneListKey, static async entry =>
+        return await cache.GetOrCreateAsync(ProfaneListKey, async entry =>
         {
             var fileNames = ProfaneContentReader.GetFileNames();
 
             Console.WriteLine("Source word list for profane content:");
+
             foreach (var fileName in fileNames)
             {
                 Console.WriteLine(fileName);
@@ -49,27 +50,15 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
                 })
                 .ConfigureAwait(false);
 
-            return allWords.Select(
-                static kvp =>
-                    new KeyValuePair<string, FrozenSet<string>>(kvp.Key, kvp.Value.ToFrozenSet()));
+            foreach (var (source, set) in allWords)
+            {
+                cache.Set(source, set.ToFrozenSet());
+            }
+
+            return allWords.ToDictionary(
+                static kvp => kvp.Key,
+                static kvp => new ProfaneFilter(kvp.Key, kvp.Value.ToFrozenSet()));
         }) ?? [];        
-    }
-
-    /// <inheritdoc />
-    async ValueTask<bool> IProfaneContentCensorService.ContainsProfanityAsync(string content)
-    {
-        if (string.IsNullOrWhiteSpace(content))
-        {
-            return false;
-        }
-
-        var pattern = await GetProfaneWordListRegexPatternAsync();
-
-        return pattern switch
-        {
-            null => false,
-            _ => Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase)
-        };
     }
 
     /// <inheritdoc />
@@ -84,27 +73,15 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
             return result;
         }
 
-        var evaluator = replacementStrategy switch
-        {
-            ReplacementStrategy.Asterisk => MatchEvaluators.AsteriskEvaluator,
-            ReplacementStrategy.RandomAsterisk => MatchEvaluators.RandomAsteriskEvaluator,
-            ReplacementStrategy.MiddleAsterisk => MatchEvaluators.MiddleAsteriskEvaluator,
-            ReplacementStrategy.MiddleSwearEmoji => MatchEvaluators.MiddleSwearEmojiEvaluator,
-            ReplacementStrategy.VowelAsterisk => MatchEvaluators.VowelAsteriskEvaluator,
-            ReplacementStrategy.AngerEmoji => MatchEvaluators.AngerEmojiEvaluator,
-
-            _ => MatchEvaluators.EmojiEvaluator,
-        };
+        var evaluator = ToMatchEvaluator(replacementStrategy);
 
         var wordList =
             await ReadAllProfaneWordsAsync().ConfigureAwait(false);
 
         var stepContent = content;
 
-        foreach (var (source, set) in wordList)
+        foreach (var (source, filter) in wordList)
         {
-            var pattern = ToWordListRegexPattern(set);
-
             if (result is { Steps: null } or { Steps.Count: 0 })
             {
                 result = result with
@@ -116,7 +93,7 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
             CensorStep step = new(stepContent, source);
 
             var potentiallyReplacedContent =
-                Regex.Replace(stepContent, pattern, evaluator, options: RegexOptions.IgnoreCase);
+                Regex.Replace(stepContent, filter.RegexPattern, evaluator, options: RegexOptions.IgnoreCase);
 
             if (stepContent != potentiallyReplacedContent)
             {
@@ -134,34 +111,18 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
         return result;
     }
 
-    private async ValueTask<string?> GetProfaneWordListRegexPatternAsync()
+    private static MatchEvaluator ToMatchEvaluator(ReplacementStrategy replacementStrategy)
     {
-        var wordList =
-            await ReadAllProfaneWordsAsync().ConfigureAwait(false);
-
-        var set = wordList.SelectMany(
-                static kvp => kvp.Value
-            )
-            .Distinct()
-            .ToFrozenSet();
-
-        return ToWordListRegexPattern(set);
-    }
-
-    private static string ToWordListRegexPattern(FrozenSet<string> set)
-    {
-        if (set.Count is 0)
+        return replacementStrategy switch
         {
-            Console.WriteLine("Unable to read profane word lists.");
-            return "";
-        }
-        else
-        {
-            Console.WriteLine($"Found {set.Count:#,#} profane source words.");
-        }
+            ReplacementStrategy.Asterisk => MatchEvaluators.AsteriskEvaluator,
+            ReplacementStrategy.RandomAsterisk => MatchEvaluators.RandomAsteriskEvaluator,
+            ReplacementStrategy.MiddleAsterisk => MatchEvaluators.MiddleAsteriskEvaluator,
+            ReplacementStrategy.MiddleSwearEmoji => MatchEvaluators.MiddleSwearEmojiEvaluator,
+            ReplacementStrategy.VowelAsterisk => MatchEvaluators.VowelAsteriskEvaluator,
+            ReplacementStrategy.AngerEmoji => MatchEvaluators.AngerEmojiEvaluator,
 
-        var pattern = $"\\b({string.Join('|', set)})\\b";
-
-        return pattern;
+            _ => MatchEvaluators.EmojiEvaluator,
+        };
     }
 }
