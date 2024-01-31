@@ -62,11 +62,11 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
     }
 
     /// <inheritdoc />
-    async ValueTask<CensorResult> IProfaneContentCensorService.CensorProfanityAsync(
+    async ValueTask<FilterResult> IProfaneContentCensorService.CensorProfanityAsync(
         string content,
         ReplacementStrategy replacementStrategy)
     {
-        CensorResult result = new(content);
+        FilterResult result = new(content);
 
         if (string.IsNullOrWhiteSpace(content))
         {
@@ -90,7 +90,7 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
                 };
             }
 
-            CensorStep step = new(stepContent, source);
+            FilterStep step = new(stepContent, source);
 
             var potentiallyReplacedContent =
                 Regex.Replace(stepContent, filter.RegexPattern, evaluator, options: RegexOptions.IgnoreCase);

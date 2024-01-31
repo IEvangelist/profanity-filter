@@ -15,5 +15,7 @@ public interface IProfaneContentCensorService
     /// <param name="replacementStrategy">The type of replacement to use for censoring.</param>
     /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous 
     /// operation, containing the censored content.</returns>
-    ValueTask<CensorResult> CensorProfanityAsync(string content, ReplacementStrategy replacementStrategy);
+    ValueTask<FilterResult> CensorProfanityAsync(
+        string content,
+        ReplacementStrategy replacementStrategy);
 }

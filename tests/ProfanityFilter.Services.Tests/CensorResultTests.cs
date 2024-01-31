@@ -8,9 +8,9 @@ public class CensorResultTests
     [Fact]
     public void CensorResultCorrectlyReportsIsCensored()
     {
-        CensorResult sut = new("Fake input");
+        FilterResult sut = new("Fake input");
 
-        Assert.False(sut.IsCensored);
+        Assert.False(sut.IsFiltered);
         Assert.Equal("Fake input", sut.Input);
         Assert.Null(sut.FinalOutput);
 
@@ -18,11 +18,11 @@ public class CensorResultTests
         {
             Steps =
             [
-                new CensorStep("Fake input", "bad-words.txt", "Fake ****")
+                new FilterStep("Fake input", "bad-words.txt", "Fake ****")
             ]
         };
 
-        Assert.True(sut.IsCensored);
+        Assert.True(sut.IsFiltered);
         Assert.Equal("Fake ****", sut.FinalOutput);
     }
 }

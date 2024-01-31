@@ -1,8 +1,6 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using ProfanityFilter.Services.Results;
-
 namespace ProfanityFilter.Action;
 
 internal sealed class ProfanityProcessor(
@@ -40,6 +38,7 @@ internal sealed class ProfanityProcessor(
             var label = isIssueComment
                 ? null
                 : await client.GetLabelAsync() ?? await client.CreateLabelAsync();
+
             if (label is null && isIssueComment is false)
             {
                 core.Warning("""
@@ -148,10 +147,10 @@ internal sealed class ProfanityProcessor(
                 return;
             }
 
-            var replacementType = GetInputReplacementStrategy();
+            var replacementStrategy = GetInputReplacementStrategy();
 
             var (text, isFiltered) = await TryApplyFilterAsync(
-                issueComment.Body ?? "", replacementType, summary);
+                issueComment.Body ?? "", replacementStrategy, summary);
 
             if (isFiltered)
             {
@@ -177,10 +176,10 @@ internal sealed class ProfanityProcessor(
                 return;
             }
 
-            var replacementType = GetInputReplacementStrategy();
+            var replacementStrategy = GetInputReplacementStrategy();
 
             var filterResult = await ApplyProfanityFilterAsync(
-                issue.Title ?? "", issue.Body ?? "", replacementType, summary);
+                issue.Title ?? "", issue.Body ?? "", replacementStrategy, summary);
 
             if (filterResult.IsFiltered)
             {
@@ -230,10 +229,10 @@ internal sealed class ProfanityProcessor(
                 return;
             }
 
-            var replacementType = GetInputReplacementStrategy();
+            var replacementStrategy = GetInputReplacementStrategy();
 
             var filterResult = await ApplyProfanityFilterAsync(
-                pullRequest.Title ?? "", pullRequest.Body ?? "", replacementType, summary);
+                pullRequest.Title ?? "", pullRequest.Body ?? "", replacementStrategy, summary);
 
             if (filterResult.IsFiltered)
             {
@@ -256,13 +255,13 @@ internal sealed class ProfanityProcessor(
         }
     }
 
-    private async ValueTask<FilterResult> ApplyProfanityFilterAsync(
+    private async ValueTask<Models.FilterResult> ApplyProfanityFilterAsync(
         string title, string body, ReplacementStrategy replacementStrategy, Summary summary)
     {
         if (string.IsNullOrWhiteSpace(title) &&
             string.IsNullOrWhiteSpace(body))
         {
-            return FilterResult.NotFiltered;
+            return Models.FilterResult.NotFiltered;
         }
 
         var (resultingTitle, isTitleFiltered) =
@@ -270,7 +269,7 @@ internal sealed class ProfanityProcessor(
         var (resultingBody, isBodyFiltered) =
             await TryApplyFilterAsync(body, replacementStrategy, summary);
 
-        return new FilterResult(
+        return new Models.FilterResult(
             resultingTitle,
             isTitleFiltered,
             resultingBody,
@@ -283,7 +282,7 @@ internal sealed class ProfanityProcessor(
         var result =
             await profaneContentCensor.CensorProfanityAsync(text, replacementStrategy);
 
-        if (result.IsCensored)
+        if (result.IsFiltered)
         {
             SummarizeAppliedFilter(result, replacementStrategy, summary);
 
@@ -293,11 +292,11 @@ internal sealed class ProfanityProcessor(
                 """);
         }
 
-        return (result.FinalOutput ?? result.Input, result.IsCensored);
+        return (result.FinalOutput ?? result.Input, result.IsFiltered);
     }
 
     private static void SummarizeAppliedFilter(
-        CensorResult result, ReplacementStrategy replacementStrategy, Summary summary)
+        Services.Results.FilterResult result, ReplacementStrategy replacementStrategy, Summary summary)
     {
         summary.AddHeading("🤬 Profanity filter applied", 2);
 
@@ -326,7 +325,7 @@ internal sealed class ProfanityProcessor(
 
         foreach (var step in result.Steps ?? [])
         {
-            if (step.IsCensored)
+            if (step.IsFiltered)
             {
                 rows.Add(new SummaryTableRow(Cells: [
                     new(Data: $"After _{step.ProfaneSourceData}_ filter"),
@@ -351,7 +350,7 @@ internal sealed class ProfanityProcessor(
                 """);
     }
 
-    private ReplacementStrategy GetInputReplacementStrategy()
+    internal ReplacementStrategy GetInputReplacementStrategy()
     {
         // The replacement-strategy input is optional, so we default to asterisk.
         // An example valid values is:
