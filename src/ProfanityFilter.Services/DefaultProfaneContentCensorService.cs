@@ -73,11 +73,10 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
             return result;
         }
 
-        var evaluator = ToMatchEvaluator(replacementStrategy);
-
         var wordList =
             await ReadAllProfaneWordsAsync().ConfigureAwait(false);
 
+        var evaluator = replacementStrategy.ToMatchEvaluator();
         var stepContent = content;
 
         foreach (var (source, filter) in wordList)
@@ -109,20 +108,5 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
         }
 
         return result;
-    }
-
-    private static MatchEvaluator ToMatchEvaluator(ReplacementStrategy replacementStrategy)
-    {
-        return replacementStrategy switch
-        {
-            ReplacementStrategy.Asterisk => MatchEvaluators.AsteriskEvaluator,
-            ReplacementStrategy.RandomAsterisk => MatchEvaluators.RandomAsteriskEvaluator,
-            ReplacementStrategy.MiddleAsterisk => MatchEvaluators.MiddleAsteriskEvaluator,
-            ReplacementStrategy.MiddleSwearEmoji => MatchEvaluators.MiddleSwearEmojiEvaluator,
-            ReplacementStrategy.VowelAsterisk => MatchEvaluators.VowelAsteriskEvaluator,
-            ReplacementStrategy.AngerEmoji => MatchEvaluators.AngerEmojiEvaluator,
-
-            _ => MatchEvaluators.EmojiEvaluator,
-        };
     }
 }

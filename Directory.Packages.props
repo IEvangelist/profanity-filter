@@ -5,15 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <!-- TFM agnostic -->
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.0" />
-    <PackageVersion Include="GitHub.Actions.Core" Version="8.0.9" />
-    <PackageVersion Include="GitHub.Actions.Octokit" Version="8.0.9" />
+    <PackageVersion Include="GitHub.Actions.Core" Version="8.0.10" />
+    <PackageVersion Include="GitHub.Actions.Octokit" Version="8.0.10" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Build.Containers" Version="8.0.101" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />

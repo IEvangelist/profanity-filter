@@ -74,6 +74,62 @@ public partial class MatchEvaluatorTests
         Assert.Equal(expected, actual);
     }
 
+    [Theory]
+    [InlineData("Test", @"bleep")]
+    [InlineData("swear", @"bleep")]
+    public void BleepEvaluator_Returns_Expected_Result(string input, string expected)
+    {
+        var regex = TestRegex();
+        var match = regex.Match(input);
+        var sut = MatchEvaluators.BleepEvaluator;
+
+        var actual = sut(match);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData("Test", @"████")]
+    [InlineData("swear", @"█████")]
+    public void RedactedBlackRectangleEvaluator_Returns_Expected_Result(string input, string expected)
+    {
+        var regex = TestRegex();
+        var match = regex.Match(input);
+        var sut = MatchEvaluators.RedactedBlackRectangleEvaluator;
+
+        var actual = sut(match);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData("Test", @"~~Test~~")]
+    [InlineData("swear", @"~~swear~~")]
+    public void StrikeThroughEvaluator_Returns_Expected_Result(string input, string expected)
+    {
+        var regex = TestRegex();
+        var match = regex.Match(input);
+        var sut = MatchEvaluators.StrikeThroughEvaluator;
+
+        var actual = sut(match);
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Theory]
+    [InlineData("Test", @"____")]
+    [InlineData("swear", @"_____")]
+    public void UnderscoresEvaluator_Returns_Expected_Result(string input, string expected)
+    {
+        var regex = TestRegex();
+        var match = regex.Match(input);
+        var sut = MatchEvaluators.UnderscoresEvaluator;
+
+        var actual = sut(match);
+
+        Assert.Equal(expected, actual);
+    }
+
     [Fact]
     public void MiddleSwearEmojiEvaluator_Returns_Expected_Result()
     {

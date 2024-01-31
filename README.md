@@ -98,6 +98,12 @@ Each replacement strategy corresponds to a different way of replacing profane co
 | `ReplacementType.RandomAsterisk` | `"RandomAsterisk"` | Replaces profane content with a random number of asterisks. For example, a swear word with four letters could look like any value between `\*` and `\*\*\*\*`. |
 | `ReplacementType.FirstLetterThenAsterisk` | `"FirstLetterThenAsterisk"` | Replaces profane content with asterisks after the first letter. For example, a swear word with four letters could look like this `f\*\*\*`. |
 | `ReplacementType.VowelAsterisk` | `"VowelAsterisk"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh\*t`. |
+| `ReplacementType.Bleep` | `"Bleep"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh\*t`. |
+| `ReplacementType.RedactedBlackRectangle` | `"RedactedBlackRectangle"` | Replaces profane content with black rectangles to redact their content. For example, a swear word with four letters could look like this `████`. |
+| `ReplacementType.StrikeThrough` | `"StrikeThrough"` | Encloses profane content with `~~` causing strikethrough rendering. For example, a swear word with four letters could look like this ~~`shit`~~. |
+| `ReplacementType.Underscores` | `"Underscores"` | Replaces profane content with underscores `_`. For example, a swear word with four letters could look like this `____`. |
+
+The value of the `replacement-strategy` input is case-insensitive, and accepts hyphened alternatives (such as `anger-emoji`) as well.
 
 > [!TIP]
 > All asterisk replacement strategies are escaped with a backslash `\` to prevent markdown from rendering the asterisks as bold text. No need for you the escape these values yourself.

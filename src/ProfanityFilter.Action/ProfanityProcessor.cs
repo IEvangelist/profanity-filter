@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.Action;
 
-internal sealed class ProfanityProcessor(
+internal sealed partial class ProfanityProcessor(
     CustomGitHubClient client,
     IProfaneContentCensorService profaneContentCensor,
     ICoreService core)
@@ -21,11 +21,13 @@ internal sealed class ProfanityProcessor(
                 return;
             }
 
+            ContextSummaryPair pair = (context, summary);
+
             var isIssueComment = context.Payload?.Comment is not null;
             var isIssue = context.Payload?.Issue is not null;
             var isPullRequest = context.Payload?.PullRequest is not null;
 
-            Func<long, Summary, Label?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
+            Func<long, ContextSummaryPair, Label?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
             {
                 (true, _, _) => HandleIssueCommentAsync,
                 (_, true, _) => HandleIssueAsync,
@@ -52,7 +54,7 @@ internal sealed class ProfanityProcessor(
                 ?? context.Payload?.PullRequest?.Number
                 ?? 0L)!;
 
-            await handler(numberOrId, summary, label ?? null);
+            await handler(numberOrId, pair, label ?? null);
 
             if (!summary.IsBufferEmpty)
             {
@@ -128,148 +130,25 @@ internal sealed class ProfanityProcessor(
         }
 
         context = null;
+
         return false;
-    }
+    } 
 
-    private async Task HandleIssueCommentAsync(long issueCommentId, Summary summary, Label? label)
-    {
-        // We don't apply labels to issue comments, discard it...
-        _ = label;
-
-        core.StartGroup($"Evaluating issue comment id #{issueCommentId} for profanity");
-
-        try
-        {
-            var issueComment = await client.GetIssueCommentAsync(issueCommentId);
-            if (issueComment is null)
-            {
-                core.Error($"Unable to get issue comment with id: {issueCommentId}");
-                return;
-            }
-
-            var replacementStrategy = GetInputReplacementStrategy();
-
-            var (text, isFiltered) = await TryApplyFilterAsync(
-                issueComment.Body ?? "", replacementStrategy, summary);
-
-            if (isFiltered)
-            {
-                await client.UpdateIssueCommentAsync(issueCommentId, text);
-            }
-        }
-        finally
-        {
-            core.EndGroup();
-        }
-    }
-
-    private async Task HandleIssueAsync(long issueNumber, Summary summary, Label? label)
-    {
-        core.StartGroup($"Evaluating issue #{issueNumber} for profanity");
-
-        try
-        {
-            var issue = await client.GetIssueAsync((int)issueNumber);
-            if (issue is null)
-            {
-                core.Error($"Unable to get issue with number: {issueNumber}");
-                return;
-            }
-
-            var replacementStrategy = GetInputReplacementStrategy();
-
-            var filterResult = await ApplyProfanityFilterAsync(
-                issue.Title ?? "", issue.Body ?? "", replacementStrategy, summary);
-
-            if (filterResult.IsFiltered)
-            {
-                var issueUpdate = new IssueUpdate
-                {
-                    Body = filterResult.Body,
-                    Title = new()
-                    {
-                        String = filterResult.Title
-                    }
-                };
-
-                if (label is not null and { Name.Length: > 0 })
-                {
-                    if (issueUpdate.Labels is not null)
-                    {
-                        issueUpdate.Labels.Add(label.Name);
-                    }
-                    else
-                    {
-                        issueUpdate.Labels = [label.Name];
-                    }
-                }
-
-                await client.UpdateIssueAsync(issue.Number.GetValueOrDefault(), issueUpdate);
-
-                await client.AddReactionAsync(
-                    issue.Id.GetValueOrDefault(), ReactionContent.Confused);
-            }
-        }
-        finally
-        {
-            core.EndGroup();
-        }
-    }
-
-    private async Task HandlePullRequestAsync(long pullRequestNumber, Summary summary, Label? label)
-    {
-        core.StartGroup($"Evaluating pull request #{pullRequestNumber} for profanity");
-
-        try
-        {
-            var pullRequest = await client.GetPullRequestAsync((int)pullRequestNumber);
-            if (pullRequest is null)
-            {
-                core.Error($"Unable to get PR with number: {pullRequestNumber}");
-                return;
-            }
-
-            var replacementStrategy = GetInputReplacementStrategy();
-
-            var filterResult = await ApplyProfanityFilterAsync(
-                pullRequest.Title ?? "", pullRequest.Body ?? "", replacementStrategy, summary);
-
-            if (filterResult.IsFiltered)
-            {
-                var issueUpdate = new PullRequestUpdate
-                {
-                    Body = filterResult.Body,
-                    Title = filterResult.Title
-                };
-
-                await client.UpdatePullRequestAsync(
-                    pullRequest.Number.GetValueOrDefault(), issueUpdate, label?.Name);
-
-                await client.AddReactionAsync(
-                    pullRequest.Id.GetValueOrDefault(), ReactionContent.Confused);
-            }
-        }
-        finally
-        {
-            core.EndGroup();
-        }
-    }
-
-    private async ValueTask<Models.FilterResult> ApplyProfanityFilterAsync(
-        string title, string body, ReplacementStrategy replacementStrategy, Summary summary)
+    private async ValueTask<FilterationResult> ApplyProfanityFilterAsync(
+        string title, string body, ReplacementStrategy replacementStrategy, ContextSummaryPair contextSummaryPair)
     {
         if (string.IsNullOrWhiteSpace(title) &&
             string.IsNullOrWhiteSpace(body))
         {
-            return Models.FilterResult.NotFiltered;
+            return FilterationResult.NotFiltered;
         }
 
         var (resultingTitle, isTitleFiltered) =
-            await TryApplyFilterAsync(title, replacementStrategy, summary);
+            await TryApplyFilterAsync(title, replacementStrategy, contextSummaryPair);
         var (resultingBody, isBodyFiltered) =
-            await TryApplyFilterAsync(body, replacementStrategy, summary);
+            await TryApplyFilterAsync(body, replacementStrategy, contextSummaryPair);
 
-        return new Models.FilterResult(
+        return new FilterationResult(
             resultingTitle,
             isTitleFiltered,
             resultingBody,
@@ -277,14 +156,14 @@ internal sealed class ProfanityProcessor(
     }
 
     private async ValueTask<(string text, bool isFiltered)> TryApplyFilterAsync(
-        string text, ReplacementStrategy replacementStrategy, Summary summary)
+        string text, ReplacementStrategy replacementStrategy, ContextSummaryPair contextSummaryPair)
     {
         var result =
             await profaneContentCensor.CensorProfanityAsync(text, replacementStrategy);
 
         if (result.IsFiltered)
         {
-            SummarizeAppliedFilter(result, replacementStrategy, summary);
+            SummarizeAppliedFilter(result, replacementStrategy, contextSummaryPair);
 
             core.Info($"""
                 Original text: {text}
@@ -296,8 +175,10 @@ internal sealed class ProfanityProcessor(
     }
 
     private static void SummarizeAppliedFilter(
-        Services.Results.FilterResult result, ReplacementStrategy replacementStrategy, Summary summary)
+        FilterResult result, ReplacementStrategy replacementStrategy, ContextSummaryPair contextSummaryPair)
     {
+        var (context, summary) = contextSummaryPair;
+
         summary.AddHeading("🤬 Profanity filter applied", 2);
 
         var replacement = replacementStrategy switch
@@ -348,26 +229,12 @@ internal sealed class ProfanityProcessor(
         summary.AddRawMarkdown($"""
                 For more information on configuring replacement types, see [Profanity Filter: 😵 Replacement strategies](https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies).
                 """);
-    }
 
-    internal ReplacementStrategy GetInputReplacementStrategy()
-    {
-        // The replacement-strategy input is optional, so we default to asterisk.
-        // An example valid values is:
-        //  - anger-asterisk
-        //  - AngerAsterisk
-        return core.GetInput("replacement-strategy") is string value
-            && Enum.TryParse<ReplacementStrategy>(
-                value: NormalizeEnumString(value),
-                ignoreCase: true,
-                result: out var strategy)
-                    ? strategy
-                    : ReplacementStrategy.Asterisk;
-
-        // The values are case-insensitive, and we normalize them to remove "-".
-        static string NormalizeEnumString(string enumValue)
-        {
-            return enumValue.Replace("-", "");
-        }
+        summary.AddDetails("Context Details", $"""
+            {Env.NewLine}{Env.NewLine}
+            ```json
+            {context}
+            ```{Env.NewLine}{Env.NewLine}
+            """);
     }
 }

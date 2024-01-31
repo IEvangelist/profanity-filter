@@ -23,12 +23,17 @@ global using ProfanityFilter.Action.Extensions;
 global using ProfanityFilter.Action.Models;
 global using ProfanityFilter.Services;
 global using ProfanityFilter.Services.Extensions;
+global using ProfanityFilter.Services.Results;
 
 global using Env = System.Environment;
 
 global using IssueUpdate = GitHub.Repos.Item.Item.Issues.Item.WithIssue_numberPatchRequestBody;
 global using PullRequestUpdate = GitHub.Repos.Item.Item.Pulls.Item.WithPull_numberPatchRequestBody;
 global using ReactionContent = GitHub.Repos.Item.Item.Issues.Item.Reactions.ReactionsPostRequestBody_content;
+
+global using ContextSummaryPair = (
+    Actions.Octokit.Context Context,
+    Actions.Core.Summaries.Summary Summary);
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo(
     assemblyName: "ProfanityFilter.Action.Tests")]

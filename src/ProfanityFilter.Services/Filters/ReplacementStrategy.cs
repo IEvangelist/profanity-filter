@@ -24,32 +24,54 @@ public enum ReplacementStrategy
     AngerEmoji,
 
     /// <summary>
-    /// Represents a replacement type where the middle of the swear word 
+    /// Represents a replacement strategy where the middle of the swear word 
     /// is replaced with an emoji.
     /// </summary>
     MiddleSwearEmoji,
 
     /// <summary>
-    /// Represents a replacement type where the profanity is replaced 
+    /// Represents a replacement strategy where the profanity is replaced 
     /// with a random number of asterisk.
     /// </summary>
     RandomAsterisk,
 
     /// <summary>
-    /// Represents the middle asterisk replacement type, which replaces the 
+    /// Represents the middle asterisk replacement strategy, which replaces the 
     /// characters in the middle of the profanity with asterisk.
     /// </summary>
     MiddleAsterisk,
 
     /// <summary>
-    /// Represents the first letter then asterisk replacement type, which replaces the
+    /// Represents the first letter then asterisk replacement strategy, which replaces the
     /// everything after the first letter of the profanity with asterisk.
     /// </summary>
     FirstLetterThenAsterisk,
 
     /// <summary>
-    /// Represents a replacement type where vowels in a profane word
+    /// Represents a replacement strategy where vowels in a profane word
     /// are replaced with asterisk.
     /// </summary>
     VowelAsterisk,
+
+    /// <summary>
+    /// Represents a replacement strategy where the profanity is replaced with a
+    /// the word "bleep".
+    /// </summary>
+    Bleep,
+
+    /// <summary>
+    /// Represents a replacement strategy where the profane word has each letter
+    /// replaced with the black rectangle symbol <c>█</c>.
+    /// </summary>
+    RedactedBlackRectangle,
+
+    /// <summary>
+    /// Represents a replacement strategy where the profane word is <c>~~struck through~~</c>.
+    /// </summary>
+    StrikeThrough,
+
+    /// <summary>
+    /// Represents a replacement strategy where the profane word is replaced by underscores.
+    /// </summary>
+    Underscores
 }
