@@ -1,8 +1,6 @@
 // Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using ProfanityFilter.Services.Filters;
-
 namespace ProfanityFilter.Services.Tests;
 
 public class DefaultProfaneContentCensorServiceTests
@@ -51,12 +49,12 @@ public class DefaultProfaneContentCensorServiceTests
         var result = await _sut.CensorProfanityAsync(input, ReplacementStrategy.MiddleAsterisk);
 
         // Assert
-        Assert.True(result.IsCensored);
+        Assert.True(result.IsFiltered);
 
         Assert.Equal(@"Lots of f\*\*\*\*\*g words like m\*\*\*y and a\*\*\*\*a!", result.FinalOutput);
 
         Assert.Equal(9, result.Steps.Count);
-        Assert.Equal(3, result.Steps.Count(static step => step.IsCensored));
+        Assert.Equal(3, result.Steps.Count(static step => step.IsFiltered));
 
         Assert.Contains(result.Steps,
             static step => step.ProfaneSourceData.EndsWith("GoogleBannedWords.txt"));
