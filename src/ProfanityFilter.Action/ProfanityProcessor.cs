@@ -189,7 +189,7 @@ internal sealed partial class ProfanityProcessor(
 
         var (context, summary) = contextSummaryPair;
 
-        summary.AddHeading("🤬 Profanity filter applied", 2);
+        summary.AddMarkdownHeading("🤬 Profanity filter applied", 2);
 
         if (context.ToContextualHeaderSummary() is { } header)
         {

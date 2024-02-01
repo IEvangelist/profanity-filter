@@ -18,11 +18,13 @@ internal static class GitHubContextExtensions
         }
 
         var number = context.Issue.Number;
+        var issueUrl = context.Payload!.Issue!.HtmlUrl;
+
         var linkedIssueOrPullRequest = context.EventName switch
         {
-            "pull_request" => $"pull request #{number}",
-            "issues" => $"issue #{number}",
-            "issue_comment" => $"issue {context.Payload!.Issue!.HtmlUrl}#issuecomment-{context.Payload!.Comment!.Id}",
+            "pull_request" => $"pull request [#{number}]({issueUrl}#{number})",
+            "issues" => $"issue [#{number}]({issueUrl}#{number})",
+            "issue_comment" => $"issue [#{number} (comment)]({issueUrl}#issuecomment-{context.Payload!.Comment!.Id})",
 
             _ => "issue or pull request"
         };
@@ -31,9 +33,11 @@ internal static class GitHubContextExtensions
         var action = context.Action;
         var repository = context.Payload!.Repository!;
 
-        return $"""
-            The :octocat: [{repository.FullName}]({repository.HtmlUrl}) GitHub Action ran as part of the "_{eventName}_" event with the "_{action}_" action.
-            In the {linkedIssueOrPullRequest}, the user @{context.Actor} wrote content that triggered the configured replacement to filter profane content.
-            """;
+        var headerSummary = $"The :octocat: [{repository.FullName}]({repository.HtmlUrl}) " +
+            $"GitHub Action ran as part of the \"_{eventName}_\" event with the \"_{action}_\" action. " +
+            $"In {linkedIssueOrPullRequest}, the user @{context.Actor} wrote content that triggered " +
+            "the configured replacement to filter profane content.";
+
+        return headerSummary;
     }
 }
