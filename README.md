@@ -139,7 +139,7 @@ flowchart TD
     B --o|NO| D{{Stop}} ~~~A
 ```
 
-### ⚠️ Example job summary
+### 🎉 Example job summary
 
 The following is an example of a job summary that is rendered when profane content is detected:
 
