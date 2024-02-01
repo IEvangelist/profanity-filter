@@ -4,13 +4,24 @@
 namespace ProfanityFilter.Action.Models;
 
 internal readonly record struct FiltrationResult(
-    string Title,
-    bool IsTitleFiltered,
-    string Body,
-    bool IsBodyFiltered)
+    FilterResult? TitleResult = null,
+    FilterResult? BodyResult = null)
 {
-    internal static FiltrationResult NotFiltered { get; } =
-        new(string.Empty, false, string.Empty, false);
+    internal static FiltrationResult NotFiltered { get; } = new();
 
     internal bool IsFiltered => IsTitleFiltered || IsBodyFiltered;
+
+    [MemberNotNullWhen(true, nameof(TitleResult), nameof(Title))]
+    internal bool IsTitleFiltered => TitleResult?.IsFiltered == true;
+
+    [MemberNotNullWhen(true, nameof(BodyResult))]
+    internal bool IsBodyFiltered => BodyResult?.IsFiltered == true;
+
+    internal string Title => IsTitleFiltered
+        ? TitleResult.FinalOutput ?? TitleResult.Input
+        : "";
+
+    internal string Body => IsBodyFiltered
+        ? BodyResult.FinalOutput ?? BodyResult.Input
+        : "";
 }

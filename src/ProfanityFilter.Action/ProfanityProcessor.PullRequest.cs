@@ -5,12 +5,13 @@ namespace ProfanityFilter.Action;
 
 internal sealed partial class ProfanityProcessor
 {
-    private async Task HandlePullRequestAsync(
+    private async Task<FiltrationResult> HandlePullRequestAsync(
         long pullRequestNumber,
-        ContextSummaryPair contextSummaryPair,
         Label? label)
     {
         core.StartGroup($"Evaluating pull request #{pullRequestNumber} for profanity");
+
+        var filterResult = FiltrationResult.NotFiltered;
 
         try
         {
@@ -18,13 +19,13 @@ internal sealed partial class ProfanityProcessor
             if (pullRequest is null)
             {
                 core.Error($"Unable to get PR with number: {pullRequestNumber}");
-                return;
+                return filterResult;
             }
 
             var replacementStrategy = core.GetReplacementStrategy();
 
-            var filterResult = await ApplyProfanityFilterAsync(
-                pullRequest.Title ?? "", pullRequest.Body ?? "", replacementStrategy, contextSummaryPair);
+            filterResult = await ApplyProfanityFilterAsync(
+                pullRequest.Title ?? "", pullRequest.Body ?? "", replacementStrategy);
 
             if (filterResult.IsFiltered)
             {
@@ -35,15 +36,17 @@ internal sealed partial class ProfanityProcessor
                 };
 
                 await client.UpdatePullRequestAsync(
-                    pullRequest.Number.GetValueOrDefault(), issueUpdate, label?.Name);
+                    (int)pullRequestNumber, issueUpdate, label?.Name);
 
-                // await client.AddReactionAsync(
-                //     pullRequest.Id.GetValueOrDefault(), ReactionContent.Confused);
+                 await client.AddReactionAsync(
+                     pullRequestNumber, ReactionContent.Confused);
             }
         }
         finally
         {
             core.EndGroup();
         }
+
+        return filterResult;
     }
 }

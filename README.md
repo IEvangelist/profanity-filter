@@ -133,9 +133,8 @@ flowchart TD
     A(Issue or Pull Request)
       --> B[Contains Profane Content?]
     B -->|YES| C(Apply Filter)
-      --> E(Bad words become)
-      --> F(Filtered w\*\*\*s...)
-      --o G[Job Summary]
+      --> E(All swear words are filtered, for example sw**r)
+      --o F[Job Summary]
     B --o|NO| D{{Stop}} ~~~A
 ```
 

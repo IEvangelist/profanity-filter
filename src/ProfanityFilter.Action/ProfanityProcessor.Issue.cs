@@ -5,12 +5,13 @@ namespace ProfanityFilter.Action;
 
 internal sealed partial class ProfanityProcessor
 {
-    private async Task HandleIssueAsync(
+    private async Task<FiltrationResult> HandleIssueAsync(
         long issueNumber,
-        ContextSummaryPair contextSummaryPair,
         Label? label)
     {
         core.StartGroup($"Evaluating issue #{issueNumber} for profanity");
+
+        var filterResult = FiltrationResult.NotFiltered;
 
         try
         {
@@ -18,13 +19,13 @@ internal sealed partial class ProfanityProcessor
             if (issue is null)
             {
                 core.Error($"Unable to get issue with number: {issueNumber}");
-                return;
+                return filterResult;
             }
 
             var replacementStrategy = core.GetReplacementStrategy();
 
-            var filterResult = await ApplyProfanityFilterAsync(
-                issue.Title ?? "", issue.Body ?? "", replacementStrategy, contextSummaryPair);
+            filterResult = await ApplyProfanityFilterAsync(
+                issue.Title ?? "", issue.Body ?? "", replacementStrategy);
 
             if (filterResult.IsFiltered)
             {
@@ -49,15 +50,16 @@ internal sealed partial class ProfanityProcessor
                     }
                 }
 
-                await client.UpdateIssueAsync(issue.Number.GetValueOrDefault(), issueUpdate);
+                await client.UpdateIssueAsync((int)issueNumber, issueUpdate);
 
-                // await client.AddReactionAsync(
-                //     issue.Id.GetValueOrDefault(), ReactionContent.Confused);
+                await client.AddReactionAsync(issueNumber, ReactionContent.Confused);
             }
         }
         finally
         {
             core.EndGroup();
         }
+
+        return filterResult;
     }
 }

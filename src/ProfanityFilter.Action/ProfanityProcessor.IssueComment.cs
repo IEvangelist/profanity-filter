@@ -5,9 +5,8 @@ namespace ProfanityFilter.Action;
 
 internal sealed partial class ProfanityProcessor
 {
-    private async Task HandleIssueCommentAsync(
+    private async Task<FiltrationResult> HandleIssueCommentAsync(
         long issueCommentId,
-        ContextSummaryPair contextSummaryPair,
         Label? label)
     {
         // We don't apply labels to issue comments, discard it...
@@ -15,28 +14,37 @@ internal sealed partial class ProfanityProcessor
 
         core.StartGroup($"Evaluating issue comment id #{issueCommentId} for profanity");
 
+        var filterResult = FiltrationResult.NotFiltered;
+
         try
         {
             var issueComment = await client.GetIssueCommentAsync(issueCommentId);
             if (issueComment is null)
             {
                 core.Error($"Unable to get issue comment with id: {issueCommentId}");
-                return;
+                return filterResult;
             }
 
             var replacementStrategy = core.GetReplacementStrategy();
 
-            var (text, isFiltered) = await TryApplyFilterAsync(
-                issueComment.Body ?? "", new(replacementStrategy, FilterTarget.Comment), contextSummaryPair);
+            var bodyFilterResult = await TryApplyFilterAsync(
+                issueComment.Body ?? "", new(replacementStrategy, FilterTarget.Comment));
 
-            if (isFiltered)
+            filterResult = new FiltrationResult(BodyResult: bodyFilterResult);
+
+            if (bodyFilterResult.IsFiltered)
             {
-                await client.UpdateIssueCommentAsync(issueCommentId, text);
+                await client.UpdateIssueCommentAsync(issueCommentId, bodyFilterResult.FinalOutput);
+
+                var issueNumber = (int)_context!.Payload!.Issue!.Number;
+                await client.AddReactionAsync(issueNumber, ReactionContent.Confused);
             }
         }
         finally
         {
             core.EndGroup();
         }
+
+        return filterResult;
     }
 }

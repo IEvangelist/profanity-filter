@@ -8,6 +8,8 @@ internal sealed partial class ProfanityProcessor(
     IProfaneContentFilterService profaneContentFilter,
     ICoreService core)
 {
+    private Context? _context;
+
     public async Task ProcessProfanityAsync()
     {
         var success = true;
@@ -21,13 +23,11 @@ internal sealed partial class ProfanityProcessor(
                 return;
             }
 
-            ContextSummaryPair pair = (context, summary);
-
             var isIssueComment = context.Payload?.Comment is not null;
             var isIssue = context.Payload?.Issue is not null;
             var isPullRequest = context.Payload?.PullRequest is not null;
 
-            Func<long, ContextSummaryPair, Label?, Task> handler = (isIssueComment, isIssue, isPullRequest) switch
+            Func<long, Label?, Task<FiltrationResult>> handler = (isIssueComment, isIssue, isPullRequest) switch
             {
                 (true, _, _) => HandleIssueCommentAsync,
                 (_, true, _) => HandleIssueAsync,
@@ -54,12 +54,11 @@ internal sealed partial class ProfanityProcessor(
                 ?? context.Payload?.PullRequest?.Number
                 ?? 0L)!;
 
-            await handler(numberOrId, pair, label ?? null);
+            var result = await handler(numberOrId, label ?? null);
 
-            if (!summary.IsBufferEmpty)
-            {
-                await summary.WriteAsync(new() { Overwrite = true });
-            }
+            ContextSummaryPair contextSummaryPair = (context, summary);
+
+            await SummarizeAppliedFiltersAsync(result, contextSummaryPair);            
         }
         catch (Exception ex)
         {
@@ -78,6 +77,7 @@ internal sealed partial class ProfanityProcessor(
         }
     }
 
+    [MemberNotNullWhen(true, nameof(_context))]
     private bool TryGetContext([NotNullWhen(true)] out Context? context)
     {
         try
@@ -119,6 +119,8 @@ internal sealed partial class ProfanityProcessor(
                 return false;
             }
 
+            _context = context;
+
             return true;
         }
         catch (Exception ex)
@@ -135,7 +137,7 @@ internal sealed partial class ProfanityProcessor(
     } 
 
     private async ValueTask<FiltrationResult> ApplyProfanityFilterAsync(
-        string title, string body, ReplacementStrategy replacementStrategy, ContextSummaryPair contextSummaryPair)
+        string title, string body, ReplacementStrategy replacementStrategy)
     {
         if (string.IsNullOrWhiteSpace(title) &&
             string.IsNullOrWhiteSpace(body))
@@ -143,51 +145,90 @@ internal sealed partial class ProfanityProcessor(
             return FiltrationResult.NotFiltered;
         }
 
-        var (resultingTitle, isTitleFiltered) =
-            await TryApplyFilterAsync(title, new(replacementStrategy, FilterTarget.Title), contextSummaryPair);
-        var (resultingBody, isBodyFiltered) =
-            await TryApplyFilterAsync(body, new(replacementStrategy, FilterTarget.Body), contextSummaryPair);
+        var titleResult = await TryApplyFilterAsync(
+            title, parameters: new(replacementStrategy, FilterTarget.Title));
+        var bodyResult = await TryApplyFilterAsync(
+            body, parameters: new(replacementStrategy, FilterTarget.Body));
 
-        return new FiltrationResult(
-            resultingTitle,
-            isTitleFiltered,
-            resultingBody,
-            isBodyFiltered);
+        return new FiltrationResult(titleResult, bodyResult);
     }
 
-    private async ValueTask<(string text, bool isFiltered)> TryApplyFilterAsync(
-        string text, FilterParameters parameters, ContextSummaryPair contextSummaryPair)
+    private async ValueTask<FilterResult> TryApplyFilterAsync(
+        string text, FilterParameters parameters)
     {
         var result = await profaneContentFilter.FilterProfanityAsync(
             text, parameters);
 
         if (result.IsFiltered)
         {
-            SummarizeAppliedFilter(result, parameters, contextSummaryPair);
+            var type = parameters.Target switch
+            {
+                FilterTarget.Title => "title",
+                FilterTarget.Body => "body",
+                FilterTarget.Comment => "comment",
+
+                _ => "unknown"
+            };
 
             core.Info($"""
-                Original text: {text}
-                Filtered text: {result.FinalOutput}
+                Original {type} text: {text}
+                Filtered {type} text: {result.FinalOutput}
                 """);
         }
 
-        return (result.FinalOutput ?? result.Input, result.IsFiltered);
+        return result;
     }
 
-    private static void SummarizeAppliedFilter(
-        FilterResult result, FilterParameters parameters, ContextSummaryPair contextSummaryPair)
+    private static async Task SummarizeAppliedFiltersAsync(
+        FiltrationResult result, ContextSummaryPair contextSummaryPair)
     {
+        if (result.IsFiltered == false)
+        {
+            return;
+        }
+
         var (context, summary) = contextSummaryPair;
 
         summary.AddHeading("🤬 Profanity filter applied", 2);
 
-        var replacement = parameters.Strategy.ToSummaryString();
+        if (context.ToContextualHeaderSummary() is { } header)
+        {
+            summary.AddRawMarkdown(header, true);
+        }
 
-        // TODO: add details about the issue or pr, with links, etc.
-        // Log the offending actor too...
+        SummarizeFilterResult(summary, "Title Changes", result.TitleResult);
+        SummarizeFilterResult(summary, "Body Changes", result.BodyResult);  
 
         summary.AddRawMarkdown($"""
-                The following table details the _original_ text and the resulting text after it was _filtered_ using the configured "{replacement}" replacement strategy:
+                For more information on configuring replacement types, see [Profanity Filter: 😵 Replacement strategies](https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies).
+                """);
+
+        summary.AddDetails("Context Details", $"""
+            {Env.NewLine}{Env.NewLine}
+            ```json
+            {context}
+            ```{Env.NewLine}{Env.NewLine}
+            """);
+
+        if (!summary.IsBufferEmpty)
+        {
+            await summary.WriteAsync(new() { Overwrite = true });
+        }
+    }
+
+    private static void SummarizeFilterResult(Summary summary, string sectionHeading, FilterResult? result)
+    {
+        if (result is null or { IsFiltered: false })
+        {
+            return;
+        }
+
+        summary.AddMarkdownHeading(sectionHeading, 3);
+
+        var replacement = result.Parameters.Strategy.ToSummaryString();
+
+        summary.AddRawMarkdown($"""
+                The following table details the _original_ text and the resulting text after each matching filter was applied using the configured "{replacement}" replacement strategy:
                 """, true);
 
         List<SummaryTableRow> rows =
@@ -214,21 +255,10 @@ internal sealed partial class ProfanityProcessor(
                 new("", Alignment: TableColumnAlignment.Right),
                 new("Values", Alignment: TableColumnAlignment.Left),
             ]),
-            Rows: [..rows]);
+        Rows: [.. rows]);
 
         summary.AddMarkdownTable(table);
 
         summary.AddNewLine();
-
-        summary.AddRawMarkdown($"""
-                For more information on configuring replacement types, see [Profanity Filter: 😵 Replacement strategies](https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies).
-                """);
-
-        summary.AddDetails("Context Details", $"""
-            {Env.NewLine}{Env.NewLine}
-            ```json
-            {context}
-            ```{Env.NewLine}{Env.NewLine}
-            """);
     }
 }
