@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.Services;
 
-internal record class ProfaneFilter(
+internal record class ProfaneSourceFilter(
     string SourceName,
     FrozenSet<string> ProfaneWords)
 {

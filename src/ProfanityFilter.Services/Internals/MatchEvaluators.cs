@@ -169,9 +169,9 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
-    /// A <see cref="MatchEvaluator"/> that replaces each letter in a string with the black rectangle symbol <c>█</c>.
+    /// A <see cref="MatchEvaluator"/> that replaces each letter in a string with the rectangle symbol <c>█</c>.
     /// </summary>
-    internal static MatchEvaluator RedactedBlackRectangleEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator RedactedRectangleEvaluator(FilterTarget target) =>
         string (match) =>
         {
             _ = target;

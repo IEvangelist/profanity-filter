@@ -48,29 +48,33 @@ public partial class MatchEvaluatorTests
     }
 
     [Theory]
-    [InlineData("Test", @"T\*st")]
-    [InlineData("swear", @"sw\*\*r")]
-    public void VowelAsteriskEvaluator_Returns_Expected_Result(string input, string expected)
+    [InlineData(FilterTarget.Body, "Test", @"T\*st")]
+    [InlineData(FilterTarget.Body, "swear", @"sw\*\*r")]
+    [InlineData(FilterTarget.Title, "Test", @"T*st")]
+    [InlineData(FilterTarget.Title, "swear", @"sw**r")]
+    public void VowelAsteriskEvaluator_Returns_Expected_Result(FilterTarget target, string input, string expected)
     {
         var regex = TestRegex();
         var match = regex.Match(input);
         var sut = MatchEvaluators.VowelAsteriskEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var actual = sut(target).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
 
     [Theory]
-    [InlineData("Test", @"T\*\*t")]
-    [InlineData("swear", @"s\*\*\*r")]
-    public void MiddleAsteriskEvaluator_Returns_Expected_Result(string input, string expected)
+    [InlineData(FilterTarget.Body, "Test", @"T\*\*t")]
+    [InlineData(FilterTarget.Body, "swear", @"s\*\*\*r")]
+    [InlineData(FilterTarget.Title, "Test", @"T**t")]
+    [InlineData(FilterTarget.Title, "swear", @"s***r")]
+    public void MiddleAsteriskEvaluator_Returns_Expected_Result(FilterTarget target, string input, string expected)
     {
         var regex = TestRegex();
         var match = regex.Match(input);
         var sut = MatchEvaluators.MiddleAsteriskEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var actual = sut(target).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -96,7 +100,7 @@ public partial class MatchEvaluatorTests
     {
         var regex = TestRegex();
         var match = regex.Match(input);
-        var sut = MatchEvaluators.RedactedBlackRectangleEvaluator;
+        var sut = MatchEvaluators.RedactedRectangleEvaluator;
 
         var actual = sut(FilterTarget.Body).Invoke(match);
 

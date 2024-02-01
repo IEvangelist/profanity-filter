@@ -12,7 +12,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
     /// </summary>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation that 
     /// returns a readonly dictionary of all profane words.</returns>
-    private async Task<Dictionary<string, ProfaneFilter>> ReadAllProfaneWordsAsync()
+    private async Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync()
     {
         return await cache.GetOrCreateAsync(ProfaneListKey, async entry =>
         {
@@ -57,7 +57,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
 
             return allWords.ToDictionary(
                 static kvp => kvp.Key,
-                static kvp => new ProfaneFilter(kvp.Key, kvp.Value.ToFrozenSet()));
+                static kvp => new ProfaneSourceFilter(kvp.Key, kvp.Value.ToFrozenSet()));
         }) ?? [];        
     }
 

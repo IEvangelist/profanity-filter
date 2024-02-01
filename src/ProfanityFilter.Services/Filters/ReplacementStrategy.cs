@@ -61,9 +61,9 @@ public enum ReplacementStrategy
 
     /// <summary>
     /// Represents a replacement strategy where the profane word has each letter
-    /// replaced with the black rectangle symbol <c>█</c>.
+    /// replaced with the rectangle symbol <c>█</c>.
     /// </summary>
-    RedactedBlackRectangle,
+    RedactedRectangle,
 
     /// <summary>
     /// Represents a replacement strategy where the profane word is <c>~~struck through~~</c>.

@@ -15,11 +15,13 @@ public static class ReplacementStrategyExtensions
             ReplacementStrategy.RandomAsterisk => "random asterisk",
             ReplacementStrategy.MiddleAsterisk => "middle asterisk",
             ReplacementStrategy.VowelAsterisk => "vowel asterisk",
+            ReplacementStrategy.FirstLetterThenAsterisk => "first letter then asterisk",
             ReplacementStrategy.AngerEmoji => "anger emoji",
             ReplacementStrategy.Bleep => "bleep",
-            ReplacementStrategy.RedactedBlackRectangle => "redacted black rectangle",
+            ReplacementStrategy.RedactedRectangle => "redacted rectangle",
             ReplacementStrategy.StrikeThrough => "string through",
             ReplacementStrategy.Underscores => "underscores",
+
             _ => "asterisk",
         };
     }
@@ -28,18 +30,19 @@ public static class ReplacementStrategyExtensions
     {
         return replacementStrategy switch
         {
-            ReplacementStrategy.Asterisk => MatchEvaluators.AsteriskEvaluator,
+            ReplacementStrategy.Emoji => MatchEvaluators.EmojiEvaluator,
             ReplacementStrategy.RandomAsterisk => MatchEvaluators.RandomAsteriskEvaluator,
             ReplacementStrategy.MiddleAsterisk => MatchEvaluators.MiddleAsteriskEvaluator,
             ReplacementStrategy.MiddleSwearEmoji => MatchEvaluators.MiddleSwearEmojiEvaluator,
             ReplacementStrategy.VowelAsterisk => MatchEvaluators.VowelAsteriskEvaluator,
+            ReplacementStrategy.FirstLetterThenAsterisk => MatchEvaluators.FirstLetterThenAsteriskEvaluator,
             ReplacementStrategy.AngerEmoji => MatchEvaluators.AngerEmojiEvaluator,
             ReplacementStrategy.Bleep => MatchEvaluators.BleepEvaluator,
-            ReplacementStrategy.RedactedBlackRectangle => MatchEvaluators.RedactedBlackRectangleEvaluator,
+            ReplacementStrategy.RedactedRectangle => MatchEvaluators.RedactedRectangleEvaluator,
             ReplacementStrategy.StrikeThrough => MatchEvaluators.StrikeThroughEvaluator,
             ReplacementStrategy.Underscores => MatchEvaluators.UnderscoresEvaluator,
 
-            _ => MatchEvaluators.EmojiEvaluator,
+            _ => MatchEvaluators.AsteriskEvaluator,
         };
     }
 }
