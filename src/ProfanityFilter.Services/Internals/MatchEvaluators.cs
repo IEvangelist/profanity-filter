@@ -11,10 +11,16 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with asterisks.
     /// </summary>
-    internal static MatchEvaluator AsteriskEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator AsteriskEvaluator(FilterTarget target) =>
+        string (match) =>
         {
-            var result = string.Join("", Enumerable.Repeat("\\*", match.Length));
+            var isNotTitle = target is not FilterTarget.Title;
+
+            // Don't escape titles
+            var element = isNotTitle ? "\\*" : "*";
+
+            var result = string.Join(
+                "", Enumerable.Repeat(element, match.Length));
 
             return result;
         };
@@ -23,8 +29,8 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random emoji from 
     /// a predefined list of hand-selected replacements.
     /// </summary>
-    internal static MatchEvaluator EmojiEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator EmojiEvaluator(FilterTarget target) =>
+        string (match) =>
         {
             var emoji = Emoji.HandSelectedReplacements;
 
@@ -35,8 +41,8 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random anger emoji from 
     /// a predefined list of hand-selected replacements.
     /// </summary>
-    internal static MatchEvaluator AngerEmojiEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator AngerEmojiEvaluator(FilterTarget target) =>
+        string (match) =>
         {
             var emoji = Emoji.AngerEmoji;
 
@@ -46,8 +52,8 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces the everythingAfterFirstLetter of a swear word with the 🤬 emoji.
     /// </summary>
-    internal static MatchEvaluator MiddleSwearEmojiEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator MiddleSwearEmojiEvaluator(FilterTarget target) =>
+        string (match) =>
         {
             var value = match.ValueSpan;
 
@@ -60,10 +66,16 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with a random number of asterisks.
     /// The number of asterisks is between 1 and the length of the matched string.
     /// </summary>
-    internal static MatchEvaluator RandomAsteriskEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator RandomAsteriskEvaluator(FilterTarget target) =>
+        string (match) =>
         {
-            var result = string.Join("", Enumerable.Repeat("\\*", Random.Shared.Next(1, match.Length)));
+            var isNotTitle = target is not FilterTarget.Title;
+
+            // Don't escape titles
+            var element = isNotTitle ? "\\*" : "*";
+
+            var result = string.Join(
+                "", Enumerable.Repeat(element, Random.Shared.Next(1, match.Length)));
 
             return result;
         };
@@ -72,12 +84,18 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces the characters between the first and last 
     /// characters of a match with asterisks.
     /// </summary>
-    internal static MatchEvaluator MiddleAsteriskEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator MiddleAsteriskEvaluator(FilterTarget target) =>
+        string (match) =>
         {
             var value = match.ValueSpan;
 
-            var middle = string.Join("", Enumerable.Repeat("\\*", match.Length - 2));
+            var isNotTitle = target is not FilterTarget.Title;
+
+            // Don't escape titles
+            var element = isNotTitle ? "\\*" : "*";
+
+            var middle = string.Join(
+                "", Enumerable.Repeat(element, match.Length - 2));
 
             var result = $"{value[0]}{middle}{value[^1]}";
 
@@ -87,12 +105,18 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces everything after the first letter in a string with asterisks (*).
     /// </summary>
-    internal static MatchEvaluator FirstLetterThenAsteriskEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator FirstLetterThenAsteriskEvaluator(FilterTarget target) =>
+        string (match) =>
         {
             var value = match.ValueSpan;
 
-            var everythingAfterFirstLetter = string.Join("", Enumerable.Repeat("\\*", match.Length - 1));
+            var isNotTitle = target is not FilterTarget.Title;
+
+            // Don't escape titles
+            var element = isNotTitle ? "\\*" : "*";
+
+            var everythingAfterFirstLetter = string.Join(
+                "", Enumerable.Repeat(element, match.Length - 1));
 
             var result = $"{value[0]}{everythingAfterFirstLetter}";
 
@@ -102,19 +126,25 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces vowels in a string with asterisks (*).
     /// </summary>
-    internal static MatchEvaluator VowelAsteriskEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator VowelAsteriskEvaluator(FilterTarget target) =>
+        string (match) =>
         {
             var value = match.ValueSpan;
 
             var result = new StringBuilder(match.Length);
+
+            var isNotTitle = target is not FilterTarget.Title;
 
             for (var index = 0; index < match.Length; ++index)
             {
                 var @char = value[index];
                 if (@char.IsVowel())
                 {
-                    result.Append('\\');
+                    if (isNotTitle) // Don't escape titles
+                    {
+                        result.Append('\\');
+                    }
+
                     result.Append('*');
                 }
                 else
@@ -129,9 +159,10 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with the word "bleep".
     /// </summary>
-    internal static MatchEvaluator BleepEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator BleepEvaluator(FilterTarget target) =>
+        string (match) =>
         {
+            _ = target;
             _ = match;
 
             return "bleep";
@@ -140,9 +171,10 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces each letter in a string with the black rectangle symbol <c>█</c>.
     /// </summary>
-    internal static MatchEvaluator RedactedBlackRectangleEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator RedactedBlackRectangleEvaluator(FilterTarget target) =>
+        string (match) =>
         {
+            _ = target;
             var length = match.Length;
 
             return new string('█', length);
@@ -151,9 +183,14 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with the <c>~~struck through~~</c> markdown.
     /// </summary>
-    internal static MatchEvaluator StrikeThroughEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator StrikeThroughEvaluator(FilterTarget target) =>
+        string (match) =>
         {
+            if (target is FilterTarget.Title)
+            {
+                return match.Value; // We cannot strike through a title.
+            }
+
             var value = match.ValueSpan;
 
             return $"~~{value}~~";
@@ -162,8 +199,8 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with underscored.
     /// </summary>
-    internal static MatchEvaluator UnderscoresEvaluator =
-        static string (match) =>
+    internal static MatchEvaluator UnderscoresEvaluator(FilterTarget target) =>
+        string (match) =>
         {
             var length = match.Length;
 

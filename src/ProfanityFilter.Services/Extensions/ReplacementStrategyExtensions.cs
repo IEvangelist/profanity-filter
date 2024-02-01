@@ -4,9 +4,27 @@
 
 namespace ProfanityFilter.Services.Extensions;
 
-internal static class ReplacementStrategyExtensions
+public static class ReplacementStrategyExtensions
 {
-    internal static MatchEvaluator ToMatchEvaluator(this ReplacementStrategy replacementStrategy)
+    public static string ToSummaryString(this ReplacementStrategy replacementStrategy)
+    {
+        return replacementStrategy switch
+        {
+            ReplacementStrategy.Emoji => "emoji",
+            ReplacementStrategy.MiddleSwearEmoji => "middle swear emoji",
+            ReplacementStrategy.RandomAsterisk => "random asterisk",
+            ReplacementStrategy.MiddleAsterisk => "middle asterisk",
+            ReplacementStrategy.VowelAsterisk => "vowel asterisk",
+            ReplacementStrategy.AngerEmoji => "anger emoji",
+            ReplacementStrategy.Bleep => "bleep",
+            ReplacementStrategy.RedactedBlackRectangle => "redacted black rectangle",
+            ReplacementStrategy.StrikeThrough => "string through",
+            ReplacementStrategy.Underscores => "underscores",
+            _ => "asterisk",
+        };
+    }
+
+    internal static Func<FilterTarget, MatchEvaluator> GetMatchEvaluator(this ReplacementStrategy replacementStrategy)
     {
         return replacementStrategy switch
         {

@@ -27,7 +27,7 @@ internal sealed partial class ProfanityProcessor
             var replacementStrategy = core.GetReplacementStrategy();
 
             var (text, isFiltered) = await TryApplyFilterAsync(
-                issueComment.Body ?? "", replacementStrategy, contextSummaryPair);
+                issueComment.Body ?? "", new(replacementStrategy, FilterTarget.Comment), contextSummaryPair);
 
             if (isFiltered)
             {

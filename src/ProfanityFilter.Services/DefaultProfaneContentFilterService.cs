@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.Services;
 
-internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : IProfaneContentCensorService
+internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : IProfaneContentFilterService
 {
     private const string ProfaneListKey = nameof(ProfaneListKey);
 
@@ -62,11 +62,12 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
     }
 
     /// <inheritdoc />
-    async ValueTask<FilterResult> IProfaneContentCensorService.CensorProfanityAsync(
+    async ValueTask<FilterResult> IProfaneContentFilterService.FilterProfanityAsync(
         string content,
-        ReplacementStrategy replacementStrategy)
+        FilterParameters parameters)
     {
-        FilterResult result = new(content);
+        var (strategy, target) = parameters;
+        FilterResult result = new(content, parameters);
 
         if (string.IsNullOrWhiteSpace(content))
         {
@@ -76,7 +77,9 @@ internal sealed class DefaultProfaneContentCensorService(IMemoryCache cache) : I
         var wordList =
             await ReadAllProfaneWordsAsync().ConfigureAwait(false);
 
-        var evaluator = replacementStrategy.ToMatchEvaluator();
+        var getEvaluator = strategy.GetMatchEvaluator();
+        var evaluator = getEvaluator(parameters.Target);
+
         var stepContent = content;
 
         foreach (var (source, filter) in wordList)

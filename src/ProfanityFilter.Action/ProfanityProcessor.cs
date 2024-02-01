@@ -5,7 +5,7 @@ namespace ProfanityFilter.Action;
 
 internal sealed partial class ProfanityProcessor(
     CustomGitHubClient client,
-    IProfaneContentCensorService profaneContentCensor,
+    IProfaneContentFilterService profaneContentFilter,
     ICoreService core)
 {
     public async Task ProcessProfanityAsync()
@@ -134,21 +134,21 @@ internal sealed partial class ProfanityProcessor(
         return false;
     } 
 
-    private async ValueTask<FilterationResult> ApplyProfanityFilterAsync(
+    private async ValueTask<FiltrationResult> ApplyProfanityFilterAsync(
         string title, string body, ReplacementStrategy replacementStrategy, ContextSummaryPair contextSummaryPair)
     {
         if (string.IsNullOrWhiteSpace(title) &&
             string.IsNullOrWhiteSpace(body))
         {
-            return FilterationResult.NotFiltered;
+            return FiltrationResult.NotFiltered;
         }
 
         var (resultingTitle, isTitleFiltered) =
-            await TryApplyFilterAsync(title, replacementStrategy, contextSummaryPair);
+            await TryApplyFilterAsync(title, new(replacementStrategy, FilterTarget.Title), contextSummaryPair);
         var (resultingBody, isBodyFiltered) =
-            await TryApplyFilterAsync(body, replacementStrategy, contextSummaryPair);
+            await TryApplyFilterAsync(body, new(replacementStrategy, FilterTarget.Body), contextSummaryPair);
 
-        return new FilterationResult(
+        return new FiltrationResult(
             resultingTitle,
             isTitleFiltered,
             resultingBody,
@@ -156,14 +156,14 @@ internal sealed partial class ProfanityProcessor(
     }
 
     private async ValueTask<(string text, bool isFiltered)> TryApplyFilterAsync(
-        string text, ReplacementStrategy replacementStrategy, ContextSummaryPair contextSummaryPair)
+        string text, FilterParameters parameters, ContextSummaryPair contextSummaryPair)
     {
-        var result =
-            await profaneContentCensor.CensorProfanityAsync(text, replacementStrategy);
+        var result = await profaneContentFilter.FilterProfanityAsync(
+            text, parameters);
 
         if (result.IsFiltered)
         {
-            SummarizeAppliedFilter(result, replacementStrategy, contextSummaryPair);
+            SummarizeAppliedFilter(result, parameters, contextSummaryPair);
 
             core.Info($"""
                 Original text: {text}
@@ -175,22 +175,16 @@ internal sealed partial class ProfanityProcessor(
     }
 
     private static void SummarizeAppliedFilter(
-        FilterResult result, ReplacementStrategy replacementStrategy, ContextSummaryPair contextSummaryPair)
+        FilterResult result, FilterParameters parameters, ContextSummaryPair contextSummaryPair)
     {
         var (context, summary) = contextSummaryPair;
 
         summary.AddHeading("🤬 Profanity filter applied", 2);
 
-        var replacement = replacementStrategy switch
-        {
-            ReplacementStrategy.Emoji => "emoji",
-            ReplacementStrategy.MiddleSwearEmoji => "middle swear emoji",
-            ReplacementStrategy.RandomAsterisk => "random asterisk",
-            ReplacementStrategy.MiddleAsterisk => "middle asterisk",
-            ReplacementStrategy.VowelAsterisk => "vowel asterisk",
-            ReplacementStrategy.AngerEmoji => "anger emoji",
-            _ => "asterisk",
-        };
+        var replacement = parameters.Strategy.ToSummaryString();
+
+        // TODO: add details about the issue or pr, with links, etc.
+        // Log the offending actor too...
 
         summary.AddRawMarkdown($"""
                 The following table details the _original_ text and the resulting text after it was _filtered_ using the configured "{replacement}" replacement strategy:

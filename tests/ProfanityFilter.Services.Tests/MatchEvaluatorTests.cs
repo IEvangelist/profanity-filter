@@ -6,15 +6,16 @@ namespace ProfanityFilter.Services.Tests;
 public partial class MatchEvaluatorTests
 {
     [Theory]
-    [InlineData("Test", @"\*\*\*\*")]
-    [InlineData("swear", @"\*\*\*\*\*")]
-    public void AsteriskEvaluator_Returns_Expected_Result(string input, string expected)
+    [InlineData(FilterTarget.Body, "Test", @"\*\*\*\*")]
+    [InlineData(FilterTarget.Body, "swear", @"\*\*\*\*\*")]
+    [InlineData(FilterTarget.Title, "swear", @"*****")]
+    public void AsteriskEvaluator_Returns_Expected_Result(FilterTarget target, string input, string expected)
     {
         var regex = TestRegex();
         var match = regex.Match(input);
         var sut = MatchEvaluators.AsteriskEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(target).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -27,7 +28,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.RandomAsteriskEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.NotEqual(input, actual);
         Assert.True(actual.Length > 0 && actual.Length <= input.Length * 2 /* escape characters */);
@@ -41,7 +42,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.EmojiEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.NotEqual(input, actual);
     }
@@ -55,7 +56,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.VowelAsteriskEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -69,7 +70,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.MiddleAsteriskEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -83,7 +84,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.BleepEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -97,7 +98,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.RedactedBlackRectangleEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -111,7 +112,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.StrikeThroughEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -125,7 +126,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.UnderscoresEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -138,7 +139,7 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.MiddleSwearEmojiEvaluator;
 
-        var actual = sut(match);
+        var actual = sut(FilterTarget.Body).Invoke(match);
 
         Assert.NotEqual(input, actual);
     }

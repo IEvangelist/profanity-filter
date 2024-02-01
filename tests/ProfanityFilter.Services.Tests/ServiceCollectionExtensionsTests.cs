@@ -16,9 +16,9 @@ public class ServiceCollectionExtensionsTests
 
         // Assert
         var provider = services.BuildServiceProvider();
-        var censorService = provider.GetService<IProfaneContentCensorService>();
+        var censorService = provider.GetService<IProfaneContentFilterService>();
 
         Assert.NotNull(censorService);
-        Assert.IsType<DefaultProfaneContentCensorService>(censorService);
+        Assert.IsType<DefaultProfaneContentFilterService>(censorService);
     }
 }

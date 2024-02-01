@@ -15,6 +15,7 @@ global using Pathological.Globbing.Options;
 
 global using ProfanityFilter.Services.Extensions;
 global using ProfanityFilter.Services.Results;
+global using ProfanityFilter.Services.Filters;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo(
     assemblyName: "ProfanityFilter.Services.Tests")]

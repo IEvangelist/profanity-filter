@@ -3,11 +3,11 @@
 
 namespace ProfanityFilter.Services.Tests;
 
-public class DefaultProfaneContentCensorServiceTests
+public class DefaultProfaneContentFilterServiceTests
 {
-    private readonly IProfaneContentCensorService _sut;
+    private readonly IProfaneContentFilterService _sut;
 
-    public DefaultProfaneContentCensorServiceTests() => _sut = new DefaultProfaneContentCensorService(
+    public DefaultProfaneContentFilterServiceTests() => _sut = new DefaultProfaneContentFilterService(
         new MemoryCache(Options.Create<MemoryCacheOptions>(new())));
 
     [Theory]
@@ -19,34 +19,37 @@ public class DefaultProfaneContentCensorServiceTests
     [InlineData("This is a sentence with the word crap and shit.", @"This is a sentence with the word \*\*\*\* and \*\*\*\*.")]
     [InlineData("This is a sentence with the word crap and shit and fuck.", @"This is a sentence with the word \*\*\*\* and \*\*\*\* and \*\*\*\*.")]
     [InlineData("This is a sentence with the word crap and shit and fuck and ass.", @"This is a sentence with the word \*\*\*\* and \*\*\*\* and \*\*\*\* and \*\*\*.")]
-    public async Task CensorProfanityAsync_Returns_Expected_Result(string? input, string? expectedResult)
+    public async Task FilterProfanityAsync_Returns_Expected_Result(string? input, string? expectedResult)
     {
         // Act
-        var result = await _sut.CensorProfanityAsync(input!, ReplacementStrategy.Asterisk);
+        var result = await _sut.FilterProfanityAsync(input!,
+            new(ReplacementStrategy.Asterisk, FilterTarget.Body));
 
         // Assert
         Assert.Equal(expectedResult, result.FinalOutput ?? input);
     }
 
     [Fact]
-    public async Task CensorProfanityAsyncWithEmoji_Returns_Valid_Result()
+    public async Task FilterProfanityAsyncWithEmoji_Returns_Valid_Result()
     {
         var input = "This is fucking bullshit!";
 
         // Act
-        var result = await _sut.CensorProfanityAsync(input, ReplacementStrategy.Emoji);
+        var result = await _sut.FilterProfanityAsync(input,
+            new(ReplacementStrategy.Emoji, FilterTarget.Body));
 
         // Assert
         Assert.NotEqual(input, result.FinalOutput);
     }
 
     [Fact]
-    public async Task CensorProfanityAsyncWithMiddleAsterisk_ReturnsMultiStep_Result()
+    public async Task FilterProfanityAsyncWithMiddleAsterisk_ReturnsMultiStep_Result()
     {
         var input = "Lots of fucking words like manky and arrusa!";
 
         // Act
-        var result = await _sut.CensorProfanityAsync(input, ReplacementStrategy.MiddleAsterisk);
+        var result = await _sut.FilterProfanityAsync(input,
+            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body));
 
         // Assert
         Assert.True(result.IsFiltered);

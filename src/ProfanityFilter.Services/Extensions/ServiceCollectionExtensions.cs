@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddMemoryCache();
 
-        services.AddSingleton<IProfaneContentCensorService, DefaultProfaneContentCensorService>();
+        services.AddSingleton<IProfaneContentFilterService, DefaultProfaneContentFilterService>();
 
         return services;
     }

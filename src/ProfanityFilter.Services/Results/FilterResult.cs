@@ -7,9 +7,11 @@ namespace ProfanityFilter.Services.Results;
 /// Represents the result of a filter operation.
 /// </summary>
 /// <param name="Input">The value to check for profane content.</param>
+/// <param name="Parameters">The parameters used to generate this filter result.</param>
 /// <param name="Steps">The steps fo</param>
 public record class FilterResult(
     string Input,
+    FilterParameters Parameters,
     List<FilterStep>? Steps = null)
 {
     /// <summary>
