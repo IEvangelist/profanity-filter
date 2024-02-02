@@ -1,6 +1,8 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Text.RegularExpressions;
+
 namespace ProfanityFilter.Action;
 
 internal sealed partial class ProfanityProcessor(
@@ -216,7 +218,7 @@ internal sealed partial class ProfanityProcessor(
         summary.AddNewLine();
         summary.AddNewLine();
 
-        summary.AddRawMarkdown($"> The _potty mouth_ profanity filter ran in {elapsedTime:g}.");
+        summary.AddRawMarkdown($"> The _Potty Mouth_ profanity filter ran in {elapsedTime:g}.");
 
         if (!summary.IsBufferEmpty)
         {
@@ -247,13 +249,18 @@ internal sealed partial class ProfanityProcessor(
             ]),
         ];
 
+        static string ReplaceNewLinesWithHtmlBreaks(string content)
+        {
+            return NewLineRegex().Replace(content, "<br>");
+        }
+
         foreach (var step in result.Steps ?? [])
         {
             if (step.IsFiltered)
             {
                 rows.Add(new SummaryTableRow(Cells: [
                     new(Data: $"After _{step.ProfaneSourceData}_ filter"),
-                    new(Data: step.Output)
+                    new(Data: ReplaceNewLinesWithHtmlBreaks(step.Output))
                 ]));
             }
         }
@@ -273,9 +280,12 @@ internal sealed partial class ProfanityProcessor(
         {
             summary.AddRawMarkdown("The following words (or phrases) were considered profane:", true);
 
-            summary.AddMarkdownList(result.Matches);
+            summary.AddMarkdownList(result.Matches.Select(match => $"\"{match}\""));
 
             summary.AddNewLine();
         }
     }
+
+    [GeneratedRegex(@"\r\n?|\n")]
+    private static partial Regex NewLineRegex();
 }
