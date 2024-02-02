@@ -31,7 +31,7 @@ internal sealed partial class ProfanityProcessor
             {
                 var issueUpdate = new IssueUpdate
                 {
-                    Body = filterResult.Body,
+                    Body = core.GetFinalResultText(filterResult.BodyResult) ?? filterResult.Body,
                     Title = new()
                     {
                         String = filterResult.Title

@@ -1,6 +1,8 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using ProfanityFilter.Services.Filters;
+
 namespace ProfanityFilter.Services.Tests;
 
 public partial class MatchEvaluatorTests
@@ -15,7 +17,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.AsteriskEvaluator;
 
-        var actual = sut(target).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.Asterisk, target);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -28,7 +31,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.RandomAsteriskEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.Asterisk, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.NotEqual(input, actual);
         Assert.True(actual.Length > 0 && actual.Length <= input.Length * 2 /* escape characters */);
@@ -42,7 +46,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.EmojiEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.Emoji, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.NotEqual(input, actual);
     }
@@ -58,7 +63,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.VowelAsteriskEvaluator;
 
-        var actual = sut(target).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.VowelAsterisk, target);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -74,7 +80,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.MiddleAsteriskEvaluator;
 
-        var actual = sut(target).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.MiddleAsterisk, target);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -88,7 +95,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.BleepEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -102,7 +110,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.RedactedRectangleEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.RedactedRectangle, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -116,7 +125,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.StrikeThroughEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.StrikeThrough, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -130,7 +140,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.UnderscoresEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.Underscores, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.Equal(expected, actual);
     }
@@ -143,7 +154,8 @@ public partial class MatchEvaluatorTests
         var match = regex.Match(input);
         var sut = MatchEvaluators.MiddleSwearEmojiEvaluator;
 
-        var actual = sut(FilterTarget.Body).Invoke(match);
+        var parameters = new FilterParameters(ReplacementStrategy.MiddleSwearEmoji, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
 
         Assert.NotEqual(input, actual);
     }

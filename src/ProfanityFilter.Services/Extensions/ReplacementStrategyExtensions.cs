@@ -26,7 +26,7 @@ public static class ReplacementStrategyExtensions
         };
     }
 
-    internal static Func<FilterTarget, MatchEvaluator> GetMatchEvaluator(this ReplacementStrategy replacementStrategy)
+    internal static Func<FilterParameters, MatchEvaluator> GetMatchEvaluator(this ReplacementStrategy replacementStrategy)
     {
         return replacementStrategy switch
         {

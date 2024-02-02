@@ -260,5 +260,14 @@ internal sealed partial class ProfanityProcessor(
         summary.AddMarkdownTable(table);
 
         summary.AddNewLine();
+
+        if (result is { Matches.Count: > 0 })
+        {
+            summary.AddRawMarkdown("The following words (or phrases) were considered profane:", true);
+
+            summary.AddMarkdownList(result.Matches);
+
+            summary.AddNewLine();
+        }
     }
 }

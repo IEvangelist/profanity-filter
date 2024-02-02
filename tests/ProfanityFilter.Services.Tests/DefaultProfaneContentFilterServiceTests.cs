@@ -27,6 +27,15 @@ public class DefaultProfaneContentFilterServiceTests
 
         // Assert
         Assert.Equal(expectedResult, result.FinalOutput ?? input);
+
+        if (result.IsFiltered)
+        {
+            Assert.True(result.Matches.Count > 0);            
+        }
+        else
+        {
+            Assert.Null(result.Matches);
+        }
     }
 
     [Fact]
@@ -40,6 +49,8 @@ public class DefaultProfaneContentFilterServiceTests
 
         // Assert
         Assert.NotEqual(input, result.FinalOutput);
+        Assert.True(result.IsFiltered);
+        Assert.Equal(2, result.Matches.Count);
     }
 
     [Fact]

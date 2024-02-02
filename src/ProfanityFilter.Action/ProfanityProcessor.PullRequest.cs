@@ -29,14 +29,14 @@ internal sealed partial class ProfanityProcessor
 
             if (filterResult.IsFiltered)
             {
-                var issueUpdate = new PullRequestUpdate
+                var pullRequestUpdate = new PullRequestUpdate
                 {
-                    Body = filterResult.Body,
+                    Body = core.GetFinalResultText(filterResult.BodyResult) ?? filterResult.Body,
                     Title = filterResult.Title
                 };
 
                 await client.UpdatePullRequestAsync(
-                    (int)pullRequestNumber, issueUpdate, label?.Name);
+                    (int)pullRequestNumber, pullRequestUpdate, label?.Name);
 
                  await client.AddReactionAsync(
                      pullRequestNumber, ReactionContent.Confused);

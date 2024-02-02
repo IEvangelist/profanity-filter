@@ -10,4 +10,10 @@ namespace ProfanityFilter.Services.Filters;
 /// <param name="Target">The target of the filter.</param>
 public readonly record struct FilterParameters(
     ReplacementStrategy Strategy,
-    FilterTarget Target);
+    FilterTarget Target)
+{
+    /// <summary>
+    /// A value used to uniquely identify the filter parameters.
+    /// </summary>
+    public Guid Id { get; init; } = Guid.NewGuid();
+}

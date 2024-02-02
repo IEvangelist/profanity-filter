@@ -11,10 +11,12 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with asterisks.
     /// </summary>
-    internal static MatchEvaluator AsteriskEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator AsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            var isNotTitle = target is not FilterTarget.Title;
+            MatchRegistry.Register(parameters, match);
+
+            var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             // Don't escape titles
             var element = isNotTitle ? "\\*" : "*";
@@ -29,9 +31,11 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random emoji from 
     /// a predefined list of hand-selected replacements.
     /// </summary>
-    internal static MatchEvaluator EmojiEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator EmojiEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
+            MatchRegistry.Register(parameters, match);
+
             var emoji = Emoji.HandSelectedReplacements;
 
             return emoji[Random.Shared.Next(emoji.Length)];
@@ -41,9 +45,11 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random anger emoji from 
     /// a predefined list of hand-selected replacements.
     /// </summary>
-    internal static MatchEvaluator AngerEmojiEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator AngerEmojiEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
+            MatchRegistry.Register(parameters, match);
+
             var emoji = Emoji.AngerEmoji;
 
             return emoji[Random.Shared.Next(emoji.Length)];
@@ -52,9 +58,11 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces the everythingAfterFirstLetter of a swear word with the 🤬 emoji.
     /// </summary>
-    internal static MatchEvaluator MiddleSwearEmojiEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator MiddleSwearEmojiEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
+            MatchRegistry.Register(parameters, match);
+
             var value = match.ValueSpan;
 
             var result = $"{value[0]}🤬{value[^1]}";
@@ -66,10 +74,12 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with a random number of asterisks.
     /// The number of asterisks is between 1 and the length of the matched string.
     /// </summary>
-    internal static MatchEvaluator RandomAsteriskEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator RandomAsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            var isNotTitle = target is not FilterTarget.Title;
+            MatchRegistry.Register(parameters, match);
+
+            var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             // Don't escape titles
             var element = isNotTitle ? "\\*" : "*";
@@ -84,12 +94,14 @@ internal static class MatchEvaluators
     /// A <see cref="MatchEvaluator"/> that replaces the characters between the first and last 
     /// characters of a match with asterisks.
     /// </summary>
-    internal static MatchEvaluator MiddleAsteriskEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator MiddleAsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
+            MatchRegistry.Register(parameters, match);
+
             var value = match.ValueSpan;
 
-            var isNotTitle = target is not FilterTarget.Title;
+            var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             // Don't escape titles
             var element = isNotTitle ? "\\*" : "*";
@@ -105,12 +117,14 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces everything after the first letter in a string with asterisks (*).
     /// </summary>
-    internal static MatchEvaluator FirstLetterThenAsteriskEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator FirstLetterThenAsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
+            MatchRegistry.Register(parameters, match);
+
             var value = match.ValueSpan;
 
-            var isNotTitle = target is not FilterTarget.Title;
+            var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             // Don't escape titles
             var element = isNotTitle ? "\\*" : "*";
@@ -126,14 +140,16 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces vowels in a string with asterisks (*).
     /// </summary>
-    internal static MatchEvaluator VowelAsteriskEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator VowelAsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
+            MatchRegistry.Register(parameters, match);
+
             var value = match.ValueSpan;
 
             var result = new StringBuilder(match.Length);
 
-            var isNotTitle = target is not FilterTarget.Title;
+            var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             for (var index = 0; index < match.Length; ++index)
             {
@@ -159,11 +175,10 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with the word "bleep".
     /// </summary>
-    internal static MatchEvaluator BleepEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator BleepEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            _ = target;
-            _ = match;
+            MatchRegistry.Register(parameters, match);
 
             return "bleep";
         };
@@ -171,10 +186,11 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces each letter in a string with the rectangle symbol <c>█</c>.
     /// </summary>
-    internal static MatchEvaluator RedactedRectangleEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator RedactedRectangleEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            _ = target;
+            MatchRegistry.Register(parameters, match);
+
             var length = match.Length;
 
             return new string('█', length);
@@ -183,10 +199,12 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with the <c>~~struck through~~</c> markdown.
     /// </summary>
-    internal static MatchEvaluator StrikeThroughEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator StrikeThroughEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            if (target is FilterTarget.Title)
+            MatchRegistry.Register(parameters, match);
+
+            if (parameters.Target is FilterTarget.Title)
             {
                 return match.Value; // We cannot strike through a title.
             }
@@ -199,9 +217,11 @@ internal static class MatchEvaluators
     /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with underscored.
     /// </summary>
-    internal static MatchEvaluator UnderscoresEvaluator(FilterTarget target) =>
+    internal static MatchEvaluator UnderscoresEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
+            MatchRegistry.Register(parameters, match);
+
             var length = match.Length;
 
             return new string('_', length);

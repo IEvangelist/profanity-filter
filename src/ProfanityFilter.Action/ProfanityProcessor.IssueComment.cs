@@ -34,7 +34,10 @@ internal sealed partial class ProfanityProcessor
 
             if (bodyFilterResult.IsFiltered)
             {
-                await client.UpdateIssueCommentAsync(issueCommentId, bodyFilterResult.FinalOutput);
+                var finalBodyUpdate = core.GetFinalResultText(bodyFilterResult)
+                    ?? bodyFilterResult.FinalOutput;
+
+                await client.UpdateIssueCommentAsync(issueCommentId, finalBodyUpdate);
 
                 var issueNumber = (int)_context!.Payload!.Issue!.Number;
                 await client.AddReactionAsync(issueNumber, ReactionContent.Confused);

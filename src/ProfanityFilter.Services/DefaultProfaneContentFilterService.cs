@@ -78,7 +78,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
             await ReadAllProfaneWordsAsync().ConfigureAwait(false);
 
         var getEvaluator = strategy.GetMatchEvaluator();
-        var evaluator = getEvaluator(parameters.Target);
+        var evaluator = getEvaluator(parameters);
 
         var stepContent = content;
 
@@ -110,6 +110,9 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
             result.Steps.Add(step);
         }
 
-        return result;
+        return result with
+        {
+            Matches = MatchRegistry.PurgeMatches(parameters)
+        };
     }
 }
