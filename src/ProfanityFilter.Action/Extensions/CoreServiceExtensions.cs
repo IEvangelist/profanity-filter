@@ -34,7 +34,7 @@ internal static class CoreServiceExtensions
         }
 
         // Consumers can opt-out of this feature.
-        if (core.GetBoolInput("include-updated-note") is false)
+        if (core.GetBoolInput("include-updated-note", new() {  Required = false }) is false)
         {
             return finalResult;
         }
