@@ -213,6 +213,9 @@ internal sealed partial class ProfanityProcessor(
             ```{Env.NewLine}{Env.NewLine}
             """);
 
+        summary.AddNewLine();
+        summary.AddNewLine();
+
         summary.AddRawMarkdown($"> The _potty mouth_ profanity filter ran in {elapsedTime:g}.");
 
         if (!summary.IsBufferEmpty)

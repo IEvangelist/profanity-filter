@@ -5,7 +5,8 @@ namespace ProfanityFilter.Action.Extensions;
 
 internal static class CoreServiceExtensions
 {
-    private const string UpdatedNote = "This content was automatically updated to _filter out profanity_. " +
+    private const string UpdatedNote =
+        "This content was automatically updated to _filter out profanity_. " +
         "If you feel as though this was done in error, please " +
         "[file an issue with the details](https://github.com/IEvangelist/profanity-filter/issues/new).";
 
@@ -46,7 +47,12 @@ internal static class CoreServiceExtensions
             return finalResult;
         }
 
-        return $"{finalResult}{Env.NewLine}{Env.NewLine}{UpdatedNote}";
+        return $"""
+            {finalResult}
+
+            > [!NOTE]
+            > {UpdatedNote}
+            """;
     }
 
     /// <summary>
