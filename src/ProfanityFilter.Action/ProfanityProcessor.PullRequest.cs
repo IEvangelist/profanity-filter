@@ -38,8 +38,11 @@ internal sealed partial class ProfanityProcessor
                 await client.UpdatePullRequestAsync(
                     (int)pullRequestNumber, pullRequestUpdate, label?.Name);
 
-                 await client.AddReactionAsync(
-                     pullRequestNumber, ReactionContent.Confused);
+                if (core.GetBoolInput("include-confused-reaction"))
+                {
+                    await client.AddReactionAsync(
+                    pullRequestNumber, ReactionContent.Confused);
+                }
             }
         }
         finally

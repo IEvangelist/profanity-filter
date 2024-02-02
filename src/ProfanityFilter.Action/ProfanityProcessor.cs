@@ -15,6 +15,7 @@ internal sealed partial class ProfanityProcessor(
         var success = true;
 
         Summary summary = new();
+        var startingTimestamp = Stopwatch.GetTimestamp();
 
         try
         {
@@ -58,7 +59,9 @@ internal sealed partial class ProfanityProcessor(
 
             ContextSummaryPair contextSummaryPair = (context, summary);
 
-            await SummarizeAppliedFiltersAsync(result, contextSummaryPair);            
+            var elapsedTime = Stopwatch.GetElapsedTime(startingTimestamp);
+
+            await SummarizeAppliedFiltersAsync(result, contextSummaryPair, elapsedTime);            
         }
         catch (Exception ex)
         {
@@ -180,7 +183,7 @@ internal sealed partial class ProfanityProcessor(
     }
 
     private static async Task SummarizeAppliedFiltersAsync(
-        FiltrationResult result, ContextSummaryPair contextSummaryPair)
+        FiltrationResult result, ContextSummaryPair contextSummaryPair, TimeSpan elapsedTime)
     {
         if (result.IsFiltered == false)
         {
@@ -209,6 +212,8 @@ internal sealed partial class ProfanityProcessor(
             {context}
             ```{Env.NewLine}{Env.NewLine}
             """);
+
+        summary.AddRawMarkdown($"> The _potty mouth_ profanity filter ran in {elapsedTime:g}.");
 
         if (!summary.IsBufferEmpty)
         {

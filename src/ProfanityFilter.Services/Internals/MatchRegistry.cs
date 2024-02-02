@@ -8,7 +8,7 @@ internal static class MatchRegistry
     private static readonly ConcurrentDictionary<FilterParameters, List<string>> s_registry = new();
 
     /// <summary>
-    /// Registers a given <paramref name="match"/> for the given <paramref name="parameters"/>.
+    /// Registers a given <paramref name="match"/> with the given <paramref name="parameters"/>.
     /// </summary>
     internal static void Register(FilterParameters parameters, Match match)
     {

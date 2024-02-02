@@ -39,8 +39,11 @@ internal sealed partial class ProfanityProcessor
 
                 await client.UpdateIssueCommentAsync(issueCommentId, finalBodyUpdate);
 
-                var issueNumber = (int)_context!.Payload!.Issue!.Number;
-                await client.AddReactionAsync(issueNumber, ReactionContent.Confused);
+                if (core.GetBoolInput("include-confused-reaction"))
+                {
+                    var issueNumber = (int)_context!.Payload!.Issue!.Number;
+                    await client.AddReactionAsync(issueNumber, ReactionContent.Confused);
+                }
             }
         }
         finally

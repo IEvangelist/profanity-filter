@@ -20,6 +20,11 @@ inputs:
       'Whether to include a note in the issue or pull request body indicating that the content was filtered.'
     required: false
     default: 'true'
+  include-confused-reaction:
+    description:
+      'Whether to include a confused reaction on the issue or pull request when profane content is filtered.'
+    required: false
+    default: 'true'
 
 runs:
   using: 'docker'

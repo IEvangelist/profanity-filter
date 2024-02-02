@@ -1,6 +1,6 @@
 ﻿# Potty Mouth: GitHub Action
 
-> 🤬 Profane content filter
+> This repository contains the source code for a profane content filter 🤬.
 
 [![.NET](https://github.com/IEvangelist/profanity-filter/actions/workflows/dotnet.yml/badge.svg)](https://github.com/IEvangelist/profanity-filter/actions/workflows/dotnet.yml) [![Dogfood](https://github.com/IEvangelist/profanity-filter/actions/workflows/dogfood.yml/badge.svg)](https://github.com/IEvangelist/profanity-filter/actions/workflows/dogfood.yml)
 
@@ -54,7 +54,7 @@ jobs:
       id: profanity-filter
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-      # See https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies
+        # See https://bit.ly/potty-mouth-replacement-strategies
         replacement-strategy: Emoji # See Replacement strategy
 ```
 
@@ -69,7 +69,7 @@ If you already have an existing workflow that is triggered `on/issues|pull_reque
   id: profanity-filter
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
-    # See https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies
+    # See https://bit.ly/potty-mouth-replacement-strategies
     replacement-strategy: FirstLetterThenAsterisk
 ```
 
@@ -87,6 +87,7 @@ The following table describes each input:
 | `token` | The GitHub token used to update the issues or pull requests with.<br><br>Example, `${{ secrets.GITHUB_TOKEN }}`. | `true` |
 | `replacement-strategy` | The type of replacement method to use when profane content is filtered. | `false` (default: `asterisk`) |
 | `include-update-note` | A `boolean` value to indicate if the action should include a note in the issue or pull request body when profane content is replaced. | `false` (default: `true`) |
+| `include-confused-reaction` | A `boolean` value to indicate if the action should react to the issue or pull request with the confused 😕 reaction. | `false` (default: `true`) |
 
 ### 😵 Replacement strategies
 
@@ -125,7 +126,7 @@ Consider the following automatically applied label to an issue that contains pro
 When profane content is detected, the action will update the issue or pull request by:
 
 - Replacing any found profane content with the configured replacement strategy.
-- ~~Reacting to the issue or pull request with the [confused 😕 reaction](https://docs.github.com/rest/reactions/reactions).~~
+- Reacting to the issue or pull request with the [confused 😕 reaction](https://docs.github.com/rest/reactions/reactions).
 - Conditionally applying the `profane content 🤬` label if found in the repository.
 - Reporting the profane content in the workflow summary as a detailed table.
 
@@ -137,7 +138,8 @@ flowchart TD
       --> B[Contains Profane Content?]
     B -->|YES| C(Apply Filter)
       --> E(All swear words are filtered, for example sw**r)
-      --o F[Job Summary]
+      --> F(React to and label profane content)
+      --o G[Job Summary]
     B --o|NO| D{{Stop}} ~~~A
 ```
 

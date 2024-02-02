@@ -39,6 +39,28 @@ public class DefaultProfaneContentFilterServiceTests
     }
 
     [Fact]
+    public async Task FilterProfanityAsyncMultipleParameters_Returns_Valid_Results()
+    {
+        var input = "This is fucking bullshit!";
+
+        // Act
+        var titleResult = await _sut.FilterProfanityAsync(input,
+            new(ReplacementStrategy.Bleep, FilterTarget.Title));
+
+        var bodyResult = await _sut.FilterProfanityAsync(input,
+            new(ReplacementStrategy.Emoji, FilterTarget.Body));
+
+        // Assert
+        Assert.Equal("This is bleep bleep!", titleResult.FinalOutput);
+        Assert.True(titleResult.IsFiltered);
+        Assert.Equal(2, titleResult.Matches.Count);
+
+        Assert.NotEqual(input, bodyResult.FinalOutput);
+        Assert.True(bodyResult.IsFiltered);
+        Assert.Equal(2, bodyResult.Matches.Count);
+    }
+
+    [Fact]
     public async Task FilterProfanityAsyncWithEmoji_Returns_Valid_Result()
     {
         var input = "This is fucking bullshit!";
