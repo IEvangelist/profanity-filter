@@ -23,16 +23,12 @@ name: Profanity filter
 
 # Trigger on issue or pull requests, that are opened, edited, or reopened
 on:
+  issue_comment:
+    types: [created, edited]
   issues:
-    types:
-      - opened
-      - edited
-      - reopened
+    types: [opened, edited, reopened]
   pull_request:
-    types:
-      - opened
-      - edited
-      - reopened
+    types: [opened, edited, reopened]
 
 jobs:
   # Name the job whatever you'd like

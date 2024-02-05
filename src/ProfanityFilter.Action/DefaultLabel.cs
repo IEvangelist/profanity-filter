@@ -10,6 +10,7 @@ internal static class DefaultLabel
 {
     /// <summary>
     /// The default name of the label that is applied to content that is deemed to be profane.
+    /// <c>"profane content 🤬"</c>
     /// </summary>
     internal const string Name = "profane content 🤬";
 
@@ -20,6 +21,7 @@ internal static class DefaultLabel
 
     /// <summary>
     /// The default color for labels in the application, represented as a hexadecimal string.
+    /// <c>#512bd4</c>
     /// </summary>
     internal const string Color = "512bd4";
 }
