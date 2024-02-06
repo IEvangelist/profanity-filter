@@ -35,7 +35,7 @@ internal static class CoreServiceExtensions
         }
 
         // Consumers can opt-out of this feature.
-        if (core.GetBoolInput("include-updated-note", new() {  Required = false }) is false)
+        if (core.GetBoolInput(ActionInputs.IncludeUpdatedNote) is false)
         {
             return finalResult;
         }
@@ -61,7 +61,7 @@ internal static class CoreServiceExtensions
     /// </summary>
     public static ReplacementStrategy GetReplacementStrategy(this ICoreService core)
     {
-        return core.GetInput("replacement-strategy") is string value
+        return core.GetInput(ActionInputs.ReplacementStrategy) is string value
             && Enum.TryParse<ReplacementStrategy>(
                 value: NormalizeEnumString(value),
                 ignoreCase: true,
@@ -74,5 +74,48 @@ internal static class CoreServiceExtensions
         {
             return enumValue.Replace("-", "");
         }
+    }
+
+    /// <summary>
+    /// Gets the manual profane words from the <paramref name="core"/> service's input.
+    /// </summary>
+    public static string[]? GetManualProfaneWords(this ICoreService core)
+    {
+        var words = core.GetInput(ActionInputs.ManualProfaneWords);
+
+        if (words is null or { Length: 0 })
+        {
+            return default;
+        }
+
+        return words.Split(",", StringSplitOptions.RemoveEmptyEntries)
+            .Select(static word => word.Trim())
+            .ToArray();
+    }
+
+    private static readonly HttpClient s_client = new();
+    private static readonly string[] s_newLines = [ "\r\n", "\r", "\n" ];
+
+    /// <summary>
+    /// Gets the custom profane words from the <paramref name="core"/> service's input,
+    /// making an HTTP request to the provided URL.
+    /// </summary>
+    public static async ValueTask<string[]?> GetCustomProfaneWordsAsync(this ICoreService core)
+    {
+        if (core.GetInput(ActionInputs.CustomProfaneWordsUrl) is { Length: > 0 } requestUri)
+        {
+            var words = await s_client.GetStringAsync(requestUri);
+
+            if (words is null or { Length: 0 })
+            {
+                return default;
+            }
+
+            return words.Split(s_newLines, StringSplitOptions.RemoveEmptyEntries)
+                .Select(static word => word.Trim())
+                .ToArray();
+        }
+
+        return default;
     }
 }

@@ -30,7 +30,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         if (result.IsFiltered)
         {
-            Assert.True(result.Matches.Count > 0);            
+            Assert.True(result.Matches.Count > 0);
         }
         else
         {
@@ -41,23 +41,34 @@ public class DefaultProfaneContentFilterServiceTests
     [Fact]
     public async Task FilterProfanityAsyncMultipleParameters_Returns_Valid_Results()
     {
-        var input = "This is fucking bullshit!";
+        var input = "I love WebForms!";
+
+        var set = new HashSet<ProfaneSourceFilter>
+        {
+            new("Custom", new[] { "WebForms" }.ToFrozenSet())
+        };
 
         // Act
         var titleResult = await _sut.FilterProfanityAsync(input,
-            new(ReplacementStrategy.Bleep, FilterTarget.Title));
+            new(ReplacementStrategy.Bleep, FilterTarget.Title)
+            {
+                AdditionalFilterSources = set
+            });
 
         var bodyResult = await _sut.FilterProfanityAsync(input,
-            new(ReplacementStrategy.Emoji, FilterTarget.Body));
+            new(ReplacementStrategy.Emoji, FilterTarget.Body)
+            {
+                AdditionalFilterSources = set
+            });
 
         // Assert
-        Assert.Equal("This is bleep bleep!", titleResult.FinalOutput);
+        Assert.Equal("I love bleep!", titleResult.FinalOutput);
         Assert.True(titleResult.IsFiltered);
-        Assert.Equal(2, titleResult.Matches.Count);
+        Assert.Single(titleResult.Matches);
 
         Assert.NotEqual(input, bodyResult.FinalOutput);
         Assert.True(bodyResult.IsFiltered);
-        Assert.Equal(2, bodyResult.Matches.Count);
+        Assert.Single(bodyResult.Matches);
     }
 
     [Fact]
@@ -73,6 +84,25 @@ public class DefaultProfaneContentFilterServiceTests
         Assert.NotEqual(input, result.FinalOutput);
         Assert.True(result.IsFiltered);
         Assert.Equal(2, result.Matches.Count);
+    }
+
+    [Fact]
+    public async Task FilterProfanityAsyncWithManualProfaneWords_ReturnsExpectedResult()
+    {
+        var input = "Does this get filtered if I say WebForms?! Well, does it?";
+
+        // Act
+        var result = await _sut.FilterProfanityAsync(input,
+            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body)
+            {
+                AdditionalFilterSources =
+                [
+                    new("ManualProfaneWords", (new string[] { "WebForms" }).ToFrozenSet())
+                ]
+            });
+
+        // Assert
+        Assert.True(result.IsFiltered);
     }
 
     [Fact]

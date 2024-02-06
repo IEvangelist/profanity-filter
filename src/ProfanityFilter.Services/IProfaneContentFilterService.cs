@@ -9,12 +9,12 @@ namespace ProfanityFilter.Services;
 public interface IProfaneContentFilterService
 {
     /// <summary>
-    /// Censors any profanity in the specified content.
+    /// Filters any profanity in the specified content.
     /// </summary>
-    /// <param name="content">The content to censor.</param>
+    /// <param name="content">The content to filter.</param>
     /// <param name="parameters">The parameters to employ when filtering content.</param>
     /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous 
-    /// operation, containing the censored content.</returns>
+    /// operation, containing the filtered content.</returns>
     ValueTask<FilterResult> FilterProfanityAsync(
         string content,
         FilterParameters parameters);

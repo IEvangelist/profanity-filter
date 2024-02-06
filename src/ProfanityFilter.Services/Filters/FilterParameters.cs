@@ -16,4 +16,9 @@ public readonly record struct FilterParameters(
     /// A value used to uniquely identify the filter parameters.
     /// </summary>
     public Guid Id { get; init; } = Guid.NewGuid();
+
+    /// <summary>
+    /// A collection of additional profane words to filter.
+    /// </summary>
+    public HashSet<ProfaneSourceFilter>? AdditionalFilterSources { get; init;  }
 }

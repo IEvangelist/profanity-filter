@@ -1,7 +1,6 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-
 namespace ProfanityFilter.Services.Extensions;
 
 public static class ReplacementStrategyExtensions
@@ -21,6 +20,8 @@ public static class ReplacementStrategyExtensions
             ReplacementStrategy.RedactedRectangle => "redacted rectangle",
             ReplacementStrategy.StrikeThrough => "string through",
             ReplacementStrategy.Underscores => "underscores",
+            ReplacementStrategy.Grawlix => "grawlix",
+            ReplacementStrategy.BoldGrawlix => "bold grawlix",
 
             _ => "asterisk",
         };
@@ -41,6 +42,8 @@ public static class ReplacementStrategyExtensions
             ReplacementStrategy.RedactedRectangle => MatchEvaluators.RedactedRectangleEvaluator,
             ReplacementStrategy.StrikeThrough => MatchEvaluators.StrikeThroughEvaluator,
             ReplacementStrategy.Underscores => MatchEvaluators.UnderscoresEvaluator,
+            ReplacementStrategy.Grawlix => MatchEvaluators.GrawlixEvaluator,
+            ReplacementStrategy.BoldGrawlix => MatchEvaluators.BoldGrawlixEvaluator,
 
             _ => MatchEvaluators.AsteriskEvaluator,
         };

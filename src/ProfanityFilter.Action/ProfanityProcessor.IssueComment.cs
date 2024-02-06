@@ -27,8 +27,13 @@ internal sealed partial class ProfanityProcessor
 
             var replacementStrategy = core.GetReplacementStrategy();
 
+            var additionalFilters = await GetAdditionalFiltersAsync();
+
             var bodyFilterResult = await TryApplyFilterAsync(
-                issueComment.Body ?? "", new(replacementStrategy, FilterTarget.Comment));
+                issueComment.Body ?? "", new(replacementStrategy, FilterTarget.Comment)
+                {
+                    AdditionalFilterSources = additionalFilters
+                });
 
             filterResult = new FiltrationResult(BodyResult: bodyFilterResult);
 
@@ -39,7 +44,7 @@ internal sealed partial class ProfanityProcessor
 
                 await client.UpdateIssueCommentAsync(issueCommentId, finalBodyUpdate);
 
-                if (core.GetBoolInput("include-confused-reaction", new() { Required = false }))
+                if (core.GetBoolInput(ActionInputs.IncludeConfusedReaction))
                 {
                     var issueNumber = (int)_context!.Payload!.Issue!.Number;
                     await client.AddReactionAsync(issueNumber, ReactionContent.Confused);

@@ -39,6 +39,34 @@ public partial class MatchEvaluatorTests
     }
 
     [Fact]
+    public void GrawlixEvaluator_Returns_Expected_Result()
+    {
+        var input = "swear";
+        var regex = TestRegex();
+        var match = regex.Match(input);
+        var sut = MatchEvaluators.GrawlixEvaluator;
+
+        var parameters = new FilterParameters(ReplacementStrategy.Grawlix, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
+
+        Assert.NotEqual(input, actual);
+    }
+
+    [Fact]
+    public void BoldGrawlixEvaluator_Returns_Expected_Result()
+    {
+        var input = "swear";
+        var regex = TestRegex();
+        var match = regex.Match(input);
+        var sut = MatchEvaluators.BoldGrawlixEvaluator;
+
+        var parameters = new FilterParameters(ReplacementStrategy.BoldGrawlix, FilterTarget.Body);
+        var actual = sut(parameters).Invoke(match);
+
+        Assert.NotEqual(input, actual);
+    }
+
+    [Fact]
     public void EmojiEvaluator_Returns_Expected_Result()
     {
         var input = "Test";

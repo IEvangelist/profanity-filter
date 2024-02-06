@@ -3,7 +3,12 @@
 
 namespace ProfanityFilter.Services;
 
-internal record class ProfaneSourceFilter(
+/// <summary>
+/// Represents a filter that is used to filter profane words from a source.
+/// </summary>
+/// <param name="SourceName">The name of the source.</param>
+/// <param name="ProfaneWords">A set of profane words to filter on.</param>
+public record class ProfaneSourceFilter(
     string SourceName,
     FrozenSet<string> ProfaneWords)
 {

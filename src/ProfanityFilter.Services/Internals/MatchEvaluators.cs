@@ -9,6 +9,42 @@ namespace ProfanityFilter.Services;
 internal static class MatchEvaluators
 {
     /// <summary>
+    /// A <see cref="MatchEvaluator"/> that replaces a matched string with grawlix symbols.
+    /// </summary>
+    internal static MatchEvaluator GrawlixEvaluator(FilterParameters parameters) =>
+        string (match) =>
+        {
+            MatchRegistry.Register(parameters, match);
+
+            var isNotTitle = parameters.Target is not FilterTarget.Title;
+
+            var grawlixes = isNotTitle ? Symbols.Grawlixes : Symbols.UnescapedGrawlixes;
+
+            var result = string.Join(
+                "", Random.Shared.GetItems(grawlixes, match.Length));
+
+            return result;
+        };
+
+    /// <summary>
+    /// A <see cref="MatchEvaluator"/> that replaces a matched string with grawlix symbols.
+    /// </summary>
+    internal static MatchEvaluator BoldGrawlixEvaluator(FilterParameters parameters) =>
+        string (match) =>
+        {
+            MatchRegistry.Register(parameters, match);
+
+            var isNotTitle = parameters.Target is not FilterTarget.Title;
+
+            var grawlixes = isNotTitle ? Symbols.Grawlixes : Symbols.UnescapedGrawlixes;
+
+            var result = string.Join(
+                "", Random.Shared.GetItems(grawlixes, match.Length));
+
+            return isNotTitle ? $"__{result}__" : result;
+        };
+
+    /// <summary>
     /// A <see cref="MatchEvaluator"/> that replaces a matched string with asterisks.
     /// </summary>
     internal static MatchEvaluator AsteriskEvaluator(FilterParameters parameters) =>

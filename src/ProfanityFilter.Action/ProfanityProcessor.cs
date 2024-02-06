@@ -1,6 +1,8 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using System.Collections.Frozen;
+
 namespace ProfanityFilter.Action;
 
 internal sealed partial class ProfanityProcessor(
@@ -139,6 +141,35 @@ internal sealed partial class ProfanityProcessor(
         return false;
     } 
 
+    private async ValueTask<HashSet<ProfaneSourceFilter>?> GetAdditionalFiltersAsync()
+    {
+        var manualProfaneWords = core.GetManualProfaneWords();
+        var customProfaneWords = await core.GetCustomProfaneWordsAsync();
+
+        if (manualProfaneWords is null && customProfaneWords is null)
+        {
+            return null;
+        }
+
+        var filters = new HashSet<ProfaneSourceFilter>();
+
+        if (manualProfaneWords is { Length: > 0 })
+        {
+            filters.Add(new(
+                SourceName: "ManualProfaneWords.raw",
+                ProfaneWords: manualProfaneWords.ToFrozenSet()));
+        }
+
+        if (customProfaneWords is {  Length: > 0 })
+        {
+            filters.Add(new(
+                SourceName: "CustomProfaneWords.url",
+                ProfaneWords: customProfaneWords.ToFrozenSet()));
+        }
+
+        return filters;
+    }
+
     private async ValueTask<FiltrationResult> ApplyProfanityFilterAsync(
         string title, string body, ReplacementStrategy replacementStrategy)
     {
@@ -148,10 +179,18 @@ internal sealed partial class ProfanityProcessor(
             return FiltrationResult.NotFiltered;
         }
 
+        var additionalFilters = await GetAdditionalFiltersAsync();
+
         var titleResult = await TryApplyFilterAsync(
-            title, parameters: new(replacementStrategy, FilterTarget.Title));
+            title, parameters: new(replacementStrategy, FilterTarget.Title)
+            {
+                AdditionalFilterSources = additionalFilters
+            });
         var bodyResult = await TryApplyFilterAsync(
-            body, parameters: new(replacementStrategy, FilterTarget.Body));
+            body, parameters: new(replacementStrategy, FilterTarget.Body)
+            {
+                AdditionalFilterSources = additionalFilters
+            });
 
         return new FiltrationResult(titleResult, bodyResult);
     }

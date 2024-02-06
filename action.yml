@@ -25,6 +25,14 @@ inputs:
       'Whether to include a confused reaction on the issue or pull request when profane content is filtered.'
     required: false
     default: 'true'
+  manual-profane-words:
+    description:
+      'A comma-separated list of additional sources to use for profanity filtering.'
+    required: false
+  custom-profane-words-url:
+    description:
+      'A URL that returns a newline-delimted list of custom words to use for profanity filtering.'
+    required: false
 
 runs:
   using: 'docker'

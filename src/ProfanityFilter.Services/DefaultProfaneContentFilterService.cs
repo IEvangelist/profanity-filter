@@ -77,6 +77,11 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
         var wordList =
             await ReadAllProfaneWordsAsync().ConfigureAwait(false);
 
+        foreach (var profaneSourceFilter in parameters.AdditionalFilterSources ?? [])
+        {
+            wordList[profaneSourceFilter.SourceName] = profaneSourceFilter;
+        }
+
         var getEvaluator = strategy.GetMatchEvaluator();
         var evaluator = getEvaluator(parameters);
 

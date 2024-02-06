@@ -3,8 +3,49 @@
 
 namespace ProfanityFilter.Action.Tests;
 
-public class ProfanityProcessorTests
+public class CoreServiceExtensionsTests
 {
+    [Theory]
+    [InlineData(null, new string [0])]
+    [InlineData("WebForms,WinForms", new string[] { "WebForms", "WinForms" })]
+    public void CoreServiceCorrectlyParseManualWordList(string? input, string[]? expected = null)
+    {
+        ICoreService sut = new TestCoreService(new()
+        {
+            [ActionInputs.ManualProfaneWords] = input ?? ""
+        });
+
+        var actual = sut.GetManualProfaneWords();
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public async Task CoreServiceCorrectlyParseCustomWordList()
+    {
+        ICoreService sut = new TestCoreService(new()
+        {
+            [ActionInputs.CustomProfaneWordsUrl] =
+                "https://raw.githubusercontent.com/ProfanityFilter/ProfanityFilter/main/src/ProfanityFilter.Services/ProfaneWords.txt"
+        });
+
+        var actual = await sut.GetCustomProfaneWordsAsync();
+
+        Assert.Equal<string[]>(
+        [
+            "WebForms",
+            "Web Forms",
+            "ASP.NET WebForms",
+            "ASP.NET Web Forms",
+            "ASP.NET Core WebForms",
+            "ASP.NET Core Web Forms",
+            "WinForms",
+            "WinForms",
+            "WindowsForms",
+            "Windows Forms",
+        ], actual);
+    }
+
     [Theory]
     [InlineData("emoji", ReplacementStrategy.Emoji)]
     [InlineData("EMOJI", ReplacementStrategy.Emoji)]
@@ -14,11 +55,11 @@ public class ProfanityProcessorTests
     [InlineData("AngerEmoji", ReplacementStrategy.AngerEmoji)]
     [InlineData("first-letter-then-asterisk", ReplacementStrategy.FirstLetterThenAsterisk)]
     [InlineData(nameof(ReplacementStrategy.FirstLetterThenAsterisk), ReplacementStrategy.FirstLetterThenAsterisk)]
-    public void ProfanityProcessorCorrectlyParsesReplacementStrategy(string input, ReplacementStrategy expected)
+    public void CoreServiceCorrectlyParsesReplacementStrategy(string input, ReplacementStrategy expected)
     {
         ICoreService sut = new TestCoreService(new()
         {
-            ["replacement-strategy"] = input
+            [ActionInputs.ReplacementStrategy] = input
         });
 
         var actual = sut.GetReplacementStrategy();
