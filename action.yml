@@ -41,4 +41,4 @@ inputs:
 
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/ievangelist/profanity-filter:${{ github.event.inputs.image-tag }}'
+  image: 'docker://ghcr.io/ievangelist/profanity-filter:${{ inputs.image-tag }}'
