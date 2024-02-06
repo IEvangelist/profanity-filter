@@ -39,11 +39,22 @@ internal sealed partial class ProfanityProcessor
         summary.AddNewLine();
         summary.AddNewLine();
 
-        summary.AddRawMarkdown($"> The _Potty Mouth_ profanity filter ran in {elapsedTime:g}.");
+        summary.AddRawMarkdown(
+            $"> The _Potty Mouth_ profanity filter ran in {ToHumanReadableTimeSpan(elapsedTime)}.");
 
         if (!summary.IsBufferEmpty)
         {
             await summary.WriteAsync(new() { Overwrite = true });
+        }
+
+        static string ToHumanReadableTimeSpan(TimeSpan time)
+        {
+            return time switch
+            {
+                { TotalSeconds: >= 2 } => $"{time.Seconds} seconds and {time.Milliseconds} milliseconds",
+                { TotalSeconds: > 1 } => $"{time.Seconds} second and {time.Milliseconds} milliseconds",
+                _ => $"{time.Milliseconds} milliseconds"
+            };
         }
     }
 
