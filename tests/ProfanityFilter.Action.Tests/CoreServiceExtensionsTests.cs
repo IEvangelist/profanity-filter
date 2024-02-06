@@ -6,7 +6,7 @@ namespace ProfanityFilter.Action.Tests;
 public class CoreServiceExtensionsTests
 {
     [Theory]
-    [InlineData(null, new string [0])]
+    [InlineData(null, null)]
     [InlineData("WebForms,WinForms", new string[] { "WebForms", "WinForms" })]
     public void CoreServiceCorrectlyParseManualWordList(string? input, string[]? expected = null)
     {
@@ -26,7 +26,7 @@ public class CoreServiceExtensionsTests
         ICoreService sut = new TestCoreService(new()
         {
             [ActionInputs.CustomProfaneWordsUrl] =
-                "https://raw.githubusercontent.com/ProfanityFilter/ProfanityFilter/main/src/ProfanityFilter.Services/ProfaneWords.txt"
+                "https://gist.githubusercontent.com/IEvangelist/355ad7852bafedb4365a896d1c545a6c/raw/cbd4cea1592ab5acb518d139240dd5a11f42612c/Example.ProfaneWord.List.txt"
         });
 
         var actual = await sut.GetCustomProfaneWordsAsync();
