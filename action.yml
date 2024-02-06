@@ -33,12 +33,7 @@ inputs:
     description:
       'A URL that returns a newline-delimted list of custom words to use for profanity filtering.'
     required: false
-  image-tag:
-    description:
-      'The image tag to use for the IEvangelist/profanity-filter container image.'
-    required: false
-    default: 'latest'
 
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/ievangelist/profanity-filter:${{ inputs.image-tag }}'
+  image: 'docker://ghcr.io/ievangelist/profanity-filter:latest'
