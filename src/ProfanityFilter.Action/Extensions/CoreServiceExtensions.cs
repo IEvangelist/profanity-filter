@@ -35,7 +35,7 @@ internal static class CoreServiceExtensions
         }
 
         // Consumers can opt-out of this feature.
-        if (core.GetBoolInput("include-updated-note", new() {  Required = false }) is false)
+        if (core.GetBoolInput(ActionInputs.IncludeUpdatedNote, new() {  Required = false }) is false)
         {
             return finalResult;
         }
@@ -61,7 +61,7 @@ internal static class CoreServiceExtensions
     /// </summary>
     public static ReplacementStrategy GetReplacementStrategy(this ICoreService core)
     {
-        return core.GetInput("replacement-strategy") is string value
+        return core.GetInput(ActionInputs.ReplacementStrategy) is string value
             && Enum.TryParse<ReplacementStrategy>(
                 value: NormalizeEnumString(value),
                 ignoreCase: true,
@@ -74,5 +74,24 @@ internal static class CoreServiceExtensions
         {
             return enumValue.Replace("-", "");
         }
+    }
+
+    /// <summary>
+    /// Gets a custom replacement strategy, when one has been provided.
+    /// </summary>
+    public static CustomReplacementStrategy? GetCustomReplacementStrategy(
+        this ICoreService core)
+    {
+        var customJson = core.GetInput(ActionInputs.CustomReplacementStrategy);
+
+        if (string.IsNullOrWhiteSpace(customJson))
+        {
+            return default;
+        }
+
+        var strategy = JsonSerializer.Deserialize<CustomReplacementStrategy>(
+            customJson, SourceGenerationContexts.Default.CustomReplacementStrategy);
+
+        return strategy;
     }
 }

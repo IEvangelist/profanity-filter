@@ -73,5 +73,10 @@ public enum ReplacementStrategy
     /// <summary>
     /// Represents a replacement strategy where the profane word is replaced by underscores.
     /// </summary>
-    Underscores
+    Underscores,
+
+    /// <summary>
+    /// Represents a replacement strategy where the profane word is replaced by a user-defined regex.
+    /// </summary>
+    UserDefinedRegex
 }
