@@ -66,7 +66,7 @@ internal sealed partial class ProfanityProcessor
         [
             new SummaryTableRow(Cells: [
                 new(Data: "Original text"),
-                new(Data: result.Input)
+                new(Data: ReplaceNewLinesWithHtmlBreaks(result.Input))
             ]),
         ];
 
