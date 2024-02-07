@@ -93,19 +93,20 @@ Each replacement strategy corresponds to a different way of replacing profane co
 
 | `ReplacementStrategy` | Valid string value | Description |
 | --- | --- | --- |
-| `ReplacementType.Asterisk` | `"Asterisk"` | Replaces profane content with asterisks. For example, a swear word with four letters would look like this `****`. |
-| `ReplacementType.Emoji` | `"Emoji"` | Replaces profane content with a random emoji. For example, a swear word with four letters could look like this `💩`. |
-| `ReplacementType.Grawlix` | `"Grawlix"` | Replaces profane content with grawlix symbols. For example, a swear word with four letters could look like this `#%$!`. |
-| `ReplacementType.BoldGrawlix` | `"BoldGrawlix"` | Replaces profane content with bold grawlix symbols. For example, a swear word with four letters could look like this __`#%$!`__. |
-| `ReplacementType.Bleep` | `"Bleep"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `bleep`. |
-| `ReplacementType.RedactedRectangle` | `"RedactedRectangle"` | Replaces profane content with rectangles to redact their content. For example, a swear word with four letters could look like this `████`. |
-| `ReplacementType.AngerEmoji` | `"AngerEmoji"` | Replaces profane content with a random anger emoji. For example, a swear word it might `😡`. |
-| `ReplacementType.MiddleSwearEmoji` | `"MiddleSwearEmoji"` | Replaces profane content with a random swear emoji, but only in the middle of the word. For example, a swear word with four letters could look like this `f🤬k`. |
-| `ReplacementType.RandomAsterisk` | `"RandomAsterisk"` | Replaces profane content with a random number of asterisks. For example, a swear word with four letters could look like any value between `*` and `****`. |
-| `ReplacementType.FirstLetterThenAsterisk` | `"FirstLetterThenAsterisk"` | Replaces profane content with asterisks after the first letter. For example, a swear word with four letters could look like this `f***`. |
-| `ReplacementType.VowelAsterisk` | `"VowelAsterisk"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh*t`. |
-| `ReplacementType.StrikeThrough` | `"StrikeThrough"` | Encloses profane content with `~~` causing strikethrough rendering. For example, a swear word with four letters could look like this ~~`shit`~~. |
-| `ReplacementType.Underscores` | `"Underscores"` | Replaces profane content with underscores `_`. For example, a swear word with four letters could look like this `____`. |
+| `ReplacementStrategy.Asterisk` | `"Asterisk"` | Replaces profane content with asterisks. For example, a swear word with four letters would look like this `****`. |
+| `ReplacementStrategy.Emoji` | `"Emoji"` | Replaces profane content with a random emoji. For example, a swear word with four letters could look like this `💩`. |
+| `ReplacementStrategy.Grawlix` | `"Grawlix"` | Replaces profane content with grawlix symbols. For example, a swear word with four letters could look like this `#%$!`. |
+| `ReplacementStrategy.BoldGrawlix` | `"BoldGrawlix"` | Replaces profane content with bold grawlix symbols. For example, a swear word with four letters could look like this __`#%$!`__. |
+| `ReplacementStrategy.Bleep` | `"Bleep"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `bleep`. |
+| `ReplacementStrategy.RedactedRectangle` | `"RedactedRectangle"` | Replaces profane content with rectangles to redact their content. For example, a swear word with four letters could look like this `████`. |
+| `ReplacementStrategy.AngerEmoji` | `"AngerEmoji"` | Replaces profane content with a random anger emoji. For example, a swear word it might `😡`. |
+| `ReplacementStrategy.MiddleAsterisk` | `"MiddleAsterisk"` | Replaces profane content with asterisk, but only in the middle of the word. For example, a swear word with four letters could look like this `f**k`. |
+| `ReplacementStrategy.MiddleSwearEmoji` | `"MiddleSwearEmoji"` | Replaces profane content with a random swear emoji, but only in the middle of the word. For example, a swear word with four letters could look like this `f🤬k`. |
+| `ReplacementStrategy.RandomAsterisk` | `"RandomAsterisk"` | Replaces profane content with a random number of asterisks. For example, a swear word with four letters could look like any value between `*` and `****`. |
+| `ReplacementStrategy.FirstLetterThenAsterisk` | `"FirstLetterThenAsterisk"` | Replaces profane content with asterisks after the first letter. For example, a swear word with four letters could look like this `f***`. |
+| `ReplacementStrategy.VowelAsterisk` | `"VowelAsterisk"` | Replaces profane content with asterisks, but only the vowels. For example, a swear word with four letters could look like this `sh*t`. |
+| `ReplacementStrategy.StrikeThrough` | `"StrikeThrough"` | Encloses profane content with `~~` causing strikethrough rendering. For example, a swear word with four letters could look like this ~~`shit`~~. |
+| `ReplacementStrategy.Underscores` | `"Underscores"` | Replaces profane content with underscores `_`. For example, a swear word with four letters could look like this `____`. |
 
 The value of the `replacement-strategy` input is case-insensitive, and accepts hyphened alternatives (such as `anger-emoji`) as well.
 

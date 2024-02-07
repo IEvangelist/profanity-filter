@@ -7,7 +7,7 @@ internal sealed class CustomGitHubClient(
     ICoreService core,
     GitHubClient client,
     string owner,
-    string repo)
+    string repo) : ICustomGitHubClient
 {
     public Task<Reaction?> AddReactionAsync(long issueNumber, ReactionContent reaction)
     {

@@ -32,7 +32,7 @@ internal static class GitHubContextExtensions
         var eventName = context.EventName;
         var action = context.Action;
 
-        var headerSummary = $"The :octocat: [ievangelist/profanity-filter](https://github.com/IEvangelist/profanity-filter) " +
+        var headerSummary = $"The **:octocat: [IEvangelist/profanity-filter](https://github.com/IEvangelist/profanity-filter)** " +
             $"GitHub Action ran as part of the \"_{eventName}_\" event with the \"_{action}_\" action. " +
             $"In {linkedIssueOrPullRequest}, the user @{context.Actor} wrote content that triggered " +
             "the configured replacement to filter profane content.";

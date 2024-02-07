@@ -1,27 +1,24 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Frozen;
-
 namespace ProfanityFilter.Action;
 
 internal sealed partial class ProfanityProcessor(
-    CustomGitHubClient client,
+    ICustomGitHubClient client,
     IProfaneContentFilterService profaneContentFilter,
     ICoreService core)
 {
     private Context? _context;
 
-    public async Task ProcessProfanityAsync()
+    public async Task ProcessProfanityAsync(Context? context)
     {
         var success = true;
 
-        Summary summary = new();
         var startingTimestamp = Stopwatch.GetTimestamp();
 
         try
         {
-            if (TryGetContext(out var context) is false)
+            if (TryValidateContext(context) is false)
             {
                 return;
             }
@@ -59,7 +56,7 @@ internal sealed partial class ProfanityProcessor(
 
             var result = await handler(numberOrId, label ?? null);
 
-            ContextSummaryPair contextSummaryPair = (context, summary);
+            ContextSummaryPair contextSummaryPair = (context, core.Summary);
 
             var elapsedTime = Stopwatch.GetElapsedTime(startingTimestamp);
 
@@ -77,17 +74,20 @@ internal sealed partial class ProfanityProcessor(
             if (success)
             {
                 core.Info("Profanity filter completed successfully.");
-                Env.Exit(0);
             }
         }
     }
 
     [MemberNotNullWhen(true, nameof(_context))]
-    private bool TryGetContext([NotNullWhen(true)] out Context? context)
+    private bool TryValidateContext([NotNullWhen(true)] Context? context)
     {
         try
         {
-            context = Context.Current;
+            if (context is null)
+            {
+                return false;
+            }
+
             core.Info(context.ToString() ?? "Unknown context");
 
             var isValidAction = context.Action switch
@@ -135,8 +135,6 @@ internal sealed partial class ProfanityProcessor(
                   {ex}
                 """);
         }
-
-        context = null;
 
         return false;
     } 

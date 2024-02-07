@@ -3,6 +3,10 @@
 
 namespace ProfanityFilter.Services;
 
+/// <summary>
+/// Represents the filter target, meaning whether the filter is
+/// being applied to a title, body, or comment.
+/// </summary>
 public enum FilterTarget
 {
     /// <summary>

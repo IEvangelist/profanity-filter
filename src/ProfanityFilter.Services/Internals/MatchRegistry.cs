@@ -3,6 +3,9 @@
 
 namespace ProfanityFilter.Services;
 
+/// <summary>
+/// The match registry is used to store all matches for a given set of <see cref="FilterParameters"/>.
+/// </summary>
 internal static class MatchRegistry
 {
     private static readonly ConcurrentDictionary<FilterParameters, List<string>> s_registry = new();

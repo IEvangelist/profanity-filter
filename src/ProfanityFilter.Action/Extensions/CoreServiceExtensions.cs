@@ -77,7 +77,7 @@ internal static class CoreServiceExtensions
     }
 
     /// <summary>
-    /// Gets the manual profane words from the <paramref name="core"/> service's input.
+    /// Gets the manual profane words from the action's input <c>manual-profane-words</c> value.
     /// </summary>
     public static string[]? GetManualProfaneWords(this ICoreService core)
     {
@@ -94,26 +94,36 @@ internal static class CoreServiceExtensions
     }
 
     private static readonly HttpClient s_client = new();
-    private static readonly string[] s_newLines = [ "\r\n", "\r", "\n" ];
+    private static readonly string[] s_newLines = ["\r\n", "\r", "\n"];
 
     /// <summary>
-    /// Gets the custom profane words from the <paramref name="core"/> service's input,
-    /// making an HTTP request to the provided URL.
+    /// Gets the custom profane words from the action's input <c>custom-profane-words-url</c> value,
+    /// making an HTTP GET call to the specified URL.
     /// </summary>
     public static async ValueTask<string[]?> GetCustomProfaneWordsAsync(this ICoreService core)
     {
         if (core.GetInput(ActionInputs.CustomProfaneWordsUrl) is { Length: > 0 } requestUri)
         {
-            var words = await s_client.GetStringAsync(requestUri);
-
-            if (words is null or { Length: 0 })
+            try
             {
-                return default;
-            }
+                var words = await s_client.GetStringAsync(requestUri);
 
-            return words.Split(s_newLines, StringSplitOptions.RemoveEmptyEntries)
-                .Select(static word => word.Trim())
-                .ToArray();
+                if (words is null or { Length: 0 })
+                {
+                    return default;
+                }
+
+                return words.Split(s_newLines, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(static word => word.Trim())
+                    .ToArray();
+            }
+            catch (Exception ex)
+            {
+                core.Warning($"""
+                    Unable to get the custom word list at {requestUri}:
+                    {ex}
+                    """);
+            }
         }
 
         return default;

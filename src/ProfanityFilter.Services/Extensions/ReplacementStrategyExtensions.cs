@@ -3,30 +3,12 @@
 
 namespace ProfanityFilter.Services.Extensions;
 
-public static class ReplacementStrategyExtensions
+internal static class ReplacementStrategyExtensions
 {
-    public static string ToSummaryString(this ReplacementStrategy replacementStrategy)
-    {
-        return replacementStrategy switch
-        {
-            ReplacementStrategy.Emoji => "emoji",
-            ReplacementStrategy.MiddleSwearEmoji => "middle swear emoji",
-            ReplacementStrategy.RandomAsterisk => "random asterisk",
-            ReplacementStrategy.MiddleAsterisk => "middle asterisk",
-            ReplacementStrategy.VowelAsterisk => "vowel asterisk",
-            ReplacementStrategy.FirstLetterThenAsterisk => "first letter then asterisk",
-            ReplacementStrategy.AngerEmoji => "anger emoji",
-            ReplacementStrategy.Bleep => "bleep",
-            ReplacementStrategy.RedactedRectangle => "redacted rectangle",
-            ReplacementStrategy.StrikeThrough => "string through",
-            ReplacementStrategy.Underscores => "underscores",
-            ReplacementStrategy.Grawlix => "grawlix",
-            ReplacementStrategy.BoldGrawlix => "bold grawlix",
-
-            _ => "asterisk",
-        };
-    }
-
+    /// <summary>
+    /// Gets the corresponding function, that when given <see cref="FilterParameters"/>
+    /// returns a <see cref="MatchEvaluator"/>.
+    /// </summary>
     internal static Func<FilterParameters, MatchEvaluator> GetMatchEvaluator(this ReplacementStrategy replacementStrategy)
     {
         return replacementStrategy switch

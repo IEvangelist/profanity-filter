@@ -10,6 +10,7 @@ public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Adds the necessary services for the profanity filter to the specified <see cref="IServiceCollection"/>.
+    /// Specifically, see <see cref="IProfaneContentFilterService"/>.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
     /// <returns>The updated <see cref="IServiceCollection"/>.</returns>

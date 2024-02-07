@@ -8,7 +8,8 @@ builder.Services.AddActionProcessorServices();
 var app = builder.Build();
 
 var processor = app.Services.GetRequiredService<ProfanityProcessor>();
+var context = app.Services.GetRequiredService<Context>();
 
-await processor.ProcessProfanityAsync();
+await processor.ProcessProfanityAsync(context);
 
 await app.RunAsync();

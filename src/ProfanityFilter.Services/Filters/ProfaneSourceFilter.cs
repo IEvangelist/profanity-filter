@@ -4,7 +4,7 @@
 namespace ProfanityFilter.Services;
 
 /// <summary>
-/// Represents a filter that is used to filter profane words from a source.
+/// Represents a filter source that is used as an additive to the existing profane definitions.
 /// </summary>
 /// <param name="SourceName">The name of the source.</param>
 /// <param name="ProfaneWords">A set of profane words to filter on.</param>

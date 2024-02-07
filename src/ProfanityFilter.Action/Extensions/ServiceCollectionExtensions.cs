@@ -19,7 +19,7 @@ internal static class ServiceCollectionExtensions
 
         services.AddGitHubClientServices(inputToken);
 
-        services.AddSingleton(static provider =>
+        services.AddSingleton<ICustomGitHubClient>(static provider =>
         {
             var core = provider.GetRequiredService<ICoreService>();
 

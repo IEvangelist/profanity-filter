@@ -14,7 +14,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
     /// returns a readonly dictionary of all profane words.</returns>
     private async Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync()
     {
-        return await cache.GetOrCreateAsync(ProfaneListKey, async entry =>
+        return await cache.GetOrCreateAsync(ProfaneListKey, async _ =>
         {
             var fileNames = ProfaneContentReader.GetFileNames();
 
@@ -66,7 +66,6 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
         string content,
         FilterParameters parameters)
     {
-        var (strategy, target) = parameters;
         FilterResult result = new(content, parameters);
 
         if (string.IsNullOrWhiteSpace(content))
@@ -82,7 +81,10 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
             wordList[profaneSourceFilter.SourceName] = profaneSourceFilter;
         }
 
+        var (strategy, _) = parameters;
+
         var getEvaluator = strategy.GetMatchEvaluator();
+
         var evaluator = getEvaluator(parameters);
 
         var stepContent = content;

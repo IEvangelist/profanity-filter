@@ -7,6 +7,8 @@ internal sealed class ProfaneContentReader
 {
     private static readonly Lazy<GlobOptions> s_globOptions = new(() =>
     {
+        EnsureWorkingDirectory();
+
         var builder = new GlobOptionsBuilder()
             .WithPattern("Data/*.txt");
 
@@ -17,26 +19,11 @@ internal sealed class ProfaneContentReader
     /// Gets an array of file names that match the profanity content file pattern.
     /// </summary>
     /// <returns>An array of file names.</returns>
-    public static string[] GetFileNames()
-    {
-        EnsureWorkingDirectory();
-
-        return s_globOptions.Value
+    public static string[] GetFileNames() =>
+        s_globOptions.Value
             .GetMatchingFileInfos()
             .Select(static file => file.FullName)
             .ToArray();
-    }
-
-    private static void EnsureWorkingDirectory()
-    {
-        var currentDirectory = Directory.GetCurrentDirectory();
-
-        // When running as a GitHub Action, we need to be in the /app dir.
-        if (currentDirectory is "/github/workspace")
-        {
-            Directory.SetCurrentDirectory("/app");
-        }
-    }
 
     /// <summary>
     /// Reads the contents of the embedded resource as a <c>string</c>
@@ -85,5 +72,16 @@ internal sealed class ProfaneContentReader
         }
 
         return text ?? "";
+    }
+
+    private static void EnsureWorkingDirectory()
+    {
+        var currentDirectory = Directory.GetCurrentDirectory();
+
+        // When running as a GitHub Action, we need to be in the /app dir.
+        if (currentDirectory is "/github/workspace")
+        {
+            Directory.SetCurrentDirectory("/app");
+        }
     }
 }
