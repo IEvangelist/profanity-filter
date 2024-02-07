@@ -20,5 +20,5 @@ public readonly record struct FilterParameters(
     /// <summary>
     /// A collection of additional profane words to consider as a filter source.
     /// </summary>
-    public HashSet<ProfaneSourceFilter>? AdditionalFilterSources { get; init;  }
+    public HashSet<ProfaneSourceFilter>? AdditionalFilterSources { get; init; }
 }

@@ -58,7 +58,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
             return allWords.ToDictionary(
                 static kvp => kvp.Key,
                 static kvp => new ProfaneSourceFilter(kvp.Key, kvp.Value.ToFrozenSet()));
-        }) ?? [];        
+        }) ?? [];
     }
 
     /// <inheritdoc />

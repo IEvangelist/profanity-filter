@@ -60,7 +60,7 @@ internal sealed partial class ProfanityProcessor(
 
             var elapsedTime = Stopwatch.GetElapsedTime(startingTimestamp);
 
-            await SummarizeAppliedFiltersAsync(result, contextSummaryPair, elapsedTime);            
+            await SummarizeAppliedFiltersAsync(result, contextSummaryPair, elapsedTime);
         }
         catch (Exception ex)
         {
@@ -137,7 +137,7 @@ internal sealed partial class ProfanityProcessor(
         }
 
         return false;
-    } 
+    }
 
     private async ValueTask<HashSet<ProfaneSourceFilter>?> GetAdditionalFiltersAsync()
     {
@@ -158,7 +158,7 @@ internal sealed partial class ProfanityProcessor(
                 ProfaneWords: manualProfaneWords.ToFrozenSet()));
         }
 
-        if (customProfaneWords is {  Length: > 0 })
+        if (customProfaneWords is { Length: > 0 })
         {
             filters.Add(new(
                 SourceName: "CustomProfaneWords.url",

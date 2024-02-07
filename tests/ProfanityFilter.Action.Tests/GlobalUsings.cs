@@ -1,7 +1,6 @@
 // Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-global using System.Diagnostics;
 global using System.Text.Json.Serialization.Metadata;
 
 global using Actions.Core;
