@@ -12,8 +12,6 @@ internal sealed partial class ProfanityProcessor(
 
     public async Task ProcessProfanityAsync(Context? context)
     {
-        var success = true;
-
         var startingTimestamp = Stopwatch.GetTimestamp();
 
         try
@@ -64,17 +62,13 @@ internal sealed partial class ProfanityProcessor(
         }
         catch (Exception ex)
         {
-            success = false;
-
             core.SetFailed(ex.ToString());
             Env.Exit(Env.ExitCode);
         }
         finally
         {
-            if (success)
-            {
-                core.Info("Profanity filter completed successfully.");
-            }
+            core.Info("Profanity filter completed successfully.");
+            Env.Exit(0);
         }
     }
 
