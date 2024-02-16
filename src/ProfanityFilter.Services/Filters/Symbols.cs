@@ -6,18 +6,30 @@ namespace ProfanityFilter.Services.Filters;
 internal static class Symbols
 {
     /// <summary>
+    /// Only permit a single <c>"\$"</c> string within an entire grawlix
+    /// replacement, to avoid GitHub from rendering it as a Math expression.
+    /// </summary>
+    internal const string LimitGrawlixToOne = $"\\{UnescapedLimitGrawlixToOne}";
+
+    /// <summary>
+    /// Only permit a single <c>"$"</c> string within an entire grawlix
+    /// replacement, to avoid GitHub from rendering it as a Math expression.
+    /// </summary>
+    internal const string UnescapedLimitGrawlixToOne = "$";
+
+    /// <summary>
     /// An array of hand-selected grawlix replacements for profane words.
     /// See <a href="https://english.stackexchange.com/a/86840/446108"></a>
     /// </summary>
     internal static string[] Grawlixes =
     [
-        new Symbol('#', true),
+        new Symbol('#'),
         new Symbol('$'),
         new Symbol('@'),
-        new Symbol('!', true),
+        new Symbol('!'),
         new Symbol('%'),
         new Symbol('&'),
-        new Symbol('*', true),
+        new Symbol('*'),
         new Symbol('+'),
         new Symbol('?'),
         new Symbol('^'),
@@ -41,7 +53,7 @@ internal static class Symbols
     ];
 }
 
-file readonly record struct Symbol(char Value, bool RequiresEscaping = false)
+file readonly record struct Symbol(char Value, bool Escape = true)
 {
     /// <summary>
     /// Implicitly converts a <see cref="char"/> to a <see cref="Symbol"/>.
@@ -55,6 +67,6 @@ file readonly record struct Symbol(char Value, bool RequiresEscaping = false)
 
     public override string ToString()
     {
-        return RequiresEscaping ? $"\\{Value}" : $"{Value}";
+        return Escape ? $"\\{Value}" : $"{Value}";
     }
 }

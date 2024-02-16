@@ -41,7 +41,7 @@ public partial class MatchEvaluatorTests
     [Fact]
     public void GrawlixEvaluator_Returns_Expected_Result()
     {
-        var input = "swear";
+        var input = "someReallyLongSwearWordOrPhrase";
         var regex = TestRegex();
         var match = regex.Match(input);
         var sut = MatchEvaluators.GrawlixEvaluator;
@@ -50,6 +50,7 @@ public partial class MatchEvaluatorTests
         var actual = sut(parameters).Invoke(match);
 
         Assert.NotEqual(input, actual);
+        Assert.Single(actual.Where(@char => @char is '$'));
     }
 
     [Fact]
@@ -64,6 +65,7 @@ public partial class MatchEvaluatorTests
         var actual = sut(parameters).Invoke(match);
 
         Assert.NotEqual(input, actual);
+        Assert.Single(actual.Where(@char => @char is '$'));
     }
 
     [Fact]

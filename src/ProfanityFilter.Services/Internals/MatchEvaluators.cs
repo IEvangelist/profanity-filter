@@ -20,8 +20,12 @@ internal static class MatchEvaluators
 
             var grawlixes = isNotTitle ? Symbols.Grawlixes : Symbols.UnescapedGrawlixes;
 
+            var limit = isNotTitle ? Symbols.LimitGrawlixToOne : Symbols.UnescapedLimitGrawlixToOne;
+
+            var randomGrawlix = grawlixes.RandomItemsWithLimitToOne(match.Length, limit);
+
             var result = string.Join(
-                "", Random.Shared.GetItems(grawlixes, match.Length));
+                "", randomGrawlix);
 
             return result;
         };
@@ -38,9 +42,14 @@ internal static class MatchEvaluators
 
             var grawlixes = isNotTitle ? Symbols.Grawlixes : Symbols.UnescapedGrawlixes;
 
-            var result = string.Join(
-                "", Random.Shared.GetItems(grawlixes, match.Length));
+            var limit = isNotTitle ? Symbols.LimitGrawlixToOne : Symbols.UnescapedLimitGrawlixToOne;
 
+            var randomGrawlix = grawlixes.RandomItemsWithLimitToOne(match.Length, limit);
+
+            var result = string.Join(
+                "", randomGrawlix);
+
+            // Titles cannot be bolded
             return isNotTitle ? $"__{result}__" : result;
         };
 
