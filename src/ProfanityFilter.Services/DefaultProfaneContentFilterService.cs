@@ -14,7 +14,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
     /// returns a readonly dictionary of all profane words.</returns>
     private async Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync()
     {
-        return await cache.GetOrCreateAsync(ProfaneListKey, async _ =>
+        return await cache.GetOrCreateAsync(ProfaneListKey, async entry =>
         {
             var fileNames = ProfaneContentReader.GetFileNames();
 
@@ -58,7 +58,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
             return allWords.ToDictionary(
                 static kvp => kvp.Key,
                 static kvp => new ProfaneSourceFilter(kvp.Key, kvp.Value.ToFrozenSet()));
-        }) ?? [];
+        }) ?? [];        
     }
 
     /// <inheritdoc />
@@ -66,6 +66,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
         string content,
         FilterParameters parameters)
     {
+        var (strategy, target) = parameters;
         FilterResult result = new(content, parameters);
 
         if (string.IsNullOrWhiteSpace(content))
@@ -81,10 +82,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
             wordList[profaneSourceFilter.SourceName] = profaneSourceFilter;
         }
 
-        var (strategy, _) = parameters;
-
         var getEvaluator = strategy.GetMatchEvaluator();
-
         var evaluator = getEvaluator(parameters);
 
         var stepContent = content;
@@ -119,7 +117,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
 
         return result with
         {
-            Matches = MatchRegistry.PurgeMatches(parameters)
+            Matches = MatchRegistry.Unregister(parameters)
         };
     }
 }
