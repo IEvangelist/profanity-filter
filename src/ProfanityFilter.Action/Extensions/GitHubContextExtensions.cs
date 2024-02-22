@@ -18,13 +18,13 @@ internal static class GitHubContextExtensions
         }
 
         var number = context.Issue.Number;
-        var issueUrl = context.Payload!.Issue!.HtmlUrl;
+        var htmlUrl = GetHtmlUrl(context);
 
         var linkedIssueOrPullRequest = context.EventName switch
         {
-            "pull_request" => $"pull request [#{number}]({issueUrl}#{number})",
-            "issues" => $"issue [#{number}]({issueUrl}#{number})",
-            "issue_comment" => $"issue [#{number} (comment)]({issueUrl}#issuecomment-{context.Payload!.Comment!.Id})",
+            "pull_request" => $"pull request [#{number}]({htmlUrl}#{number})",
+            "issues" => $"issue [#{number}]({htmlUrl}#{number})",
+            "issue_comment" => $"issue [#{number} (comment)]({htmlUrl}#issuecomment-{context.Payload!.Comment!.Id})",
 
             _ => "issue or pull request"
         };
@@ -38,5 +38,14 @@ internal static class GitHubContextExtensions
             "the configured replacement to filter profane content.";
 
         return headerSummary;
+    }
+
+    private static string? GetHtmlUrl(Context context)
+    {
+        return context.EventName switch
+        {
+            "pull_request" => context.Payload?.PullRequest?.HtmlUrl,
+            _ => context.Payload?.Issue?.HtmlUrl
+        };
     }
 }
