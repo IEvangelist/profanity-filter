@@ -148,14 +148,14 @@ internal sealed partial class ProfanityProcessor(
         if (manualProfaneWords is { Length: > 0 })
         {
             filters.Add(new(
-                SourceName: "ManualProfaneWords.raw",
+                SourceName: $"ManualProfaneWords.raw({manualProfaneWords.Length})",
                 ProfaneWords: manualProfaneWords.ToFrozenSet()));
         }
 
         if (customProfaneWords is { Length: > 0 })
         {
             filters.Add(new(
-                SourceName: "CustomProfaneWords.url",
+                SourceName: $"CustomProfaneWords.url({customProfaneWords.Length})",
                 ProfaneWords: customProfaneWords.ToFrozenSet()));
         }
 
@@ -178,6 +178,7 @@ internal sealed partial class ProfanityProcessor(
             {
                 AdditionalFilterSources = additionalFilters
             });
+
         var bodyResult = await TryApplyFilterAsync(
             body, parameters: new(replacementStrategy, FilterTarget.Body)
             {
