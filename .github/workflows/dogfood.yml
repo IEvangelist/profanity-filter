@@ -28,5 +28,3 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         replacement-strategy: bold-grawlix
-        manual-profane-words: "custom,swear,words"
-        custom-profane-words-url: "https://gist.githubusercontent.com/IEvangelist/355ad7852bafedb4365a896d1c545a6c/raw/cbd4cea1592ab5acb518d139240dd5a11f42612c/Example.ProfaneWord.List.txt"
