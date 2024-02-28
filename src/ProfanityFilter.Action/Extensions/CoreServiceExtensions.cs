@@ -56,6 +56,12 @@ internal static class CoreServiceExtensions
     }
 
     /// <summary>
+    /// Gets a value indicating whether to react with a <c>confused</c> emoji when a profane word is found.
+    /// </summary>
+    public static bool IncludeConfusedReaction(this ICoreService core) =>
+        core.GetBoolInput(ActionInputs.IncludeConfusedReaction);
+
+    /// <summary>
     /// The <c>replacement-strategy</c> to use when filtering profane content.
     /// Example valid values: <c>anger-asterisk</c>, <c>AngerAsterisk</c>
     /// </summary>

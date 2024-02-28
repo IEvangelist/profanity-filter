@@ -114,7 +114,7 @@ internal sealed class CustomGitHubClient(
         catch (Exception ex)
         {
             // Only warn, as we don't want to fail the entire action
-            core.Warning(ex.Message);
+            core.Warning(ex.ToString());
         }
 
         return default;
@@ -129,7 +129,7 @@ internal sealed class CustomGitHubClient(
         catch (Exception ex)
         {
             // Only warn, as we don't want to fail the entire action
-            core.Warning(ex.Message);
+            core.Warning(ex.ToString());
         }
     }
 }

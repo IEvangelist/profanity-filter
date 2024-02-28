@@ -24,7 +24,7 @@ inputs:
     description:
       'Whether to include a confused reaction on the issue or pull request when profane content is filtered.'
     required: false
-    default: 'true'
+    default: 'false'
   manual-profane-words:
     description:
       'A comma-separated list of additional sources to use for profanity filtering.'

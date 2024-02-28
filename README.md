@@ -83,7 +83,7 @@ The following table describes each input:
 | `token` | The GitHub token used to update the issues or pull requests with.<br><br>Example, `${{ secrets.GITHUB_TOKEN }}`. | `true` |
 | `replacement-strategy` | The type of replacement method to use when profane content is filtered. | `false` (default: `asterisk`) |
 | `include-updated-note` | A `boolean` value to indicate if the action should include a note in the issue or pull request body when profane content is replaced. | `false` (default: `true`) |
-| `include-confused-reaction` | A `boolean` value to indicate if the action should react to the issue or pull request with the confused 😕 reaction. | `false` (default: `true`) |
+| `include-confused-reaction` | A `boolean` value to indicate if the action should react to the issue or pull request with the confused 😕 reaction. | `false` (default: `false`) |
 | `manual-profane-words` | A `string` value, with a comma-separated list of additional profane words to include in the filter. | `false` |
 | `custom-profane-words-url` | A URL that returns a `string` value, with a newline-separated list of custom profane words to include in the filter. | `false` |
 

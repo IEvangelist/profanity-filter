@@ -38,7 +38,7 @@ internal sealed partial class ProfanityProcessor
                 await client.UpdatePullRequestAsync(
                     (int)pullRequestNumber, pullRequestUpdate, label?.Name);
 
-                if (core.GetBoolInput(ActionInputs.IncludeConfusedReaction))
+                if (core.IncludeConfusedReaction())
                 {
                     await client.AddReactionAsync(
                     pullRequestNumber, ReactionContent.Confused);
