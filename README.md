@@ -97,7 +97,7 @@ Each replacement strategy corresponds to a different way of replacing profane co
 | `emoji` | `💩` | Replaces profane content with a random emoji. |
 | `grawlix` | `#%$!` | Replaces profane content with grawlix symbols. |
 | `bold-grawlix` | __`#%$!`__ | Replaces profane content with bold grawlix symbols. |
-| `bleep` | `bleep` | Replaces profane content with asterisks, but only the vowels. |
+| `bleep` | `bleep` | Replaces profane content with the word "bleep". |
 | `redacted-rectangle` | `████` | Replaces profane content with rectangles to redact their content. |
 | `anger-emoji` | `😡` | Replaces profane content with a random anger emoji. |
 | `middle-asterisk` | `f**k` | Replaces profane content with asterisk, but only in the middle of the word. |
