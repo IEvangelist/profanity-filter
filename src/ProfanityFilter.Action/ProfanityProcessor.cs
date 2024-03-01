@@ -21,25 +21,22 @@ internal sealed partial class ProfanityProcessor(
                 return;
             }
 
-            var isIssueComment = context.Payload?.Comment is not null;
-            var isIssue = context.Payload?.Issue is not null;
-            var isPullRequest = context.Payload?.PullRequest is not null;
+            var payloadType = GetPayloadTypeFrom(context);
 
-            Func<long, Label?, Task<FiltrationResult>> handler = (isIssueComment, isIssue, isPullRequest) switch
+            core.Info($"Processing as 'PayloadType.{payloadType}'.");
+
+            Func<long, Label?, Task<FiltrationResult>> handler = payloadType switch
             {
-                (true, _, _) => HandleIssueCommentAsync,
-                (_, true, _) => HandleIssueAsync,
-                (_, _, true) => HandlePullRequestAsync,
-
-                _ => throw new Exception(
-                    "The profanity filter GitHub Action only works with issues or pull requests.")
+                PayloadType.PullRequest => HandlePullRequestAsync,
+                PayloadType.Issue => HandleIssueAsync,
+                _  => HandleIssueCommentAsync
             };
 
-            var label = isIssueComment
+            var label = payloadType is PayloadType.IssueComment
                 ? null
                 : await client.GetLabelAsync() ?? await client.CreateLabelAsync();
 
-            if (label is null && isIssueComment is false)
+            if (label is null && payloadType is not PayloadType.IssueComment)
             {
                 core.Warning("""
                     The expected label isn't present, a label with the following name would have been applied if found.
@@ -72,6 +69,31 @@ internal sealed partial class ProfanityProcessor(
         }
     }
 
+    private static PayloadType GetPayloadTypeFrom(Context context)
+    {
+        var isIssueComment = context.Payload?.Comment is not null;
+        var isIssue = context.Payload?.Issue is not null;
+        var isPullRequest = context.Payload?.PullRequest is not null;
+
+        if (isIssueComment)
+        {
+            return PayloadType.IssueComment;
+        }
+
+        if (isIssue)
+        {
+            return PayloadType.Issue;
+        }
+
+        if (isPullRequest)
+        {
+            return PayloadType.PullRequest;
+        }
+
+        throw new Exception(
+            "The profanity filter GitHub Action only works with issues, issue comments, or pull requests.");
+    }
+
     [MemberNotNullWhen(true, nameof(_context))]
     private bool TryValidateContext([NotNullWhen(true)] Context? context)
     {
@@ -82,6 +104,7 @@ internal sealed partial class ProfanityProcessor(
                 return false;
             }
 
+            core.StartGroup("Initializing context");
             core.Info(context.ToString() ?? "Unknown context");
 
             var isValidAction = context.Action switch
@@ -128,6 +151,10 @@ internal sealed partial class ProfanityProcessor(
                 Error attempting to get the context:
                   {ex}
                 """);
+        }
+        finally
+        {
+            core.EndGroup();
         }
 
         return false;

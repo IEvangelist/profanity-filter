@@ -54,6 +54,11 @@ internal sealed class CustomGitHubClient(
             {
                 var labels = await client.Repos[owner][repo].Labels.GetAsync();
 
+                if (labels is null)
+                {
+                    core.Warning($"Unable to get labels for {owner}/{repo}");
+                }
+
                 return labels?.FirstOrDefault(label => label.Name == DefaultLabel.Name);
             });
     }

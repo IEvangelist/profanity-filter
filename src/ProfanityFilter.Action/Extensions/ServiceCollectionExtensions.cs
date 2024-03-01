@@ -22,26 +22,17 @@ internal static class ServiceCollectionExtensions
         services.AddSingleton<ICustomGitHubClient>(static provider =>
         {
             var core = provider.GetRequiredService<ICoreService>();
+            var client = provider.GetRequiredService<GitHubClient>();
+            var context = provider.GetRequiredService<Context>();
 
-            try
-            {
-                core.StartGroup("Initializing context");
+            var repository = context.Repo;
 
-                var client = provider.GetRequiredService<GitHubClient>();
-                var context = provider.GetRequiredService<Context>();
+            var (owner, repo) = (repository.Owner, repository.Repo);
 
-                var repository = context.Repo;
+            core.Info($"Repository: {owner}/{repo}");
 
-                var (owner, repo) = (repository.Owner, repository.Repo);
-
-                core.Info($"Repository: {owner}/{repo}");
-
-                return new CustomGitHubClient(core, client, owner, repo);
-            }
-            finally
-            {
-                core.EndGroup();
-            }
+            return new CustomGitHubClient(core, client, owner, repo);
+            
         });
 
         return services;
