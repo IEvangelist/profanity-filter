@@ -18,7 +18,7 @@ internal sealed partial class ProfanityProcessor
             var pullRequest = await client.GetPullRequestAsync((int)pullRequestNumber);
             if (pullRequest is null)
             {
-                core.Error($"Unable to get PR with number: {pullRequestNumber}");
+                core.WriteError($"Unable to get PR with number: {pullRequestNumber}");
                 return filterResult;
             }
 

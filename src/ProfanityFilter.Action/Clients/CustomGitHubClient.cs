@@ -56,7 +56,7 @@ internal sealed class CustomGitHubClient(
 
                 if (labels is null)
                 {
-                    core.Warning($"Unable to get labels for {owner}/{repo}");
+                    core.WriteWarning($"Unable to get labels for {owner}/{repo}");
                 }
 
                 return labels?.FirstOrDefault(label => label.Name == DefaultLabel.Name);
@@ -119,7 +119,7 @@ internal sealed class CustomGitHubClient(
         catch (Exception ex)
         {
             // Only warn, as we don't want to fail the entire action
-            core.Warning(ex.ToString());
+            core.WriteWarning(ex.ToString());
         }
 
         return default;
@@ -134,7 +134,7 @@ internal sealed class CustomGitHubClient(
         catch (Exception ex)
         {
             // Only warn, as we don't want to fail the entire action
-            core.Warning(ex.ToString());
+            core.WriteWarning(ex.ToString());
         }
     }
 }

@@ -20,7 +20,7 @@ internal sealed partial class ProfanityProcessor
             var issue = await client.GetIssueAsync((int)issueNumber);
             if (issue is null)
             {
-                core.Error($"Unable to get issue with number: {issueNumber}");
+                core.WriteError($"Unable to get issue with number: {issueNumber}");
                 return filterResult;
             }
 

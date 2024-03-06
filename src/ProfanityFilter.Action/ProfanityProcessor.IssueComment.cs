@@ -21,7 +21,7 @@ internal sealed partial class ProfanityProcessor
             var issueComment = await client.GetIssueCommentAsync(issueCommentId);
             if (issueComment is null)
             {
-                core.Error($"Unable to get issue comment with id: {issueCommentId}");
+                core.WriteError($"Unable to get issue comment with id: {issueCommentId}");
                 return filterResult;
             }
 

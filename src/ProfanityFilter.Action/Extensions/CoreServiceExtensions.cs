@@ -125,7 +125,7 @@ internal static class CoreServiceExtensions
             }
             catch (Exception ex)
             {
-                core.Warning($"""
+                core.WriteWarning($"""
                     Unable to get the custom word list at {requestUri}:
                     {ex}
                     """);

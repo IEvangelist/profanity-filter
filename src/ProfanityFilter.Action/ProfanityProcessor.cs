@@ -23,7 +23,7 @@ internal sealed partial class ProfanityProcessor(
 
             var payloadType = GetPayloadTypeFrom(context);
 
-            core.Info($"Processing as 'PayloadType.{payloadType}'.");
+            core.WriteInfo($"Processing as 'PayloadType.{payloadType}'.");
 
             Func<long, Label?, Task<FiltrationResult>> handler = payloadType switch
             {
@@ -38,7 +38,7 @@ internal sealed partial class ProfanityProcessor(
 
             if (label is null && payloadType is not PayloadType.IssueComment)
             {
-                core.Warning("""
+                core.WriteWarning("""
                     The expected label isn't present, a label with the following name would have been applied if found.
                         'profane content 🤬'
                     """);
@@ -64,7 +64,7 @@ internal sealed partial class ProfanityProcessor(
         }
         finally
         {
-            core.Info("Profanity filter completed successfully.");
+            core.WriteInfo("Profanity filter completed successfully.");
             Env.Exit(0);
         }
     }
@@ -105,7 +105,7 @@ internal sealed partial class ProfanityProcessor(
             }
 
             core.StartGroup("Initializing context");
-            core.Info(context.ToString() ?? "Unknown context");
+            core.WriteInfo(context.ToString() ?? "Unknown context");
 
             var isValidAction = context.Action switch
             {
@@ -120,7 +120,7 @@ internal sealed partial class ProfanityProcessor(
 
             if (isValidAction is false)
             {
-                core.Warning($"The action '{context.Action}' is not supported.");
+                core.WriteWarning($"The action '{context.Action}' is not supported.");
 
                 return false;
             }
@@ -136,7 +136,7 @@ internal sealed partial class ProfanityProcessor(
 
             if (isValidActor is false)
             {
-                core.Info($"Ignored as {context.Actor} triggered this...");
+                core.WriteInfo($"Ignored as {context.Actor} triggered this...");
 
                 return false;
             }
@@ -147,7 +147,7 @@ internal sealed partial class ProfanityProcessor(
         }
         catch (Exception ex)
         {
-            core.Error($"""
+            core.WriteError($"""
                 Error attempting to get the context:
                   {ex}
                 """);
@@ -232,7 +232,7 @@ internal sealed partial class ProfanityProcessor(
                 _ => "unknown"
             };
 
-            core.Info($"""
+            core.WriteInfo($"""
                 Original {type} text: {text}
                 Filtered {type} text: {result.FinalOutput}
                 """);

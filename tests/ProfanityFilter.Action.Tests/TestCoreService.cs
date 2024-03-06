@@ -9,7 +9,7 @@ internal class TestCoreService(Dictionary<string, string> testInputs) : ICoreSer
 {
     internal enum BufferType { Info, Debug, Notice, Warning, Error };
 
-    private Dictionary<BufferType, List<string>> _buffers = new()
+    private readonly Dictionary<BufferType, List<string>> _buffers = new()
     {
         [BufferType.Info] = [],
         [BufferType.Debug] = [],
@@ -26,12 +26,12 @@ internal class TestCoreService(Dictionary<string, string> testInputs) : ICoreSer
 
     public ValueTask AddPathAsync(string inputPath) => throw new NotImplementedException();
 
-    public void Debug(string message) =>
+    public void WriteDebug(string message) =>
         _buffers[BufferType.Debug].Add(message);
 
     public void EndGroup() => throw new NotImplementedException();
 
-    public void Error(string message, AnnotationProperties? properties = null) =>
+    public void WriteError(string message, AnnotationProperties? properties = null) =>
         _buffers[BufferType.Error].Add(message);
 
     public ValueTask ExportVariableAsync(string name, string value) => throw new NotImplementedException();
@@ -46,10 +46,10 @@ internal class TestCoreService(Dictionary<string, string> testInputs) : ICoreSer
 
     public ValueTask<T> GroupAsync<T>(string name, Func<ValueTask<T>> action) => throw new NotImplementedException();
 
-    public void Info(string message) =>
+    public void WriteInfo(string message) =>
         _buffers[BufferType.Info].Add(message);
 
-    public void Notice(string message, AnnotationProperties? properties = null) =>
+    public void WriteNotice(string message, AnnotationProperties? properties = null) =>
         _buffers[BufferType.Notice].Add(message);
 
     public ValueTask SaveStateAsync<T>(string name, T value, JsonTypeInfo<T>? typeInfo = null) => throw new NotImplementedException();
@@ -64,6 +64,6 @@ internal class TestCoreService(Dictionary<string, string> testInputs) : ICoreSer
 
     public void StartGroup(string name) => throw new NotImplementedException();
 
-    public void Warning(string message, AnnotationProperties? properties = null) =>
+    public void WriteWarning(string message, AnnotationProperties? properties = null) =>
         _buffers[BufferType.Warning].Add(message);
 }
