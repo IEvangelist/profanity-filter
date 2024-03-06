@@ -52,7 +52,7 @@ internal sealed class CustomGitHubClient(
         return TryClientRequestAsync(
             async () =>
             {
-                var label = await client.Repos[owner][repo].Labels[DefaultLabel.Name].GetAsync()
+                var label = await client.Repos[owner][repo].Labels[DefaultLabel.Name].GetAsync();
 
                 if (label is null)
                 {
