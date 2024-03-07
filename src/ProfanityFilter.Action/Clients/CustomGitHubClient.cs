@@ -52,7 +52,7 @@ internal sealed class CustomGitHubClient(
         return TryClientRequestAsync(
             async () =>
             {
-                var label = await client.Repos[owner][repo].Labels[DefaultLabel.Name].GetAsync();
+                var label = await GetLabelByNameAsync(DefaultLabel.Name);
 
                 if (label is null)
                 {
@@ -60,6 +60,34 @@ internal sealed class CustomGitHubClient(
                 }
 
                 return label;
+
+                async Task<Label?> GetLabelByNameAsync(string labelName)
+                {
+                    Label? label = null;
+
+                    const int PageCount = 100;
+                    var page = 1;
+
+                    while (label is null)
+                    {
+                        var labels = await client.Repos[owner][repo].Labels.GetAsync(
+                            parameters =>
+                            {
+                                parameters.QueryParameters.Page = page;
+                                parameters.QueryParameters.PerPage = PageCount;
+                            });
+
+                        if (labels is null or { Count: 0 })
+                        {
+                            break;
+                        }
+
+                        label = labels?.FirstOrDefault(l => l.Name == labelName);
+                        page++;
+                    }
+
+                    return label;
+                }
             });
     }
 
