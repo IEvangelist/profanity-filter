@@ -1,8 +1,6 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using ProfanityFilter.Action.Extensions;
-
 namespace ProfanityFilter.Action;
 
 internal sealed partial class ProfanityProcessor

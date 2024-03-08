@@ -64,7 +64,8 @@ internal sealed partial class ProfanityProcessor(
         }
         finally
         {
-            core.WriteInfo("Profanity filter completed successfully.");
+            var elapsedTime = Stopwatch.GetElapsedTime(startingTimestamp);
+            core.WriteInfo($"Profanity filter completed successfully in {elapsedTime.TotalSeconds:#,0.##}s.");
             Env.Exit(0);
         }
     }
@@ -128,6 +129,7 @@ internal sealed partial class ProfanityProcessor(
             var isValidActor = context.Actor switch
             {
                 "bot" or
+                "azure-sdk" or "azure-sdk[bot]" or
                 "dependabot" or "dependabot[bot]" or
                 "github-actions" or "github-actions[bot]" => false,
 

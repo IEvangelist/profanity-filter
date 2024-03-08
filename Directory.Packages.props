@@ -6,26 +6,20 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="6.0.1"
-                    PrivateAssets="all"
-                    IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.1" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="GitHub.Actions.Core" Version="8.0.12" />
     <PackageVersion Include="GitHub.Actions.Octokit" Version="8.0.12" />
-    <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3"
-                    PrivateAssets="all"
-                    IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
+    <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-      <PackageVersion Include="Microsoft.NET.Build.Containers" Version="8.0.200" />
-      <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageVersion Include="Microsoft.NET.Build.Containers" Version="8.0.200" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="8.0.1" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.7"
-                    PrivateAssets="all"
-                    IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.7" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="xunit" Version="2.7.0" />
   </ItemGroup>
 </Project>
