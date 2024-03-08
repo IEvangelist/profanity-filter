@@ -30,15 +30,16 @@ on:
   pull_request:
     types: [opened, edited, reopened]
 
+# Required permissions
+permissions:
+  issues: write
+  pull-requests: write
+
 jobs:
   # Name the job whatever you'd like
-  filter:
+  apply-filter:
 
     runs-on: ubuntu-latest
-    permissions:
-      # Required permissions.
-      issues: write
-      pull-requests: write
 
     steps:
 
