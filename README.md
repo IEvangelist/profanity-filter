@@ -1,4 +1,6 @@
-﻿# Potty Mouth: GitHub Action
+![profanity-filter](https://socialify.git.ci/IEvangelist/profanity-filter/image?description=1&descriptionEditable=%F0%9F%A4%AC%20Potty%20Mouth%3A%20A%20GitHub%20Action%20profanity%20filter%20written%20in%20.NET%2C%20leveraging%20Native%20AOT%20compilation.&font=Raleway&language=1&name=1&owner=1&pattern=Signal&theme=Auto)
+ 
+# Potty Mouth: GitHub Action
 
 > This repository contains the source code for a profane content filter 🤬.
 
