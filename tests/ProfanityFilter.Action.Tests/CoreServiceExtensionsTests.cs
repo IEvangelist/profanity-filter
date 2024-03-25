@@ -3,11 +3,12 @@
 
 namespace ProfanityFilter.Action.Tests;
 
+[TestClass]
 public class CoreServiceExtensionsTests
 {
-    [Theory]
-    [InlineData(null, null)]
-    [InlineData("WebForms,WinForms", new string[] { "WebForms", "WinForms" })]
+    [TestMethod]
+    [DataRow(null, null)]
+    [DataRow("WebForms,WinForms", new string[] { "WebForms", "WinForms" })]
     public void CoreServiceCorrectlyParseManualWordList(string? input, string[]? expected = null)
     {
         ICoreService sut = new TestCoreService(new()
@@ -17,10 +18,10 @@ public class CoreServiceExtensionsTests
 
         var actual = sut.GetManualProfaneWords();
 
-        Assert.Equal(expected, actual);
+        CollectionAssert.AreEqual(expected, actual);
     }
 
-    [Fact]
+    [TestMethod]
     public async Task CoreServiceCorrectlyParseCustomWordList()
     {
         ICoreService sut = new TestCoreService(new()
@@ -31,8 +32,8 @@ public class CoreServiceExtensionsTests
 
         var actual = await sut.GetCustomProfaneWordsAsync();
 
-        Assert.Equal<string[]>(
-        [
+        CollectionAssert.AreEqual(
+        new string[] {
             "WebForms",
             "Web Forms",
             "ASP.NET WebForms",
@@ -43,18 +44,18 @@ public class CoreServiceExtensionsTests
             "WinForms",
             "WindowsForms",
             "Windows Forms",
-        ], actual);
+        }, actual);
     }
 
-    [Theory]
-    [InlineData("emoji", ReplacementStrategy.Emoji)]
-    [InlineData("EMOJI", ReplacementStrategy.Emoji)]
-    [InlineData("eMoJi", ReplacementStrategy.Emoji)]
-    [InlineData("anger-emoji", ReplacementStrategy.AngerEmoji)]
-    [InlineData("angerEmoji", ReplacementStrategy.AngerEmoji)]
-    [InlineData("AngerEmoji", ReplacementStrategy.AngerEmoji)]
-    [InlineData("first-letter-then-asterisk", ReplacementStrategy.FirstLetterThenAsterisk)]
-    [InlineData(nameof(ReplacementStrategy.FirstLetterThenAsterisk), ReplacementStrategy.FirstLetterThenAsterisk)]
+    [TestMethod]
+    [DataRow("emoji", ReplacementStrategy.Emoji)]
+    [DataRow("EMOJI", ReplacementStrategy.Emoji)]
+    [DataRow("eMoJi", ReplacementStrategy.Emoji)]
+    [DataRow("anger-emoji", ReplacementStrategy.AngerEmoji)]
+    [DataRow("angerEmoji", ReplacementStrategy.AngerEmoji)]
+    [DataRow("AngerEmoji", ReplacementStrategy.AngerEmoji)]
+    [DataRow("first-letter-then-asterisk", ReplacementStrategy.FirstLetterThenAsterisk)]
+    [DataRow(nameof(ReplacementStrategy.FirstLetterThenAsterisk), ReplacementStrategy.FirstLetterThenAsterisk)]
     public void CoreServiceCorrectlyParsesReplacementStrategy(string input, ReplacementStrategy expected)
     {
         ICoreService sut = new TestCoreService(new()
@@ -64,6 +65,6 @@ public class CoreServiceExtensionsTests
 
         var actual = sut.GetReplacementStrategy();
 
-        Assert.Equal(expected, actual);
+        Assert.AreEqual(expected, actual);
     }
 }

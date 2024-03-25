@@ -3,9 +3,10 @@
 
 namespace ProfanityFilter.Services.Tests;
 
+[TestClass]
 public class ServiceCollectionExtensionsTests
 {
-    [Fact]
+    [TestMethod]
     public void AddProfanityFilterServices_AddsServices()
     {
         // Arrange
@@ -18,7 +19,7 @@ public class ServiceCollectionExtensionsTests
         var provider = services.BuildServiceProvider();
         var censorService = provider.GetService<IProfaneContentFilterService>();
 
-        Assert.NotNull(censorService);
-        Assert.IsType<DefaultProfaneContentFilterService>(censorService);
+        Assert.IsNotNull(censorService);
+        Assert.IsInstanceOfType<DefaultProfaneContentFilterService>(censorService);
     }
 }
