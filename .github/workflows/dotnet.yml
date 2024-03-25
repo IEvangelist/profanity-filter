@@ -28,10 +28,10 @@ jobs:
       run: |
           dotnet publish tests/ProfanityFilter.Services.Tests/ &&
           cd tests/ProfanityFilter.Services.Tests/bin/Release/net8.0/linux-x64/publish &&
-          tests/ProfanityFilter.Services.Tests/bin/Release/net8.0/linux-x64/publish/ProfanityFilter.Services.Tests
+          ProfanityFilter.Services.Tests
 
     - name: Action.Tests
       run: |
           dotnet publish tests/ProfanityFilter.Action.Tests/ &&
           cd tests/ProfanityFilter.Action.Tests/bin/Release/net8.0/linux-x64/publish/ &&
-          tests/ProfanityFilter.Action.Tests/bin/Release/net8.0/linux-x64/publish/ProfanityFilter.Action.Tests
+          ProfanityFilter.Action.Tests
