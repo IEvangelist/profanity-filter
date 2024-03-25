@@ -3,11 +3,12 @@
 
 namespace ProfanityFilter.Action.Tests;
 
+[TestClass]
 public class ServiceCollectionExtensionsTests
 {
     private const string INPUT_TOKEN = nameof(INPUT_TOKEN);
 
-    [Fact]
+    [TestMethod]
     public void AddProfanityFilter_AddsServices()
     {
         Environment.SetEnvironmentVariable(INPUT_TOKEN, "TEST");
@@ -24,8 +25,8 @@ public class ServiceCollectionExtensionsTests
             var provider = services.BuildServiceProvider();
             var censorService = provider.GetService<IProfaneContentFilterService>();
 
-            Assert.NotNull(censorService);
-            Assert.IsType<DefaultProfaneContentFilterService>(censorService);
+            Assert.IsNotNull(censorService);
+            Assert.IsInstanceOfType<DefaultProfaneContentFilterService>(censorService);
         }
         finally
         {

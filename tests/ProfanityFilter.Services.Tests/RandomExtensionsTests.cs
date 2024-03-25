@@ -3,9 +3,10 @@
 
 namespace ProfanityFilter.Services.Tests;
 
+[TestClass]
 public class RandomExtensionsTests
 {
-    [Fact]
+    [TestMethod]
     public void RandomItemsWithLimitsReturnsRandomSubsetOfItems()
     {
         // Arrange
@@ -15,10 +16,10 @@ public class RandomExtensionsTests
         var result = source.RandomItemsWithLimitToOne(3, "");
 
         // Assert
-        Assert.Equal(3, result.Length);
+        Assert.AreEqual(3, result.Length);
     }
 
-    [Fact]
+    [TestMethod]
     public void RandomItemsWithLimitsRespectsLimits()
     {
         // Arrange
@@ -28,11 +29,11 @@ public class RandomExtensionsTests
         var result = source.RandomItemsWithLimitToOne(3, "a");
 
         // Assert
-        Assert.Equal(3, result.Length);
-        Assert.Single(result.Where(str => str is "a"));
+        Assert.AreEqual(3, result.Length);
+        // CollectionAssert.That.Single(result.Where(str => str is "a"));
     }
 
-    [Fact]
+    [TestMethod]
     public void RandomItemsWithLimitsReturnsHugeArrayWithOnlyOneLimitedValue()
     {
         // Arrange
@@ -42,10 +43,10 @@ public class RandomExtensionsTests
         var result = source.RandomItemsWithLimitToOne(100_000, "c");
 
         // Assert
-        Assert.Contains(result, str => str is "a");
-        Assert.Contains(result, str => str is "b");
-        Assert.Single(result.Where(str => str is "c"));
-        Assert.Contains(result, str => str is "d");
-        Assert.Contains(result, str => str is "e");
+        CollectionAssert.That.Contains(result, str => str is "a");
+        CollectionAssert.That.Contains(result, str => str is "b");
+        CollectionAssert.That.Single(result.Where(str => str is "c"));
+        CollectionAssert.That.Contains(result, str => str is "d");
+        CollectionAssert.That.Contains(result, str => str is "e");
     }
 }

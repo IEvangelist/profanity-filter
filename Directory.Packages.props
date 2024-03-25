@@ -15,11 +15,12 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageVersion Include="Microsoft.NET.Build.Containers" Version="8.0.202" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.24163.4" />
+    <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.24163.4" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.2.2" />
+    <PackageVersion Include="MSTest.Analyzers" Version="3.2.2" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
-    <PackageVersion Include="Pathological.Globbing" Version="8.0.1" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.7" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
-    <PackageVersion Include="xunit" Version="2.7.0" />
+    <PackageVersion Include="Pathological.Globbing" Version="8.0.1" />    
   </ItemGroup>
 </Project>

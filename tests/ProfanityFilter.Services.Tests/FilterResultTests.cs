@@ -3,9 +3,10 @@
 
 namespace ProfanityFilter.Services.Tests;
 
+[TestClass]
 public class FilterResultTests
 {
-    [Fact]
+    [TestMethod]
     public void CensorResultCorrectlyReportsIsCensored()
     {
         FilterResult sut = new(
@@ -13,9 +14,9 @@ public class FilterResultTests
             Parameters: new(
                 Strategy: ReplacementStrategy.AngerEmoji, Target: FilterTarget.Title));
 
-        Assert.False(sut.IsFiltered);
-        Assert.Equal("Fake input", sut.Input);
-        Assert.Null(sut.FinalOutput);
+        Assert.IsFalse(sut.IsFiltered);
+        Assert.AreEqual("Fake input", sut.Input);
+        Assert.IsNull(sut.FinalOutput);
 
         sut = sut with
         {
@@ -25,7 +26,7 @@ public class FilterResultTests
             ]
         };
 
-        Assert.True(sut.IsFiltered);
-        Assert.Equal("Fake ****", sut.FinalOutput);
+        Assert.IsTrue(sut.IsFiltered);
+        Assert.AreEqual("Fake ****", sut.FinalOutput);
     }
 }
