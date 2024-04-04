@@ -94,7 +94,7 @@ The following table describes each input:
 
 Each replacement strategy corresponds to a different way of replacing profane content. The following represents the available replacement types:
 
-| Strategy input | For letter profane word example | Description |
+| Strategy input | Four letter profane word example | Description |
 | --- | --- | --- |
 | `asterisk` | `****` | Replaces profane content with asterisks. |
 | `emoji` | `💩` | Replaces profane content with a random emoji. |
