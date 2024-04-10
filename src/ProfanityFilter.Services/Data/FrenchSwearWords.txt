@@ -13,7 +13,6 @@ batard
 bigornette
 bique
 bise
-bite
 bitte
 bloblos
 bon sang
@@ -59,7 +58,6 @@ casse-toi
 casse-toi, idiot
 casse-toi, idiote
 casser les couilles
-cave
 ce putain d['|‘|’]embouteillage
 ce putain d['|‘|’]ordinateur
 cela me soûle

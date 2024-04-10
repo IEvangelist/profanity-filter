@@ -5,7 +5,6 @@ balls
 bastard
 beaver
 beef curtains
-bell
 bellend
 bent
 berk
@@ -96,7 +95,6 @@ nitwit
 nonce
 numpty
 nutter
-off their rocker
 penguin
 pillock
 pish
@@ -111,7 +109,6 @@ poof
 pouf
 poxy
 prat
-prick
 prick
 prickteaser
 punani
