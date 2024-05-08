@@ -7,8 +7,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.2" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
-    <PackageVersion Include="GitHub.Actions.Core" Version="8.0.14" />
-    <PackageVersion Include="GitHub.Actions.Octokit" Version="8.0.14" />
+    <PackageVersion Include="GitHub.Actions.Core" Version="8.0.15" />
+    <PackageVersion Include="GitHub.Actions.Octokit" Version="8.0.15" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
