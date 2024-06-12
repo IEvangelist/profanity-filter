@@ -9,4 +9,9 @@ internal sealed class TestProfanityFilterService : IProfaneContentFilterService
     {
         throw new NotImplementedException();
     }
+
+    public Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

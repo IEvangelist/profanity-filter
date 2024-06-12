@@ -16,6 +16,7 @@ public record class ProfaneSourceFilter(
     /// Gets the string representation of the <see cref="ProfaneWords"/> set
     /// represented as a regular expression pattern.
     /// </summary>
+    [JsonIgnore]
     public string RegexPattern { get; } =
         $"\\b({string.Join('|', ProfaneWords)})\\b";
 }

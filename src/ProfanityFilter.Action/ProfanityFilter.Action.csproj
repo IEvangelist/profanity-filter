@@ -30,7 +30,6 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="GitHub.Actions.Core" />
     <PackageReference Include="GitHub.Actions.Octokit" />
-    <PackageReference Include="Microsoft.NET.Build.Containers" />
   </ItemGroup>
 
   <ItemGroup>

@@ -42,7 +42,7 @@ public enum ReplacementStrategy
     MiddleAsterisk,
 
     /// <summary>
-    /// Represents the first letter then asterisk replacement strategy, which replaces the
+    /// Represents the first letter then asterisk replacement strategy, which replaces
     /// everything after the first letter of the profanity with asterisk.
     /// </summary>
     FirstLetterThenAsterisk,

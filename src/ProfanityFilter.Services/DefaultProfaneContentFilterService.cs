@@ -7,12 +7,8 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
 {
     private const string ProfaneListKey = nameof(ProfaneListKey);
 
-    /// <summary>
-    /// Reads all profane words from their respective sources asynchronously.
-    /// </summary>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation that 
-    /// returns a readonly dictionary of all profane words.</returns>
-    private async Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync()
+    /// <inheritdoc />
+    public async Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync()
     {
         return await cache.GetOrCreateAsync(ProfaneListKey, async entry =>
         {
@@ -62,7 +58,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
     }
 
     /// <inheritdoc />
-    async ValueTask<FilterResult> IProfaneContentFilterService.FilterProfanityAsync(
+    public async ValueTask<FilterResult> FilterProfanityAsync(
         string content,
         FilterParameters parameters)
     {

@@ -16,7 +16,10 @@
     <PackageReference Include="MSTest.Engine" />
     <PackageReference Include="MSTest.SourceGeneration" />
     <PackageReference Include="MSTest.TestFramework" />
-    <PackageReference Include="MSTest.Analyzers" />
+    <PackageReference Include="MSTest.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

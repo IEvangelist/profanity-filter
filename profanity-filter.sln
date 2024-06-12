@@ -1,4 +1,3 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34004.107
@@ -29,12 +28,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{28623E11-D15
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EAC63754-09D3-49C9-ACDF-ECF73AA1D922}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfanityFilter.WebApi", "src\ProfanityFilter.WebApi\ProfanityFilter.WebApi.csproj", "{163A89FA-5F97-4332-B5DA-3E7BDDA97E7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{163A89FA-5F97-4332-B5DA-3E7BDDA97E7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{163A89FA-5F97-4332-B5DA-3E7BDDA97E7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{163A89FA-5F97-4332-B5DA-3E7BDDA97E7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{163A89FA-5F97-4332-B5DA-3E7BDDA97E7C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -56,6 +61,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{163A89FA-5F97-4332-B5DA-3E7BDDA97E7C} = {28623E11-D15F-4448-82F6-B86A7D59B1D4}
 		{6FBF4FCA-D1E5-4BE3-8BA5-48EF90D8E966} = {28623E11-D15F-4448-82F6-B86A7D59B1D4}
 		{F2750329-F469-4BD8-A0D3-7E1CE2D62E19} = {28623E11-D15F-4448-82F6-B86A7D59B1D4}
 		{A1F889D2-290B-42C2-A61C-877C97F9D5EB} = {EAC63754-09D3-49C9-ACDF-ECF73AA1D922}
