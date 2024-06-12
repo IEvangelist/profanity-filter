@@ -30,7 +30,7 @@ jobs:
 
       - name: Get the version
         if: ${{ github.event_name == 'workflow_dispatch' }}
-        run: echo "RELEASE_VERSION=${ github.event.inputs.version }" >> $GITHUB_ENV
+        run: echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
 
       - uses: actions/setup-dotnet@main
 
