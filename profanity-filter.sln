@@ -8,6 +8,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
+		.github\workflows\release-api.yml = .github\workflows\release-api.yml
 		action.yml = action.yml
 		Directory.Packages.props = Directory.Packages.props
 		.github\workflows\dogfood.yml = .github\workflows\dogfood.yml
@@ -28,7 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{28623E11-D15
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EAC63754-09D3-49C9-ACDF-ECF73AA1D922}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfanityFilter.WebApi", "src\ProfanityFilter.WebApi\ProfanityFilter.WebApi.csproj", "{163A89FA-5F97-4332-B5DA-3E7BDDA97E7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProfanityFilter.WebApi", "src\ProfanityFilter.WebApi\ProfanityFilter.WebApi.csproj", "{163A89FA-5F97-4332-B5DA-3E7BDDA97E7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

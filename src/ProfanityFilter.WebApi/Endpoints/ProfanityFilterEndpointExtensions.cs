@@ -50,13 +50,17 @@ internal static class ProfanityFilterEndpointExtensions
     }
 
     private static async Task<IResult> OnApplyFilterAsync(
-        [FromBody] ProfanityFilterRequest request,
+        [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Disallow)] ProfanityFilterRequest request,
         [FromServices] IProfaneContentFilterService filterService)
     {
         if (request is null || string.IsNullOrWhiteSpace(request.Text))
         {
-            return Results.BadRequest($"""
-                You need to provide a valid request.
+            return Results.BadRequest("""
+                You need to provide a valid request, as example HTTP POST body:
+                {
+                    "text": "Some content to evaluate.",
+                    "strategy": "RedactedRectangle"
+                }
                 """);
         }
 

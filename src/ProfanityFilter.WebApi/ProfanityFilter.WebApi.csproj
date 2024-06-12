@@ -4,22 +4,30 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RuntimeIdentifiers>linux-x64</RuntimeIdentifiers>
     <EnableSdkContainerDebugging>True</EnableSdkContainerDebugging>
     <UserSecretsId>c381930b-4a15-4c4d-8d19-b5070cbb9fd6</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ContainerUser>root</ContainerUser>
+    <ContainerDescription>Potty Mouth: A profanity filter exposed as a Web API.</ContainerDescription>
+    <ContainerAuthors>David Pine</ContainerAuthors>
+    <ContainerInformationUrl>
+      https://github.com/IEvangelist/profanity-filter
+    </ContainerInformationUrl>
+    <ContainerDocumentationUrl>
+      https://github.com/IEvangelist/profanity-filter
+    </ContainerDocumentationUrl>
+    <ContainerLicenseExpression>
+      https://github.com/IEvangelist/profanity-filter/blob/main/LICENSE
+    </ContainerLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ContainerEnvironmentVariable Include="ASPNETCORE_HTTPS_PORTS">
-      <Value>8081</Value>
-    </ContainerEnvironmentVariable>
   </ItemGroup>
 
   <ItemGroup>

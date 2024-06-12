@@ -1,4 +1,4 @@
-name: Release
+name: Release API
 
 on:
   release:
@@ -10,8 +10,8 @@ on:
         required: true
 
 env:
-  IMAGE_NAME: ievangelist/profanity-filter
-  BASE_IMAGE: mcr.microsoft.com/dotnet/nightly/runtime-deps:8.0-jammy-chiseled-aot
+  IMAGE_NAME: ievangelist/profanity-filter-api
+  BASE_IMAGE: mcr.microsoft.com/dotnet/nightly/aspnet:8.0
 
 jobs:
   deploy:
@@ -42,9 +42,9 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish app
-        working-directory: ./src/ProfanityFilter.Action
+        working-directory: ./src/ProfanityFilter.WebApi
         run: |
-          dotnet publish \
+          dotnet publish -c Release \
             /t:PublishContainer \
             -p DebugType=none \
             -p ContainerBaseImage=${{ env.BASE_IMAGE }} \
@@ -57,4 +57,4 @@ jobs:
         if: always()
         with:
           name: msbuild.binlog
-          path: src/ProfanityFilter.Action/msbuild.binlog
+          path: src/ProfanityFilter.WebApi/msbuild.binlog

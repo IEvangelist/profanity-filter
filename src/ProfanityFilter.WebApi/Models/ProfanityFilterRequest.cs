@@ -7,7 +7,7 @@ namespace ProfanityFilter.WebApi.Models;
 /// A representation of a profanity-filter request.
 /// </summary>
 /// <param name="Text">The text to evaluate for profanity.</param>
-/// <param name="ReplacementStrategy">The desired replacement strategy to use. Defaults to <c>*</c>.</param>
+/// <param name="Strategy">The desired replacement strategy to use. Defaults to <c>*</c>.</param>
 public sealed record class ProfanityFilterRequest(
     string Text,
     ReplacementStrategy Strategy = ReplacementStrategy.Asterisk);

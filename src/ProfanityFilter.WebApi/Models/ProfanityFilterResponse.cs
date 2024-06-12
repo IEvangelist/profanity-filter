@@ -7,7 +7,7 @@ namespace ProfanityFilter.WebApi.Models;
 /// A representation of a profanity-filter response object.
 /// </summary>
 /// <param name="ContainsProfanity">A boolean value indicating whether or
-/// not the the <see cref="InputText"/> contains profanity.</param>
+/// not the the <paramref name="InputText"/> contains profanity.</param>
 /// <param name="InputText">The original input text.</param>
 /// <param name="FilteredText">The final output text, after filters have been applied.</param>
 /// <param name="ReplacementStrategy">The replacement strategy used.</param>

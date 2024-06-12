@@ -13,8 +13,11 @@ namespace ProfanityFilter.WebApi.Serialization;
     IncludeFields = true)]
 [JsonSerializable(typeof(ProfanityFilterRequest))]
 [JsonSerializable(typeof(ProfanityFilterResponse))]
+[JsonSerializable(typeof(ProfanityFilterStep[]))]
 [JsonSerializable(typeof(StrategyResponse))]
 [JsonSerializable(typeof(StrategyResponse[]))]
+[JsonSerializable(typeof(ReplacementStrategy))]
+[JsonSerializable(typeof(FilterStep[]))]
 internal partial class SourceGenerationContext : JsonSerializerContext
 {
 }
