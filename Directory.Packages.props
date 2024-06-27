@@ -16,8 +16,8 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.24271.6" />
-    <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.24271.6" />
+    <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.24325.1" />
+    <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.24325.1" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.4.3" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="MSTest.Analyzers" Version="3.4.3" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
