@@ -3,7 +3,9 @@
 
 namespace ProfanityFilter.WebApi.Hubs;
 
-public sealed class ProfanityHub(IProfaneContentFilterService filter) : Hub
+public sealed class ProfanityHub(
+    IProfaneContentFilterService filter,
+    ILogger<ProfanityHub> logger) : Hub
 {
     [HubMethodName("live")]
     public async IAsyncEnumerable<ProfanityFilterResponse> LiveStream(
@@ -11,7 +13,12 @@ public sealed class ProfanityHub(IProfaneContentFilterService filter) : Hub
         [EnumeratorCancellation]
         CancellationToken cancellationToken)
     {
-        await foreach (var request in liveRequests)
+        logger.LogInformation("""
+            Starting a live stream for: {ConnectionId}.
+            """,
+            Context.ConnectionId);
+
+        await foreach (var request in liveRequests.WithCancellation(cancellationToken))
         {
             var parameters = new FilterParameters(
                 request.Strategy, request.Target);
@@ -21,10 +28,20 @@ public sealed class ProfanityHub(IProfaneContentFilterService filter) : Hub
 
             if (result is null or { FinalOutput: null })
             {
+                logger.LogWarning("""
+                    ({ConnectionId}) Filter result was either null or its final output was null.
+                    """,
+                    Context.ConnectionId);
+
                 yield break;
             }
 
-            yield return (result, request.Strategy);
+            yield return ProfanityFilterResponse.From(result, request.Strategy);
         }
+
+        logger.LogInformation("""
+            Ending live stream for: {ConnectionId}.
+            """,
+            Context.ConnectionId);
     }
 }

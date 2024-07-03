@@ -26,12 +26,9 @@ public sealed record class ProfanityFilterResponse(
     ProfanityFilterStep[]? FiltrationSteps = default,
     string[]? Matches = default)
 {
-    public static implicit operator ProfanityFilterResponse(
-        (FilterResult result, ReplacementStrategy strategy) pair)
-    {
-        var (result, strategy) = pair;
-
-        return new(
+    public static ProfanityFilterResponse From(
+        FilterResult result, ReplacementStrategy strategy) =>
+        new(
                 ContainsProfanity: result.IsFiltered,
                 InputText: result.Input,
                 FilteredText: result.FinalOutput,
@@ -39,5 +36,4 @@ public sealed record class ProfanityFilterResponse(
                 FiltrationSteps: [.. result.Steps?.Where(static s => s.IsFiltered)],
                 Matches: [.. result.Matches]
             );
-    }
 }

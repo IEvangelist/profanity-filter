@@ -8,8 +8,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSignalR();
+builder.Services.AddSignalR(
+        static options => options.EnableDetailedErrors = true)
+    .AddMessagePackProtocol();
+
 builder.Services.AddProfanityFilterServices();
+
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 builder.Services.ConfigureHttpJsonOptions(
     static options =>
@@ -17,16 +23,17 @@ builder.Services.ConfigureHttpJsonOptions(
         0,
         SourceGenerationContext.Default));
 
-builder.Services.Configure<JsonHubProtocolOptions>(
-    static options =>
-    options.PayloadSerializerOptions.TypeInfoResolverChain.Insert(
-        0, SourceGenerationContext.Default));
-
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseAntiforgery();
 
 app.MapProfanityFilterEndpoints();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();

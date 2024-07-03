@@ -1,0 +1,40 @@
+﻿@page "/"
+@attribute [StreamRendering]
+
+<PageTitle>Filter</PageTitle>
+
+<header class="pb-4">
+    <nav class="navbar navbar-expand-md fixed-top">
+        <div class="container-fluid justify-content-center">
+            <h1>
+                🤬 Profanity Filter 💜.NET Aspire
+            </h1>
+        </div>
+    </nav>
+</header>
+
+<div class="container d-flex py-5">
+    <textarea value="@_text"
+              @oninput="@OnTextChanged"
+              class="form-control flex-fill" id="content" style="height: 80vh;">
+    </textarea>
+</div>
+
+<footer class="footer fixed-bottom mt-auto py-3">
+    <div class="container justify-content-center">
+        <div class="row g-3 align-items-center">
+            <div class="col-12">
+                <InputSelect @bind-Value="@_selectedStrategy" class="form-select form-select-lg">
+                    @foreach (var strategy in _strategies)
+                    {
+                        var text = strategy.ToString().SplitCamelCase();
+
+                        <option value="@strategy">
+                            @((MarkupString)(text?.ToHtml() ?? "..."))
+                        </option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+    </div>
+</footer>
