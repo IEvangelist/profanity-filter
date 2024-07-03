@@ -6,12 +6,12 @@ namespace ProfanityFilter.WebApi.Models;
 /// <summary>
 /// A representation of a strategy response object.
 /// </summary>
-/// <param name="StrategyName">The name of the strategy.</param>
-/// <param name="StrategyValue">The <c>int</c> value of the strategy.</param>
+/// <param name="Name">The name of the strategy.</param>
+/// <param name="Value">The <c>int</c> value of the strategy.</param>
 /// <param name="Description">The description of the strategy.</param>
 public sealed record class StrategyResponse(
-    string StrategyName,
-    int StrategyValue,
+    string Name,
+    int Value,
     string Description)
 {
     public static implicit operator StrategyResponse(ReplacementStrategy strategy)
@@ -36,8 +36,8 @@ public sealed record class StrategyResponse(
         };
 
         return new StrategyResponse(
-            StrategyName: Enum.GetName(strategy) ?? strategy.ToString(),
-            StrategyValue: (int)strategy,
+            Name: Enum.GetName(strategy) ?? strategy.ToString(),
+            Value: (int)strategy,
             Description: description);
     }
 }

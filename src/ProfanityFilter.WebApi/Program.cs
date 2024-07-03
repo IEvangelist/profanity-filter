@@ -8,7 +8,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSignalR();
 builder.Services.AddProfanityFilterServices();
+
+builder.Services.ConfigureHttpJsonOptions(
+    static options =>
+    options.SerializerOptions.TypeInfoResolverChain.Insert(
+        0,
+        SourceGenerationContext.Default));
+
+builder.Services.Configure<JsonHubProtocolOptions>(
+    static options =>
+    options.PayloadSerializerOptions.TypeInfoResolverChain.Insert(
+        0, SourceGenerationContext.Default));
 
 var app = builder.Build();
 

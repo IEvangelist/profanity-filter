@@ -8,7 +8,8 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
     private const string ProfaneListKey = nameof(ProfaneListKey);
 
     /// <inheritdoc />
-    public async Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync()
+    public async Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync(
+        CancellationToken cancellationToken)
     {
         return await cache.GetOrCreateAsync(ProfaneListKey, async entry =>
         {
@@ -26,6 +27,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
                     static fileName => new KeyValuePair<string, List<string>>(fileName, [])));
 
             await Parallel.ForEachAsync(fileNames,
+                cancellationToken,
                 async (fileName, cancellationToken) =>
                 {
                     var content = await ProfaneContentReader.ReadAsync(
@@ -60,7 +62,8 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
     /// <inheritdoc />
     public async ValueTask<FilterResult> FilterProfanityAsync(
         string content,
-        FilterParameters parameters)
+        FilterParameters parameters,
+        CancellationToken cancellationToken)
     {
         var (strategy, target) = parameters;
         FilterResult result = new(content, parameters);
@@ -71,7 +74,7 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
         }
 
         var wordList =
-            await ReadAllProfaneWordsAsync().ConfigureAwait(false);
+            await ReadAllProfaneWordsAsync(cancellationToken).ConfigureAwait(false);
 
         foreach (var profaneSourceFilter in parameters.AdditionalFilterSources ?? [])
         {

@@ -17,6 +17,8 @@ namespace ProfanityFilter.WebApi.Serialization;
 [JsonSerializable(typeof(StrategyResponse))]
 [JsonSerializable(typeof(StrategyResponse[]))]
 [JsonSerializable(typeof(ReplacementStrategy))]
+[JsonSerializable(typeof(FilterTarget))]
+[JsonSerializable(typeof(FilterTargetResponse[]))]
 [JsonSerializable(typeof(FilterStep[]))]
 internal partial class SourceGenerationContext : JsonSerializerContext
 {

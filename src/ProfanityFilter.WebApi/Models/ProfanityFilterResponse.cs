@@ -24,4 +24,20 @@ public sealed record class ProfanityFilterResponse(
     string? FilteredText,
     ReplacementStrategy ReplacementStrategy,
     ProfanityFilterStep[]? FiltrationSteps = default,
-    string[]? Matches = default);
+    string[]? Matches = default)
+{
+    public static implicit operator ProfanityFilterResponse(
+        (FilterResult result, ReplacementStrategy strategy) pair)
+    {
+        var (result, strategy) = pair;
+
+        return new(
+                ContainsProfanity: result.IsFiltered,
+                InputText: result.Input,
+                FilteredText: result.FinalOutput,
+                ReplacementStrategy: strategy,
+                FiltrationSteps: [.. result.Steps?.Where(static s => s.IsFiltered)],
+                Matches: [.. result.Matches]
+            );
+    }
+}

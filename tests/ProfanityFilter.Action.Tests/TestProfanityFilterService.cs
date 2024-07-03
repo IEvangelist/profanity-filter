@@ -5,12 +5,12 @@ namespace ProfanityFilter.Action.Tests;
 
 internal sealed class TestProfanityFilterService : IProfaneContentFilterService
 {
-    public ValueTask<FilterResult> FilterProfanityAsync(string content, FilterParameters parameters)
+    public ValueTask<FilterResult> FilterProfanityAsync(string content, FilterParameters parameters, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync()
+    public Task<Dictionary<string, ProfaneSourceFilter>> ReadAllProfaneWordsAsync(CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
