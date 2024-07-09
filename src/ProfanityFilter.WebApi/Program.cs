@@ -12,6 +12,8 @@ builder.Services.AddSignalR(
         static options => options.EnableDetailedErrors = true)
     .AddMessagePackProtocol();
 
+builder.Services.AddAntiforgery();
+
 builder.Services.AddProfanityFilterServices();
 
 builder.Services.AddRazorComponents()
@@ -24,6 +26,8 @@ builder.Services.ConfigureHttpJsonOptions(
         SourceGenerationContext.Default));
 
 var app = builder.Build();
+
+app.UseAntiforgery(); 
 
 app.UseSwagger();
 app.UseSwaggerUI();
