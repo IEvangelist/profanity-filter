@@ -1,6 +1,8 @@
 // Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft.AspNetCore.DataProtection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,6 +14,8 @@ builder.Services.AddSignalR(
         static options => options.EnableDetailedErrors = true)
     .AddMessagePackProtocol();
 
+builder.Services.AddDataProtection()
+    .PersistKeysToFileSystem(new DirectoryInfo(@"/var/tmp"));
 builder.Services.AddAntiforgery();
 
 builder.Services.AddProfanityFilterServices();
