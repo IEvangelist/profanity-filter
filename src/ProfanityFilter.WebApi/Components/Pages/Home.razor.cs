@@ -1,5 +1,7 @@
 ﻿namespace ProfanityFilter.WebApi.Components.Pages;
 
+[StreamRendering]
+[IgnoreAntiforgeryToken(Order = 700)]
 public sealed partial class Home : IAsyncDisposable
 {
     private readonly SystemTimer _debounceTimer = new()

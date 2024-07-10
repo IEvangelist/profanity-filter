@@ -1,6 +1,4 @@
 ﻿@page "/"
-@attribute [StreamRendering]
-@attribute [IgnoreAntiforgeryToken]
 
 <PageTitle>Filter</PageTitle>
 
@@ -15,7 +13,8 @@
 </header>
 
 <div class="container d-flex py-5">
-    <textarea value="@_text"
+    <textarea value="@_text" title="Text area for user input"
+              placeholder="User input"
               @oninput="@OnTextChanged"
               class="form-control flex-fill" id="content" style="height: 80vh;">
     </textarea>
@@ -25,7 +24,7 @@
     <div class="container justify-content-center">
         <div class="row g-3 align-items-center">
             <div class="col-12">
-                <InputSelect @bind-Value="@_selectedStrategy" class="form-select form-select-lg">
+                <InputSelect @bind-Value="@_selectedStrategy" title="Strategy" class="form-select form-select-lg">
                     @foreach (var strategy in _strategies)
                     {
                         var text = strategy.ToString().SplitCamelCase();

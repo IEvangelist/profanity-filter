@@ -7,7 +7,8 @@ internal static class ProfanityFilterEndpointExtensions
 {
     internal static WebApplication MapProfanityFilterEndpoints(this WebApplication app)
     {
-        var profanity = app.MapGroup("profanity");
+        var profanity = app.MapGroup("profanity")
+            .DisableAntiforgery();
 
         profanity.MapHub<ProfanityHub>("hub", options =>
             {
@@ -21,8 +22,7 @@ internal static class ProfanityFilterEndpointExtensions
             .WithOpenApi()
             .WithSummary("""
                 The profanity filter hub endpoint, used for live bi-directional updates.
-                """)
-            .DisableAntiforgery();
+                """);
 
         profanity.MapPost("filter", OnApplyFilterAsync)
             .WithOpenApi()
@@ -32,8 +32,7 @@ internal static class ProfanityFilterEndpointExtensions
             .WithSummary("""
                 Use this endpoint to attempt applying a profanity-filter. The response is returned as Markdown.
                 """)
-            .WithHttpLogging(HttpLoggingFields.All)
-            .DisableAntiforgery();
+            .WithHttpLogging(HttpLoggingFields.All);
 
         profanity.MapGet("strategies", OnGetStrategies)
             .WithOpenApi()
@@ -43,8 +42,7 @@ internal static class ProfanityFilterEndpointExtensions
             .WithSummary("""
                 Returns an array of the possible replacement strategies available. See https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies
                 """)
-            .WithHttpLogging(HttpLoggingFields.All)
-            .DisableAntiforgery();
+            .WithHttpLogging(HttpLoggingFields.All);
 
         profanity.MapGet("targets", OnGetTargets)
             .WithOpenApi()
@@ -54,10 +52,10 @@ internal static class ProfanityFilterEndpointExtensions
             .WithSummary("""
                         Returns an array of the possible filter targets available.
                         """)
-            .WithHttpLogging(HttpLoggingFields.All)
-            .DisableAntiforgery();
+            .WithHttpLogging(HttpLoggingFields.All);
 
-        var data = profanity.MapGroup("data");
+        var data = profanity.MapGroup("data")
+            .DisableAntiforgery();
 
         data.MapGet("", OnGetDataNamesAsync)
             .WithOpenApi()
@@ -67,8 +65,7 @@ internal static class ProfanityFilterEndpointExtensions
             .WithSummary("""
                 Returns an array of the data names.
                 """)
-            .WithHttpLogging(HttpLoggingFields.All)
-            .DisableAntiforgery();
+            .WithHttpLogging(HttpLoggingFields.All);
 
         data.MapGet("{name}", OnGetDataByNameAsync)
             .WithOpenApi()
@@ -78,8 +75,7 @@ internal static class ProfanityFilterEndpointExtensions
             .WithSummary("""
                 Returns an array of the profane words for a given data name.
                 """)
-            .WithHttpLogging(HttpLoggingFields.All)
-            .DisableAntiforgery();
+            .WithHttpLogging(HttpLoggingFields.All);
 
         return app;
     }
