@@ -12,6 +12,8 @@ global using System.Timers;
 global using Markdig;
 
 global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.DataProtection;
+global using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 global using Microsoft.AspNetCore.Http.Connections;
 global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.AspNetCore.HttpLogging;

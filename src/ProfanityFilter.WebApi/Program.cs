@@ -1,8 +1,6 @@
 // Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.AspNetCore.DataProtection;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,8 +13,12 @@ builder.Services.AddSignalR(
     .AddMessagePackProtocol();
 
 builder.Services.AddDataProtection()
+    .UseCryptographicAlgorithms(new()
+    {
+        EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+        ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+    })
     .PersistKeysToFileSystem(new DirectoryInfo(@"/var/tmp"));
-builder.Services.AddAntiforgery();
 
 builder.Services.AddProfanityFilterServices();
 
@@ -31,13 +33,11 @@ builder.Services.ConfigureHttpJsonOptions(
 
 var app = builder.Build();
 
-app.UseAntiforgery(); 
-
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseAntiforgery();
 app.MapProfanityFilterEndpoints();
 
 app.MapRazorComponents<App>()
