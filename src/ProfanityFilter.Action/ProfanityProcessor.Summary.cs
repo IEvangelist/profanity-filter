@@ -25,7 +25,7 @@ internal sealed partial class ProfanityProcessor
 
         if (!summary.IsBufferEmpty)
         {
-            await summary.WriteAsync(new() { Overwrite = true });
+            await summary.WriteAsync();
         }
     }
 }
