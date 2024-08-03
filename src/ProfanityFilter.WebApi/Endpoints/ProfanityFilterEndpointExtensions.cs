@@ -103,7 +103,7 @@ internal static class ProfanityFilterEndpointExtensions
 
         var response = new ProfanityFilterResponse(
             ContainsProfanity: filterResult.IsFiltered,
-            InputText: filterResult.Input,
+            InputText: filterResult.Input ?? "",
             FilteredText: filterResult.FinalOutput,
             ReplacementStrategy: request.Strategy,
             FiltrationSteps: [.. filterResult.Steps?.Where(static s => s.IsFiltered)],
