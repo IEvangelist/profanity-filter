@@ -1,13 +1,48 @@
 ﻿@inherits LayoutComponentBase
 @attribute [IgnoreAntiforgeryToken(Order = 700)]
 
-<div class="page">
-    <main>
-        <article class="content px-4">
+<section class="hero is-fullheight">
+    <!-- Hero head: will stick at the top -->
+    <div class="hero-head">
+        <header class="navbar">
+            <div class="container">
+                <div class="navbar-brand">
+                    <a class="navbar-item">
+                        <span class="is-size-2">🤬 Potty Mouth</span>
+                    </a>
+                    <span class="navbar-burger" data-target="navbarMenuHeroC">
+                        <span></span>
+                    </span>
+                </div>
+                <div id="navbarMenuHeroC" class="navbar-menu">
+                    <div class="navbar-end">
+                        <span class="navbar-item">
+                            <a class="button is-info is-outlined is-large" title="GitHub"
+                               target="_blank" href="https://github.com/IEvangelist/profanity-filter">
+                                <span class="icon">
+                                    <i class="fab fa-github"></i>
+                                </span>
+                                <span>GitHub</span>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <!-- Hero content: will be in the middle -->
+    <div class="hero-body">
+        <div class="container has-text-centered">
             @Body
-        </article>
-    </main>
-</div>
+        </div>
+    </div>
+
+    <!-- Hero footer: will stick at the bottom -->
+    <div class="hero-foot">
+        
+    </div>
+</section>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

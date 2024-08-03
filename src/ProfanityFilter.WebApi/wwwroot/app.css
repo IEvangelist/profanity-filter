@@ -2,6 +2,7 @@
 
 html, body {
     font-family: "Source Code Pro", monospace;
+    overflow: hidden;
 }
 
 a, .btn-link {

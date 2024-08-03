@@ -17,7 +17,7 @@ public interface IProfaneContentFilterService
     /// <returns>A <see cref="ValueTask{TResult}"/> representing the asynchronous 
     /// operation, containing the filtered content.</returns>
     ValueTask<FilterResult> FilterProfanityAsync(
-        string content,
+        string? content,
         FilterParameters parameters,
         CancellationToken cancellationToken = default);
 

@@ -1,40 +1,40 @@
 ﻿@page "/"
 
-<PageTitle>Filter</PageTitle>
+<PageTitle>Potty Mouth</PageTitle>
 
-<header class="pb-4">
-    <nav class="navbar navbar-expand-md fixed-top">
-        <div class="container-fluid justify-content-center">
-            <h1>
-                🤬 Profanity Filter 💜.NET Aspire
-            </h1>
-        </div>
-    </nav>
-</header>
-
-<div class="container d-flex py-5">
-    <textarea value="@_text" title="Text area for user input"
-              placeholder="User input"
-              @oninput="@OnTextChanged"
-              class="form-control flex-fill" id="content" style="height: 80vh;">
-    </textarea>
+<div class="field">
+    <div class="control is-large @(_isLoading ? "is-loading" : "")">
+        <textarea value="@_text" title="Text area for user input"
+                  placeholder="User input"
+                  @oninput="@OnTextChanged"
+                  class="textarea is-large is-monospace" id="content" style="height: 70vh;">
+        </textarea>
+    </div>
 </div>
 
-<footer class="footer fixed-bottom mt-auto py-3">
-    <div class="container justify-content-center">
-        <div class="row g-3 align-items-center">
-            <div class="col-12">
-                <InputSelect @bind-Value="@_selectedStrategy" title="Strategy" class="form-select form-select-lg">
-                    @foreach (var strategy in _strategies)
-                    {
-                        var text = strategy.ToString().SplitCamelCase();
+<button class="button is-large is-info is-inverted js-modal-trigger"
+        @onclick="@(() => _isActive = _isActive is not true)">
+    <span>Select Replacement Strategy: @(_selectedStrategy.ToString().SplitCamelCase())</span>
+</button>
 
-                        <option value="@strategy">
-                            @((MarkupString)(text?.ToHtml() ?? "..."))
-                        </option>
-                    }
-                </InputSelect>
-            </div>
-        </div>
+<div class="modal @(_isActive ? "is-active" : "")">
+    <div class="modal-background" @onclick="@(() => _isActive = false)"></div>
+    <div class="modal-content">
+        <aside class="menu">
+            <p class="menu-label is-size-4">Select Replacement Strategy</p>
+            <ul class="menu-list">
+                @foreach (var strategy in _strategies)
+                {
+                    <li>
+                        <a class="is-size-4 @(strategy == _selectedStrategy ? "is-active" : "")"
+                           @onclick="@(() => OnSelectedStrategyChanged(strategy))">
+                            @strategy.ToString().SplitCamelCase()
+                        </a>
+                    </li>
+                }
+            </ul>
+        </aside>
     </div>
-</footer>
+    <button class="modal-close is-large" aria-label="close"
+            @onclick="@(() => _isActive = false)"></button>
+</div>

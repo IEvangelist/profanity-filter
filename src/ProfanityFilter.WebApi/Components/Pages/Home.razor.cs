@@ -1,4 +1,6 @@
-﻿namespace ProfanityFilter.WebApi.Components.Pages;
+﻿using Microsoft.JSInterop;
+
+namespace ProfanityFilter.WebApi.Components.Pages;
 
 [StreamRendering]
 [IgnoreAntiforgeryToken(Order = 700)]
@@ -17,6 +19,8 @@ public sealed partial class Home : IAsyncDisposable
     private HubConnection? _hub;
     private ReplacementStrategy _selectedStrategy;
     private string? _text = "Content to filter...";
+    private bool _isLoading = false;
+    private bool _isActive = false;
 
     [Inject]
     public required ILogger<Home> Logger { get; set; }
@@ -24,17 +28,25 @@ public sealed partial class Home : IAsyncDisposable
     [Inject]
     public required NavigationManager Nav { get; set; }
 
+    [Inject]
+    public required ILocalStorageService LocalStorage { get; set; }
+
     public Home()
     {
         _liveRequests = Observable.FromEventPattern<ElapsedEventHandler, ElapsedEventArgs>(
                 handler => _debounceTimer.Elapsed += handler,
                 handler => _debounceTimer.Elapsed -= handler
             )
-            .Select(args => new ProfanityFilterRequest(
-                _text,
-                _selectedStrategy,
-                0
-            ));
+            .Select(args =>
+            {
+                _isLoading = true;
+
+                return new ProfanityFilterRequest(
+                    _text,
+                    _selectedStrategy,
+                    0
+                );
+            });
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -42,6 +54,13 @@ public sealed partial class Home : IAsyncDisposable
         if (firstRender is false)
         {
             return;
+        }
+
+        if (await LocalStorage.GetItemAsync("selected-strategy") is { } strategy &&
+            Enum.TryParse<ReplacementStrategy>(strategy, out var selectedStrategy))
+        {
+            _selectedStrategy = selectedStrategy;
+            StateHasChanged();
         }
 
         if (_hub is null)
@@ -145,16 +164,22 @@ public sealed partial class Home : IAsyncDisposable
                         _text = response.FilteredText;
                     }
 
+                    _isLoading = false;
+
                     await InvokeAsync(StateHasChanged);
                 }
             }
-            catch (Exception ex) when (Debugger.IsAttached)
+            catch (Exception ex) when (Debugger.IsAttached && ex is not OperationCanceledException)
             {
                 _ = ex;
 
                 Debugger.Break();
 
                 throw;
+            }
+            finally
+            {
+                _isLoading = false;
             }
         }
     }
@@ -165,6 +190,14 @@ public sealed partial class Home : IAsyncDisposable
 
         _debounceTimer.Stop();
         _debounceTimer.Start();
+    }
+
+    private async Task OnSelectedStrategyChanged(ReplacementStrategy strategy)
+    {
+        _selectedStrategy = strategy;
+        _isActive = false;
+
+        await LocalStorage.SetItemAsync("selected-strategy", strategy.ToString());
     }
 
     public async ValueTask DisposeAsync()

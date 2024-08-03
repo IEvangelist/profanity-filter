@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Services;
+namespace ProfanityFilter.Services.Internals;
 
 /// <summary>
 /// The match registry is used to store all matches for a given set of <see cref="FilterParameters"/>.

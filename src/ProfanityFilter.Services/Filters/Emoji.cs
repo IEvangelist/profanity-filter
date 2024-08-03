@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Services;
+namespace ProfanityFilter.Services.Filters;
 
 /// <summary>
 /// Provides a collection of hand-selected emoji replacements for profanity words.

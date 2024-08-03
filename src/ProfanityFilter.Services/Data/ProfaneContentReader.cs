@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Services;
+namespace ProfanityFilter.Services.Data;
 
 internal sealed class ProfaneContentReader
 {

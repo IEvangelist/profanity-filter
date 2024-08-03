@@ -3,7 +3,9 @@
 
 namespace ProfanityFilter.Services;
 
-internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : IProfaneContentFilterService
+internal sealed class DefaultProfaneContentFilterService(
+    IMemoryCache cache,
+    ILogger<DefaultProfaneContentFilterService> logger) : IProfaneContentFilterService
 {
     private const string ProfaneListKey = nameof(ProfaneListKey);
 
@@ -15,20 +17,21 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
         {
             var fileNames = ProfaneContentReader.GetFileNames();
 
-            Console.WriteLine("Source word list for profane content:");
+            logger.LogInformation("Source word list for profane content:");
 
-            foreach (var fileName in fileNames)
+            foreach (var (index, fileName) in fileNames.Select((f, i) => (i, f)))
             {
-                Console.WriteLine(fileName);
+                logger.LogInformation("{index} {file}", index + 1, fileName);
             }
 
             ConcurrentDictionary<string, List<string>> allWords = new(
                 fileNames.Select(
                     static fileName => new KeyValuePair<string, List<string>>(fileName, [])));
 
-            await Parallel.ForEachAsync(fileNames,
-                cancellationToken,
-                async (fileName, cancellationToken) =>
+            await Parallel.ForEachAsync(
+                source: fileNames,
+                cancellationToken: cancellationToken,
+                body: async (fileName, cancellationToken) =>
                 {
                     var content = await ProfaneContentReader.ReadAsync(
                         fileName, cancellationToken);
@@ -61,11 +64,12 @@ internal sealed class DefaultProfaneContentFilterService(IMemoryCache cache) : I
 
     /// <inheritdoc />
     public async ValueTask<FilterResult> FilterProfanityAsync(
-        string content,
+        string? content,
         FilterParameters parameters,
         CancellationToken cancellationToken)
     {
         var (strategy, target) = parameters;
+
         FilterResult result = new(content, parameters);
 
         if (string.IsNullOrWhiteSpace(content))

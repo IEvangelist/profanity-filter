@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Services;
+namespace ProfanityFilter.Services.Internals;
 
 /// <summary>
 /// Provides match evaluators for replacing profanity matches with asterisks or emojis.

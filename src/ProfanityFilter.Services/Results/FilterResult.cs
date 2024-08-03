@@ -11,7 +11,7 @@ namespace ProfanityFilter.Services.Results;
 /// <param name="Steps">The steps for the filter result involved in the filter process.</param>
 /// <param name="Matches">The list of matches that were found in the filter process.</param>
 public record class FilterResult(
-    string Input,
+    string? Input,
     FilterParameters Parameters,
     List<FilterStep>? Steps = null,
     List<string>? Matches = null)
