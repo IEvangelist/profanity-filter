@@ -19,6 +19,7 @@ public class ServiceCollectionExtensionsTests
             var services = new ServiceCollection();
 
             // Act
+            services.AddLogging();
             services.AddActionProcessorServices();
 
             // Assert
