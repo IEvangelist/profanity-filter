@@ -53,9 +53,9 @@ internal static partial class SummaryExtensions
             ]),
         ];
 
-        static string ReplaceNewLinesWithHtmlBreaks(string content)
+        static string ReplaceNewLinesWithHtmlBreaks(string? content)
         {
-            return NewLineRegex().Replace(content, "<br>");
+            return NewLineRegex().Replace(content ?? "", "<br>");
         }
 
         foreach (var step in result.Steps ?? [])

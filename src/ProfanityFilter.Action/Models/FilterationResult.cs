@@ -38,13 +38,13 @@ internal readonly record struct FiltrationResult(
     /// Gets the final output of the title.
     /// </summary>
     internal string Title => IsTitleFiltered
-        ? TitleResult.FinalOutput ?? TitleResult.Input
+        ? TitleResult.FinalOutput ?? TitleResult.Input ?? "N/A"
         : "";
 
     /// <summary>
     /// Gets the final output of the body.
     /// </summary>
     internal string Body => IsBodyFiltered
-        ? BodyResult.FinalOutput ?? BodyResult.Input
+        ? BodyResult.FinalOutput ?? BodyResult.Input ?? "N/A"
         : "";
 }

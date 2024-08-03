@@ -1,6 +1,7 @@
 // Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft.Extensions.Logging.Abstractions;
 using ProfanityFilter.Services.Filters;
 
 namespace ProfanityFilter.Services.Tests;
@@ -11,7 +12,8 @@ public class DefaultProfaneContentFilterServiceTests
     private readonly IProfaneContentFilterService _sut;
 
     public DefaultProfaneContentFilterServiceTests() => _sut = new DefaultProfaneContentFilterService(
-        new MemoryCache(Options.Create<MemoryCacheOptions>(new())));
+        cache: new MemoryCache(Options.Create<MemoryCacheOptions>(new())),
+        logger: NullLogger<DefaultProfaneContentFilterService>.Instance);
 
     [TestMethod]
     [DataRow(null, null)]
