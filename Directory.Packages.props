@@ -21,8 +21,8 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.24366.3" />
     <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.24366.3" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.5.0" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
-    <PackageVersion Include="MSTest.Analyzers" Version="3.5.0" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.5.1" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
+    <PackageVersion Include="MSTest.Analyzers" Version="3.5.1" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="8.0.4" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.0" />
