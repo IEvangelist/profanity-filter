@@ -11,8 +11,8 @@
     <PackageVersion Include="GitHub.Actions.Core" Version="8.1.0" />
     <PackageVersion Include="GitHub.Actions.Octokit" Version="8.1.0" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
@@ -21,14 +21,14 @@
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.24366.3" />
     <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.24366.3" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.5.0" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
-    <PackageVersion Include="MSTest.Analyzers" Version="3.5.0" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.5.2" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
+    <PackageVersion Include="MSTest.Analyzers" Version="3.5.2" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="8.0.4" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.0" />
     <PackageVersion Include="Markdig" Version="0.37.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.7" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.8" />
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
     <PackageVersion Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
