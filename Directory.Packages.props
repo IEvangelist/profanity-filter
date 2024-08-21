@@ -25,7 +25,7 @@
     <PackageVersion Include="MSTest.Analyzers" Version="3.5.2" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="8.0.4" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.7.1" />
     <PackageVersion Include="Markdig" Version="0.37.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.8" />
