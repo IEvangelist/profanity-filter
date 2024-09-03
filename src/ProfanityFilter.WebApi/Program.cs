@@ -7,12 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 builder.Services.AddLocalStorageServices();
 
 builder.Services.AddSignalR(
-        static options => options.EnableDetailedErrors = true)
-    .AddMessagePackProtocol();
+        static options => options.EnableDetailedErrors = true);
 
 builder.Services.AddDataProtection()
     .UseCryptographicAlgorithms(new()

@@ -8,7 +8,8 @@
     <UserSecretsId>c381930b-4a15-4c4d-8d19-b5070cbb9fd6</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!--<IsAotCompatible>true</IsAotCompatible>-->
+    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
     <NoWarn>NU5104</NoWarn>
   </PropertyGroup>
 
@@ -30,7 +31,6 @@
   <ItemGroup>
     <PackageReference Include="Blazor.LocalStorage" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Markdig" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />

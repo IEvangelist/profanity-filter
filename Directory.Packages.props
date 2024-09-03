@@ -12,7 +12,6 @@
     <PackageVersion Include="GitHub.Actions.Octokit" Version="8.1.0" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3" PrivateAssets="all" IncludeAssets="runtime;build;native;contentfiles;analyzers;buildtransitive" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0-preview.7.24406.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="9.0.0-preview.7.24406.2" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.0-preview.7.24405.7" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0-preview.7.24405.7" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-preview.7.24405.7" />
