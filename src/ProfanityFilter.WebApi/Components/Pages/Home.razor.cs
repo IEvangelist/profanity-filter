@@ -71,7 +71,6 @@ public sealed partial class Home : IAsyncDisposable
             };
 
             _hub = new HubConnectionBuilder()
-                .AddMessagePackProtocol()
                 .WithUrl(uri.Uri)
                 .WithAutomaticReconnect()
                 .WithStatefulReconnect()
