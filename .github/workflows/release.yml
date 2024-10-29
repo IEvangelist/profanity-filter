@@ -11,8 +11,7 @@ on:
 
 env:
   IMAGE_NAME: ievangelist/profanity-filter
-  # TODO: Find the .NET 9.0 replacement image!
-  BASE_IMAGE: mcr.microsoft.com/dotnet/runtime-deps:9.0
+  BASE_IMAGE: mcr.microsoft.com/dotnet/nightly/runtime-deps:9.0.0-rc.2-noble-chiseled-aot
 
 jobs:
   deploy:

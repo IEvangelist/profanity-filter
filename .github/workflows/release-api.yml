@@ -11,7 +11,6 @@ on:
 
 env:
   IMAGE_NAME: ievangelist/profanity-filter-api
-  # TODO: Find the .NET 9.0 replacement image!
   BASE_IMAGE: mcr.microsoft.com/dotnet/aspnet:9.0
 
 jobs:
