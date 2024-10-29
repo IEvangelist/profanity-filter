@@ -1,6 +1,4 @@
-﻿using Microsoft.JSInterop;
-
-namespace ProfanityFilter.WebApi.Components.Pages;
+﻿namespace ProfanityFilter.WebApi.Components.Pages;
 
 [StreamRendering]
 [IgnoreAntiforgeryToken(Order = 700)]
@@ -71,7 +69,6 @@ public sealed partial class Home : IAsyncDisposable
             };
 
             _hub = new HubConnectionBuilder()
-                .AddMessagePackProtocol()
                 .WithUrl(uri.Uri)
                 .WithAutomaticReconnect()
                 .WithStatefulReconnect()
@@ -83,9 +80,7 @@ public sealed partial class Home : IAsyncDisposable
 
             await _hub.StartAsync();
 
-            Logger.LogInformation("""
-                Hub connection started.
-                """);
+            Logger.HubStarted();
 
             _ = StartLiveUpdateStreamAsync();
         }
@@ -93,30 +88,21 @@ public sealed partial class Home : IAsyncDisposable
 
     private Task OnHubConnectionClosedAsync(Exception? exception)
     {
-        Logger.LogInformation("""
-            Hub connection closed: {Error}
-            """,
-            exception);
+        Logger.HubConnectionClosed(exception);
 
         return Task.CompletedTask;
     }
 
     private Task OnHubConnectionReconnectingAsync(Exception? exception)
     {
-        Logger.LogWarning("""
-            Hub connection reconnecting: {Error}
-            """,
-            exception);
+        Logger.HubReconnecting(exception);
 
         return Task.CompletedTask;
     }
 
     private Task OnHubConnectionReconnectedAsync(string? arg)
     {
-        Logger.LogInformation("""
-            Hub connection reconnected: {arg}
-            """,
-            arg);
+        Logger.HubReconnected(arg);
 
         return Task.CompletedTask;
     }
@@ -126,9 +112,7 @@ public sealed partial class Home : IAsyncDisposable
     {
         if (_hub is null or not { State: HubConnectionState.Connected })
         {
-            Logger.LogWarning("""
-                Not connected to the profanity filter hub.
-                """);
+            Logger.NotConnectedToHub();
 
             return true;
         }
@@ -171,6 +155,8 @@ public sealed partial class Home : IAsyncDisposable
             }
             catch (Exception ex) when (Debugger.IsAttached && ex is not OperationCanceledException)
             {
+                Logger.ErrorProcessProfanity(ex);
+
                 _ = ex;
 
                 Debugger.Break();

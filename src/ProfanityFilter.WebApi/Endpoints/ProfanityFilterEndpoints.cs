@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.WebApi.Endpoints;
 
-internal static class ProfanityFilterEndpointExtensions
+internal static partial class ProfanityFilterEndpoints
 {
     internal static WebApplication MapProfanityFilterEndpoints(this WebApplication app)
     {
@@ -130,25 +130,31 @@ internal static class ProfanityFilterEndpointExtensions
         );
 
     private static async Task<IResult> OnGetDataNamesAsync(
+        [FromServices] IMemoryCache cache,
         [FromServices] IProfaneContentFilterService filterService)
     {
         var map = await filterService.ReadAllProfaneWordsAsync();
 
+        var fileNames = await GetProfaneContentNamesAsync(cache, map.Keys);
+
         return TypedResults.Json([
-                .. map.Keys.Select(static key => Path.GetFileNameWithoutExtension(key))
+                .. fileNames.Keys
             ],
             SourceGenerationContext.Default.StringArray);
     }
 
     private static async Task<IResult> OnGetDataByNameAsync(
         [FromRoute] string name,
+        [FromServices] IMemoryCache cache,
         [FromServices] IProfaneContentFilterService filterService)
     {
         var map = await filterService.ReadAllProfaneWordsAsync();
 
+        var fileNames = await GetProfaneContentNamesAsync(cache, map.Keys);
+
         foreach (var (key, value) in map)
         {
-            if (Path.GetFileNameWithoutExtension(key) == name)
+            if (fileNames.TryGetValue(key, out var fileName) && fileName == name)
             {
                 return TypedResults.Json([
                         .. value.ProfaneWords

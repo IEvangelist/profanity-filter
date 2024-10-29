@@ -9,10 +9,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddLocalStorageServices();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddSignalR(
-        static options => options.EnableDetailedErrors = true)
-    .AddMessagePackProtocol();
+        static options => options.EnableDetailedErrors = true);
 
 builder.Services.AddDataProtection()
     .UseCryptographicAlgorithms(new()

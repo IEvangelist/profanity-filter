@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.Services;
 
-internal sealed class DefaultProfaneContentFilterService(
+internal sealed partial class DefaultProfaneContentFilterService(
     IMemoryCache cache,
     ILogger<DefaultProfaneContentFilterService> logger) : IProfaneContentFilterService
 {
@@ -17,11 +17,11 @@ internal sealed class DefaultProfaneContentFilterService(
         {
             var fileNames = ProfaneContentReader.GetFileNames();
 
-            logger.LogInformation("Source word list for profane content:");
+            logger.SourceWordListingLead();
 
             foreach (var (index, fileName) in fileNames.Select((f, i) => (i, f)))
             {
-                logger.LogInformation("{index} {file}", index + 1, fileName);
+                logger.LogFileIndexAndName(index + 1, fileName);
             }
 
             ConcurrentDictionary<string, List<string>> allWords = new(

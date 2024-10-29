@@ -21,9 +21,10 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ModelBinding;
 global using Microsoft.AspNetCore.SignalR;
 global using Microsoft.AspNetCore.SignalR.Client;
+global using Microsoft.Extensions.Caching.Memory;
+global using Microsoft.JSInterop;
 
 global using ProfanityFilter.Services;
-global using ProfanityFilter.Services.Extensions;
 global using ProfanityFilter.Services.Filters;
 global using ProfanityFilter.Services.Results;
 global using ProfanityFilter.WebApi.Components;
@@ -31,5 +32,4 @@ global using ProfanityFilter.WebApi.Endpoints;
 global using ProfanityFilter.WebApi.Hubs;
 global using ProfanityFilter.WebApi.Models;
 global using ProfanityFilter.WebApi.Serialization;
-
 global using SystemTimer = System.Timers.Timer;
