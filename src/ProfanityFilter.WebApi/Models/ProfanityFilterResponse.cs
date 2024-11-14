@@ -33,7 +33,7 @@ public sealed record class ProfanityFilterResponse(
                 InputText: result.Input ?? "",
                 FilteredText: result.FinalOutput,
                 ReplacementStrategy: strategy,
-                FiltrationSteps: [.. result.Steps?.Where(static s => s.IsFiltered)],
-                Matches: [.. result.Matches]
+                FiltrationSteps: [.. result.Steps?.Where(static s => s.IsFiltered) ?? []],
+                Matches: [.. result.Matches ?? []]
             );
 }

@@ -3,6 +3,10 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddRedaction(static redaction =>
+    redaction.SetRedactor<CharacterRedactor>(
+        classifications: [DataClassifications.SensitiveData]));
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

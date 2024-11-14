@@ -106,8 +106,8 @@ internal static partial class ProfanityFilterEndpoints
             InputText: filterResult.Input ?? "",
             FilteredText: filterResult.FinalOutput,
             ReplacementStrategy: request.Strategy,
-            FiltrationSteps: [.. filterResult.Steps?.Where(static s => s.IsFiltered)],
-            Matches: [.. filterResult.Matches]
+            FiltrationSteps: [.. filterResult.Steps?.Where(static s => s.IsFiltered) ?? []],
+            Matches: [.. filterResult.Matches ?? []]
         );
 
         return TypedResults.Json(
