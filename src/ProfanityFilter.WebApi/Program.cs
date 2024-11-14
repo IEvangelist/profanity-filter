@@ -3,16 +3,20 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddRedaction(static redaction =>
+    redaction.SetRedactor<CharacterRedactor>(
+        classifications: [DataClassifications.SensitiveData]));
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddLocalStorageServices();
+builder.Services.AddMemoryCache();
 
 builder.Services.AddSignalR(
-        static options => options.EnableDetailedErrors = true)
-    .AddMessagePackProtocol();
+        static options => options.EnableDetailedErrors = true);
 
 builder.Services.AddDataProtection()
     .UseCryptographicAlgorithms(new()

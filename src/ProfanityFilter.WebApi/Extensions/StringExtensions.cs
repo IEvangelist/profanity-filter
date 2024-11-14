@@ -1,6 +1,6 @@
 ﻿namespace ProfanityFilter.WebApi.Extensions;
 
-public static partial class StringExtensions
+internal static partial class StringExtensions
 {
     private static readonly MarkdownPipeline s_pipeline = new MarkdownPipelineBuilder()
         .ConfigureNewLine("\n")

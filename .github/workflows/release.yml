@@ -11,7 +11,9 @@ on:
 
 env:
   IMAGE_NAME: ievangelist/profanity-filter
-  BASE_IMAGE: mcr.microsoft.com/dotnet/nightly/runtime-deps:8.0-jammy-chiseled-aot
+  # The base image is now inferred by the .NET SDK.
+  # https://github.com/dotnet/dotnet-docker/blob/nightly/README.runtime-deps.md#full-tag-listing
+  # BASE_IMAGE: mcr.microsoft.com/dotnet/nightly/runtime-deps:9.0.0-noble-chiseled-aot
 
 jobs:
   deploy:
@@ -47,7 +49,6 @@ jobs:
           dotnet publish \
             /t:PublishContainer \
             -p DebugType=none \
-            -p ContainerBaseImage=${{ env.BASE_IMAGE }} \
             -p ContainerRegistry=ghcr.io \
             -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
             -p ContainerRepository=${{ env.IMAGE_NAME }} \

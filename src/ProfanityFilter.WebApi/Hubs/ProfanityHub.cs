@@ -13,10 +13,10 @@ public sealed class ProfanityHub(
         [EnumeratorCancellation]
         CancellationToken cancellationToken)
     {
-        logger.LogInformation("""
-            Starting a live stream for: {ConnectionId}.
-            """,
-            Context.ConnectionId);
+        using var scope = logger.BeginScope(
+            "ProfanityHub handling live stream...");
+
+        logger.LogStartedStream(Context.ConnectionId);
 
         await foreach (var request in liveRequests.WithCancellation(cancellationToken))
         {
@@ -28,10 +28,7 @@ public sealed class ProfanityHub(
 
             if (result is null or { FinalOutput: null })
             {
-                logger.LogWarning("""
-                    ({ConnectionId}) Filter result was either null or its final output was null.
-                    """,
-                    Context.ConnectionId);
+                logger.LogInvalidFilterResult(Context.ConnectionId);
 
                 yield break;
             }
@@ -39,9 +36,6 @@ public sealed class ProfanityHub(
             yield return ProfanityFilterResponse.From(result, request.Strategy);
         }
 
-        logger.LogInformation("""
-            Ending live stream for: {ConnectionId}.
-            """,
-            Context.ConnectionId);
+        logger.LogEndingStream(Context.ConnectionId);
     }
 }

@@ -5,7 +5,7 @@
 <div class="field">
     <div class="control is-large @(_isLoading ? "is-loading" : "")">
         <textarea value="@_text" title="Text area for user input"
-                  placeholder="User input"
+                  placeholder="Type anything you'd like and if it contains profanity...it will be filtered with the selected replacement strategy."
                   @oninput="@OnTextChanged"
                   class="textarea is-large is-monospace" id="content" style="height: 70vh;">
         </textarea>

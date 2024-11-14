@@ -11,7 +11,6 @@ on:
 
 env:
   IMAGE_NAME: ievangelist/profanity-filter-api
-  BASE_IMAGE: mcr.microsoft.com/dotnet/nightly/aspnet:8.0
 
 jobs:
   deploy:
@@ -47,7 +46,6 @@ jobs:
           dotnet publish -c Release \
             /t:PublishContainer \
             -p DebugType=none \
-            -p ContainerBaseImage=${{ env.BASE_IMAGE }} \
             -p ContainerRegistry=ghcr.io \
             -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
             -p ContainerRepository=${{ env.IMAGE_NAME }} \

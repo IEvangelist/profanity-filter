@@ -78,7 +78,7 @@ internal sealed class ProfaneContentReader
     {
         var currentDirectory = Directory.GetCurrentDirectory();
 
-        // When running as a GitHub Action, we need to be in the /app dir.
+        // When running as a GitHub Action, we need to be in the /app directory.
         if (currentDirectory is "/github/workspace")
         {
             Directory.SetCurrentDirectory("/app");

@@ -4,7 +4,6 @@
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-
     <OutputType>exe</OutputType>
     <PublishAot>true</PublishAot>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
