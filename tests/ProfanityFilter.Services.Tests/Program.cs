@@ -3,9 +3,9 @@
 
 var builder = await TestApplication.CreateBuilderAsync(args);
 
-// Registers TestFramework, with tree of test nodes 
-// that are generated into your project by source generator.
-builder.AddTestFramework(new SourceGeneratedTestNodesBuilder());
+// Instead of manually referencing the extensions, we are using the MTP MSBuild feature that
+// auto-detects extensions exposing hooks and hide them all under this extension method.
+builder.AddSelfRegisteredExtensions(args);
 
 var app = await builder.BuildAsync();
 

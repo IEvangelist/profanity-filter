@@ -19,6 +19,7 @@
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="9.0.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.4.3" />
     <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.24503.4" />
     <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.24503.4" />
     <PackageVersion Include="MSTest.TestFramework" Version="3.6.3" />
