@@ -9,7 +9,6 @@
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     <!-- Allows the new platform to be called when calling dotnet test -->
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-    <GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
   </PropertyGroup>
 
   <ItemGroup>

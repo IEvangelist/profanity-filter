@@ -8,13 +8,10 @@ global using Actions.Core.Services;
 global using Actions.Core.Summaries;
 
 global using Microsoft.Extensions.DependencyInjection;
-global using Microsoft.Testing.Framework;
-global using Microsoft.Testing.Platform.Builder;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 global using ProfanityFilter.Action.Clients;
 global using ProfanityFilter.Action.Extensions;
-global using ProfanityFilter.Action.Tests;
 
 global using ProfanityFilter.Services;
 global using ProfanityFilter.Services.Filters;

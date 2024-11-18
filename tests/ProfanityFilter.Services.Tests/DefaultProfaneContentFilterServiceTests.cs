@@ -1,15 +1,14 @@
 // Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using Microsoft.Extensions.Logging.Abstractions;
-using ProfanityFilter.Services.Filters;
-
 namespace ProfanityFilter.Services.Tests;
 
 [TestClass]
 public class DefaultProfaneContentFilterServiceTests
 {
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
     private readonly IProfaneContentFilterService _sut;
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
 
     public DefaultProfaneContentFilterServiceTests() => _sut = new DefaultProfaneContentFilterService(
         cache: new MemoryCache(Options.Create<MemoryCacheOptions>(new())),
