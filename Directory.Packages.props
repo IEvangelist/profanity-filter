@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Blazor.LocalStorage" Version="8.0.0" />
+    <PackageVersion Include="Blazor.LocalStorage" Version="9.0.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="GitHub.Actions.Core" Version="8.1.1" />
     <PackageVersion Include="GitHub.Actions.Octokit" Version="8.1.1" />
@@ -22,11 +22,11 @@
     <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.4.3" />
     <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.24562.1" />
     <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.24562.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.6.3" />
-    <PackageVersion Include="MSTest.Analyzers" Version="3.6.3" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.6.4" />
+    <PackageVersion Include="MSTest.Analyzers" Version="3.6.4" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="9.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.1.0" />
     <PackageVersion Include="Markdig" Version="0.38.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />

@@ -8,6 +8,7 @@
     <PublishAot>true</PublishAot>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+    <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
     <NoWarn>$(NoWarn);NU5104;IL2104;</NoWarn>
   </PropertyGroup>
 

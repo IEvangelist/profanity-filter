@@ -54,7 +54,7 @@ public sealed partial class Home : IAsyncDisposable
             return;
         }
 
-        if (await LocalStorage.GetItemAsync("selected-strategy") is { } strategy &&
+        if (await LocalStorage.GetItemAsync<string>("selected-strategy") is { } strategy &&
             Enum.TryParse<ReplacementStrategy>(strategy, out var selectedStrategy))
         {
             _selectedStrategy = selectedStrategy;
