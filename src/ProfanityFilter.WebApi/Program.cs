@@ -18,6 +18,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSignalR(
         static options => options.EnableDetailedErrors = true);
 
+builder.Services.AddAntiforgery();
 builder.Services.AddDataProtection()
     .UseCryptographicAlgorithms(new()
     {

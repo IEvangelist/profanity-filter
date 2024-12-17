@@ -12,6 +12,8 @@
     </div>
 </div>
 
+<AntiforgeryToken />
+
 <button class="button is-large is-info is-inverted js-modal-trigger"
         @onclick="@(() => _isActive = _isActive is not true)">
     <span>Select Replacement Strategy: @(_selectedStrategy.ToString().SplitCamelCase())</span>
