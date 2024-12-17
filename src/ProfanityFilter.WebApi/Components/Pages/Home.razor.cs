@@ -68,7 +68,8 @@ public sealed partial class Home : IAsyncDisposable
 
         if (_hub is null)
         {
-            var baseAddress = ServerAddresses.Addresses.FirstOrDefault();
+            var baseAddress = ServerAddresses.Addresses.FirstOrDefault(
+                a => a.StartsWith("https", StringComparison.OrdinalIgnoreCase));
 
             Logger.LogInformation("Attempting hub base address: {Address}", baseAddress);
 
