@@ -1,4 +1,7 @@
-﻿namespace ProfanityFilter.WebApi.Components.Pages;
+﻿using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.Extensions.Logging;
+
+namespace ProfanityFilter.WebApi.Components.Pages;
 
 [StreamRendering]
 public sealed partial class Home : IAsyncDisposable
@@ -24,6 +27,9 @@ public sealed partial class Home : IAsyncDisposable
 
     [Inject]
     public required NavigationManager Nav { get; set; }
+
+    [Inject]
+    public required IServerAddressesFeature ServerAddresses { get; set; }
 
     [Inject]
     public required ILocalStorageService LocalStorage { get; set; }
@@ -62,7 +68,11 @@ public sealed partial class Home : IAsyncDisposable
 
         if (_hub is null)
         {
-            var uri = new UriBuilder(Nav.BaseUri)
+            var baseAddress = ServerAddresses.Addresses.FirstOrDefault();
+
+            Logger.LogInformation("Attempting hub base address: {Address}", baseAddress);
+
+            var uri = new UriBuilder(baseAddress ?? Nav.BaseUri)
             {
                 Path = "/profanity/hub"
             };

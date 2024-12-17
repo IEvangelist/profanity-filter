@@ -1,7 +1,18 @@
 // Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<IServerAddressesFeature>(sp =>
+{
+    var server = sp.GetRequiredService<IServer>();
+
+    return server.Features.Get<IServerAddressesFeature>()
+        ?? throw new InvalidOperationException("There's no IServerAddressesFeature in the IServer.");
+});
 
 builder.Services.AddRedaction(static redaction =>
     redaction.SetRedactor<CharacterRedactor>(
