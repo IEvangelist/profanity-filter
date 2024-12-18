@@ -26,10 +26,7 @@ public sealed partial class Home : IAsyncDisposable
     public required ILogger<Home> Logger { get; set; }
 
     [Inject]
-    public required NavigationManager Nav { get; set; }
-
-    [Inject]
-    public required IServerAddressesFeature ServerAddresses { get; set; }
+    public required BaseAddressResolver BaseAddressResolver { get; set; }
 
     [Inject]
     public required ILocalStorageService LocalStorage { get; set; }
@@ -68,12 +65,11 @@ public sealed partial class Home : IAsyncDisposable
 
         if (_hub is null)
         {
-            var baseAddress = ServerAddresses.Addresses.FirstOrDefault(
-                a => a.StartsWith("https", StringComparison.OrdinalIgnoreCase));
+            var baseAddress = BaseAddressResolver.GetBaseAddress();
 
-            Logger.LogInformation("Attempting hub base address: {Address}", baseAddress);
+            Logger.LogInformation("Connecting to: {Address}/profanity/hub", baseAddress);
 
-            var uri = new UriBuilder(baseAddress ?? Nav.BaseUri)
+            var uri = new UriBuilder(baseAddress)
             {
                 Path = "/profanity/hub"
             };

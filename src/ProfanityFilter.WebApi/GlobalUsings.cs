@@ -14,6 +14,8 @@ global using Markdig;
 global using Microsoft.AspNetCore.Components;
 global using Microsoft.AspNetCore.DataProtection;
 global using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+global using Microsoft.AspNetCore.Hosting.Server;
+global using Microsoft.AspNetCore.Hosting.Server.Features;
 global using Microsoft.AspNetCore.Http.Connections;
 global using Microsoft.AspNetCore.Http.HttpResults;
 global using Microsoft.AspNetCore.HttpLogging;
@@ -35,5 +37,6 @@ global using ProfanityFilter.WebApi.Endpoints;
 global using ProfanityFilter.WebApi.Hubs;
 global using ProfanityFilter.WebApi.Models;
 global using ProfanityFilter.WebApi.Serialization;
+global using ProfanityFilter.WebApi.Services;
 
 global using SystemTimer = System.Timers.Timer;
