@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting.Server.Features;
-using Microsoft.Extensions.Logging;
-
-namespace ProfanityFilter.WebApi.Components.Pages;
+﻿namespace ProfanityFilter.WebApi.Components.Pages;
 
 [StreamRendering]
 public sealed partial class Home : IAsyncDisposable

@@ -1,7 +1,6 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using ProfanityFilter.Services.Filters;
 using ProfanityFilter.Services.Internals;
 
 namespace ProfanityFilter.Services.Tests;
