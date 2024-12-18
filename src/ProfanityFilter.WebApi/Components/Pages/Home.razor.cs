@@ -75,7 +75,25 @@ public sealed partial class Home : IAsyncDisposable
             };
 
             _hub = new HubConnectionBuilder()
-                .WithUrl(uri.Uri)
+                .WithUrl(uri.Uri, options =>
+                {
+                    if (!BaseAddressResolver.IsRunningInContainer)
+                    {
+                        return;
+                    }
+
+                    options.UseDefaultCredentials = true;
+                    options.HttpMessageHandlerFactory = handler =>
+                    {
+                        if (handler is HttpClientHandler clientHandler)
+                        {
+                            clientHandler.ServerCertificateCustomValidationCallback =
+                                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                        }
+
+                        return handler;
+                    };
+                })
                 .WithAutomaticReconnect()
                 .WithStatefulReconnect()
                 .Build();
