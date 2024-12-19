@@ -5,23 +5,27 @@ global using System.Collections.Frozen;
 global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Text.RegularExpressions;
+
 global using Actions.Core.Extensions;
 global using Actions.Core.Markdown;
 global using Actions.Core.Services;
 global using Actions.Core.Summaries;
 global using Actions.Octokit;
 global using Actions.Octokit.Extensions;
+
 global using GitHub;
 global using GitHub.Models;
+
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
+
 global using ProfanityFilter.Action;
 global using ProfanityFilter.Action.Clients;
 global using ProfanityFilter.Action.Extensions;
 global using ProfanityFilter.Action.Models;
 global using ProfanityFilter.Services;
-global using ProfanityFilter.Services.Filters;
-global using ProfanityFilter.Services.Results;
+global using ProfanityFilter.Shared;
+
 global using ContextSummaryPair = (
     Actions.Octokit.Context Context,
     Actions.Core.Summaries.Summary Summary);

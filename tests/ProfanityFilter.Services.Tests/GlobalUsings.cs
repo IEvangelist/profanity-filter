@@ -11,5 +11,4 @@ global using Microsoft.Extensions.Options;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 global using ProfanityFilter.Services.Extensions;
-global using ProfanityFilter.Services.Filters;
-global using ProfanityFilter.Services.Results;
+global using ProfanityFilter.Shared;

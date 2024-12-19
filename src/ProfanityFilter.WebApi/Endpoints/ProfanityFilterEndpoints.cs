@@ -112,21 +112,21 @@ internal static partial class ProfanityFilterEndpoints
 
         return TypedResults.Json(
             response,
-            SourceGenerationContext.Default.ProfanityFilterResponse);
+            JsonSerializationContext.Default.ProfanityFilterResponse);
     }
 
     private static JsonHttpResult<StrategyResponse[]> OnGetStrategies() =>
         TypedResults.Json([
                 .. Enum.GetValues<ReplacementStrategy>()
             ],
-            SourceGenerationContext.Default.StrategyResponseArray
+            JsonSerializationContext.Default.StrategyResponseArray
         );
 
     private static JsonHttpResult<FilterTargetResponse[]> OnGetTargets() =>
         TypedResults.Json([
                 .. Enum.GetValues<FilterTarget>()
             ],
-            SourceGenerationContext.Default.FilterTargetResponseArray
+            JsonSerializationContext.Default.FilterTargetResponseArray
         );
 
     private static async Task<IResult> OnGetDataNamesAsync(
@@ -140,7 +140,7 @@ internal static partial class ProfanityFilterEndpoints
         return TypedResults.Json([
                 .. fileNames.Keys
             ],
-            SourceGenerationContext.Default.StringArray);
+            JsonSerializationContext.Default.StringArray);
     }
 
     private static async Task<IResult> OnGetDataByNameAsync(
@@ -159,7 +159,7 @@ internal static partial class ProfanityFilterEndpoints
                 return TypedResults.Json([
                         .. value.ProfaneWords
                     ],
-                    SourceGenerationContext.Default.StringArray);
+                    JsonSerializationContext.Default.StringArray);
             }
         }
 

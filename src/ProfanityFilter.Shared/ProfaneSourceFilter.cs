@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Services.Filters;
+namespace ProfanityFilter.Shared;
 
 /// <summary>
 /// Represents a filter source that is used as an additive to the existing profane definitions.

@@ -10,7 +10,7 @@ internal sealed class ProfaneContentReader
         EnsureWorkingDirectory();
 
         var builder = new GlobOptionsBuilder()
-            .WithPattern("**/Data/*.txt");
+            .WithPatterns(["**/Data/*.txt", "**/CustomData/*.txt"]);
 
         return builder.Build();
     });

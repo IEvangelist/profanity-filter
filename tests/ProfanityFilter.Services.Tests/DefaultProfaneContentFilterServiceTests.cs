@@ -6,13 +6,22 @@ namespace ProfanityFilter.Services.Tests;
 [TestClass]
 public class DefaultProfaneContentFilterServiceTests
 {
-#pragma warning disable CA1859 // Use concrete types when possible for improved performance
-    private readonly IProfaneContentFilterService _sut;
-#pragma warning restore CA1859 // Use concrete types when possible for improved performance
+    private const string Path = "CustomData/CustomWords.txt";
 
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
+    private IProfaneContentFilterService _sut;
+#pragma warning restore CA1859 // Use concrete types when possible for improved performance
     public DefaultProfaneContentFilterServiceTests() => _sut = new DefaultProfaneContentFilterService(
         cache: new MemoryCache(Options.Create<MemoryCacheOptions>(new())),
         logger: NullLogger<DefaultProfaneContentFilterService>.Instance);
+
+    [TestInitialize]
+    public void Initialize() => _sut = new DefaultProfaneContentFilterService(
+        cache: new MemoryCache(Options.Create<MemoryCacheOptions>(new())),
+        logger: NullLogger<DefaultProfaneContentFilterService>.Instance);
+
+    [TestCleanup]
+    public void Cleanup() => File.Delete(Path);
 
     [TestMethod]
     [DataRow(null, null)]
@@ -182,7 +191,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         Assert.AreEqual(@"Lots of f\*\*\*\*\*g words like m\*\*\*y and a\*\*\*\*a!", result.FinalOutput);
 
-        Assert.AreEqual(9, result.Steps.Count);
+        Assert.IsTrue(result.Steps.Count is > 8);
         Assert.AreEqual(3, result.Steps.Count(static step => step.IsFiltered));
 
         CollectionAssert.That.Contains(result.Steps,
@@ -191,5 +200,31 @@ public class DefaultProfaneContentFilterServiceTests
             static step => step.ProfaneSourceData.EndsWith("BritishSwearWords.txt"));
         CollectionAssert.That.Contains(result.Steps,
             static step => step.ProfaneSourceData.EndsWith("ItalianSwearWords.txt"));
+    }
+
+    [TestMethod]
+    public async Task FilterProfanityAsyncWithCustomData_ReturnsMultiStep_Result()
+    {
+        string[] customWords = ["Silverlight", "WebForms"];
+        Directory.CreateDirectory("CustomData");
+
+        await File.WriteAllTextAsync(Path, string.Join('\n', customWords));
+
+        var input = "My least favorite web technologies are Silverlight and WebForms!";
+
+        // Act
+        var result = await _sut.FilterProfanityAsync(input,
+            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body));
+
+        // Assert
+        Assert.IsTrue(result.IsFiltered);
+
+        Assert.AreEqual(@"My least favorite web technologies are S\*\*\*\*\*\*\*\*\*t and W\*\*\*\*\*\*s!", result.FinalOutput);
+
+        Assert.AreEqual(10, result.Steps.Count);
+        Assert.AreEqual(1, result.Steps.Count(static step => step.IsFiltered));
+
+        CollectionAssert.That.Contains(result.Steps,
+            static step => step.ProfaneSourceData.EndsWith("CustomWords.txt"));
     }
 }

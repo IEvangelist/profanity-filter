@@ -14,5 +14,4 @@ global using ProfanityFilter.Action.Clients;
 global using ProfanityFilter.Action.Extensions;
 
 global using ProfanityFilter.Services;
-global using ProfanityFilter.Services.Filters;
-global using ProfanityFilter.Services.Results;
+global using ProfanityFilter.Shared;

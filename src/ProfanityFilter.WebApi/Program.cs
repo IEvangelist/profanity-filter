@@ -45,7 +45,7 @@ builder.Services.ConfigureHttpJsonOptions(
     static options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(
         0,
-        SourceGenerationContext.Default));
+        JsonSerializationContext.Default));
 
 var app = builder.Build();
 

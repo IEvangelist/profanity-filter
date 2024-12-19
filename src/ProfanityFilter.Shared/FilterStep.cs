@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Services.Results;
+namespace ProfanityFilter.Shared;
 
 /// <summary>
 /// Represents a step in the profanity filtering process.

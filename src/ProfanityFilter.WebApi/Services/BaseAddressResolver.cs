@@ -8,7 +8,7 @@ public sealed class BaseAddressResolver(
     IServerAddressesFeature serverAddresses,
     NavigationManager navigationManager)
 {
-    public bool IsRunningInContainer => configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER");
+    public bool IsRunningInContainer => configuration.IsRunningInContainer();
 
     public string GetBaseAddress()
     {
