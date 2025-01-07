@@ -24,16 +24,6 @@ public sealed class ProfanityFilterOptions
     public Uri? ApiBaseAddress { get; set; }
 
     /// <summary>
-    /// Gets the URI for the profanity REST API.
-    /// </summary>
-    public string RestUri => $"{ApiBaseAddress}/profanity";
-
-    /// <summary>
-    /// Gets the URI for the real-time profanity hub.
-    /// </summary>
-    public string RealtimeUri => $"{RestUri}/hub";
-
-    /// <summary>
     /// Gets or sets a boolean value that indicates whether the OpenTelemetry tracing is disabled or not.
     /// </summary>
     /// <value>

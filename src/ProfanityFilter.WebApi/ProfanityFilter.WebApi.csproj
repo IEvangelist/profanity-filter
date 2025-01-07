@@ -38,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProfanityFilter.Client\ProfanityFilter.Client.csproj" />
     <ProjectReference Include="..\ProfanityFilter.Services\ProfanityFilter.Services.csproj" />
   </ItemGroup>
 

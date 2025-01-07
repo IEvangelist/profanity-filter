@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ProfanityFilter.Hosting\ProfanityFilter.Hosting.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\ProfanityFilter.Api\ProfanityFilter.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -19,6 +19,20 @@ public static class ProfanityFilterResourceBuilderExtensions
     /// <param name="name">The name of the resource.</param>
     /// <param name="devCertPassword">The optional password resource builder.</param>
     /// <returns>An <see cref="IResourceBuilder{ProfanityFilterResource}"/> for the profanity filter resource.</returns>
+    /// <example>
+    /// Add a profanity filter container to the application model and reference it in a .NET project. Additionally, in this
+    /// example a bind mount is added to the container to allow data to be persisted across container restarts.
+    /// <code lang="csharp">
+    /// var builder = DistributedApplication.CreateBuilder(args);
+    ///
+    /// var profanityFilter = builder.AddProfanityFilter("profanity-filter");
+    ///
+    /// var api = builder.AddProject&lt;Projects.Api&gt;("api")
+    ///    .WithReference(profanityFilter);
+    ///
+    /// builder.Build().Run();
+    /// </code>
+    /// </example>
     public static IResourceBuilder<ProfanityFilterResource> AddProfanityFilter(
         this IDistributedApplicationBuilder builder,
         [ResourceName] string name,
@@ -41,7 +55,7 @@ public static class ProfanityFilterResourceBuilderExtensions
     }
 
     /// <summary>
-    /// Adds a bind mount for the data folder to a <see cref="ProfanityFilterResource"/>.
+    /// Adds a bind mount for the <c>/app/CustomData</c> folder in the <see cref="ProfanityFilterResource"/>.
     /// Added data files should be newline delimited and have a <i>*.txt</i> file extension.
     /// </summary>
     /// <param name="builder">The resource builder.</param>
@@ -53,8 +67,8 @@ public static class ProfanityFilterResourceBuilderExtensions
     /// <code lang="csharp">
     /// var builder = DistributedApplication.CreateBuilder(args);
     ///
-    /// var profanityFilter = builder.AddElasticsearch("profanity-filter")
-    ///    .WithDataBindMount("./data");
+    /// var profanityFilter = builder.AddProfanityFilter("profanity-filter")
+    ///    .WithDataBindMount("./CustomData");
     ///
     /// var api = builder.AddProject&lt;Projects.Api&gt;("api")
     ///    .WithReference(profanityFilter);
@@ -62,7 +76,7 @@ public static class ProfanityFilterResourceBuilderExtensions
     /// builder.Build().Run();
     /// </code>
     /// </example>
-    public static IResourceBuilder<ProfanityFilterResource> WithDataBindMount(
+    public static IResourceBuilder<ProfanityFilterResource> WithCustomDataBindMount(
         this IResourceBuilder<ProfanityFilterResource> builder,
         string source)
     {

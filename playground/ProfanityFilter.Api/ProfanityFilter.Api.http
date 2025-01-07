@@ -1,0 +1,6 @@
+@ProfanityFilter.Api_HostAddress = http://localhost:5225
+
+GET {{ProfanityFilter.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

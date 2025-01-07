@@ -27,7 +27,8 @@ public static class MaybeExtensions
     /// <param name="func">The function to transform the input value to the output value.</param>
     /// <returns>An instance of <see cref="IMaybe{TOut}"/> containing the transformed value.</returns>
     public static IMaybe<TOut> Chain<TIn, TOut>(
-        this TIn @this, Func<TIn, TOut> func) =>
+        this IMaybe<TIn> @this,
+        Func<TIn, TOut> func) =>
         @this switch
         {
             Something<TIn> s => new Something<TOut>(func.Invoke(s.Value)),

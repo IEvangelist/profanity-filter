@@ -3,7 +3,11 @@
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-_ = builder.AddProfanityFilter("profanity-filter")
-    .WithDataBindMount("./CustomData");
+var filter = builder.AddProfanityFilter("profanity-filter")
+    .WithCustomDataBindMount("./CustomData");
+
+builder.AddProject<Projects.ProfanityFilter_Api>("api")
+    .WithReference(filter)
+    .WaitFor(filter);
 
 builder.Build().Run();

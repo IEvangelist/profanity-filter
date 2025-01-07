@@ -1,4 +1,7 @@
-﻿namespace ProfanityFilter.WebApi.Components.Pages;
+﻿// Copyright (c) David Pine. All rights reserved.
+// Licensed under the MIT License.
+
+namespace ProfanityFilter.WebApi.Components.Pages;
 
 [StreamRendering]
 public sealed partial class Home : IAsyncDisposable
@@ -13,7 +16,6 @@ public sealed partial class Home : IAsyncDisposable
     private readonly ReplacementStrategy[] _strategies = Enum.GetValues<ReplacementStrategy>();
     private readonly CancellationTokenSource _cts = new();
 
-    private HubConnection? _hub;
     private ReplacementStrategy _selectedStrategy;
     private string? _text = "Content to filter...";
     private bool _isLoading = false;
@@ -23,7 +25,7 @@ public sealed partial class Home : IAsyncDisposable
     public required ILogger<Home> Logger { get; set; }
 
     [Inject]
-    public required BaseAddressResolver BaseAddressResolver { get; set; }
+    public required IRealtimeClient RealtimeClient { get; set; }
 
     [Inject]
     public required ILocalStorageService LocalStorage { get; set; }
@@ -59,91 +61,17 @@ public sealed partial class Home : IAsyncDisposable
             _selectedStrategy = selectedStrategy;
             StateHasChanged();
         }
+        
+        await RealtimeClient.StartAsync();
 
-        if (_hub is null)
-        {
-            var baseAddress = BaseAddressResolver.GetBaseAddress();
+        Logger.HubStarted();
 
-            Logger.LogInformation("Connecting to: {Address}/profanity/hub", baseAddress);
-
-            var uri = new UriBuilder(baseAddress)
-            {
-                Path = "/profanity/hub"
-            };
-
-            _hub = new HubConnectionBuilder()
-                .WithUrl(uri.Uri, options =>
-                {
-                    if (!BaseAddressResolver.IsRunningInContainer)
-                    {
-                        return;
-                    }
-
-                    options.UseDefaultCredentials = true;
-                    options.HttpMessageHandlerFactory = handler =>
-                    {
-                        if (handler is HttpClientHandler clientHandler)
-                        {
-                            clientHandler.ServerCertificateCustomValidationCallback =
-                                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-                        }
-
-                        return handler;
-                    };
-                })
-                .WithAutomaticReconnect()
-                .WithStatefulReconnect()
-                .Build();
-
-            _hub.Closed += OnHubConnectionClosedAsync;
-            _hub.Reconnected += OnHubConnectionReconnectedAsync;
-            _hub.Reconnecting += OnHubConnectionReconnectingAsync;
-
-            await _hub.StartAsync();
-
-            Logger.HubStarted();
-
-            _ = StartLiveUpdateStreamAsync();
-        }
-    }
-
-    private Task OnHubConnectionClosedAsync(Exception? exception)
-    {
-        Logger.HubConnectionClosed(exception);
-
-        return Task.CompletedTask;
-    }
-
-    private Task OnHubConnectionReconnectingAsync(Exception? exception)
-    {
-        Logger.HubReconnecting(exception);
-
-        return Task.CompletedTask;
-    }
-
-    private Task OnHubConnectionReconnectedAsync(string? arg)
-    {
-        Logger.HubReconnected(arg);
-
-        return Task.CompletedTask;
-    }
-
-    [MemberNotNullWhen(false, nameof(_hub))]
-    private bool IsHubNotConnected()
-    {
-        if (_hub is null or not { State: HubConnectionState.Connected })
-        {
-            Logger.NotConnectedToHub();
-
-            return true;
-        }
-
-        return false;
+        _ = StartLiveUpdateStreamAsync();
     }
 
     private async Task StartLiveUpdateStreamAsync()
     {
-        if (IsHubNotConnected() || _liveRequests is null)
+        if (!RealtimeClient.IsConnected || _liveRequests is null)
         {
             return;
         }
@@ -156,8 +84,7 @@ public sealed partial class Home : IAsyncDisposable
                 var liveRequests = _liveRequests.ToAsyncEnumerable();
 
                 // Consumer responses...
-                await foreach (var response in _hub.StreamAsync<ProfanityFilterResponse>(
-                    methodName: "live", arg1: liveRequests, cancellationToken: _cts.Token))
+                await foreach (var response in RealtimeClient.StreamAsync(liveRequests, cancellationToken: _cts.Token))
                 {
                     if (response is null)
                     {
@@ -215,14 +142,9 @@ public sealed partial class Home : IAsyncDisposable
         await _cts.CancelAsync();
         _cts.Dispose();
 
-        if (_hub is not null)
+        if (RealtimeClient is not null)
         {
-            _hub.Closed -= OnHubConnectionClosedAsync;
-            _hub.Reconnected -= OnHubConnectionReconnectedAsync;
-            _hub.Reconnecting -= OnHubConnectionReconnectingAsync;
-
-            await _hub.StopAsync();
-            await _hub.DisposeAsync();
+            await RealtimeClient.StopAsync();
         }
     }
 }

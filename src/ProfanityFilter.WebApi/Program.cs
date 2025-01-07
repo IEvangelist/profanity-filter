@@ -3,14 +3,7 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped(sp =>
-{
-    var server = sp.GetRequiredService<IServer>();
-
-    return server.Features.Get<IServerAddressesFeature>()
-        ?? throw new InvalidOperationException("There's no IServerAddressesFeature in the IServer.");
-});
-builder.Services.AddScoped<BaseAddressResolver>();
+builder.AddProfanityFilterClient("profanity-filter");
 
 builder.Services.AddRedaction(static redaction =>
     redaction.SetRedactor<CharacterRedactor>(
@@ -24,8 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddLocalStorageServices();
 builder.Services.AddMemoryCache();
 
-builder.Services.AddSignalR(
-        static options => options.EnableDetailedErrors = true);
+builder.Services.AddSignalR(static options => options.EnableDetailedErrors = true);
 
 builder.Services.AddAntiforgery();
 builder.Services.AddDataProtection()
@@ -42,10 +34,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.ConfigureHttpJsonOptions(
-    static options =>
-    options.SerializerOptions.TypeInfoResolverChain.Insert(
-        0,
-        JsonSerializationContext.Default));
+    static options => AssignJsonSerializerContext(options.SerializerOptions));
 
 var app = builder.Build();
 
@@ -60,3 +49,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+static void AssignJsonSerializerContext(JsonSerializerOptions options)
+{
+    options.TypeInfoResolverChain.Insert(0, JsonSerializationContext.Default);
+}

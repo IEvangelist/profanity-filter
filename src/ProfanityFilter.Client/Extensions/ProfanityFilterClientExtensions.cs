@@ -57,18 +57,40 @@ public static class ProfanityFilterClientExtensions
         configSection.Bind(options);
         namedConfigSection.Bind(options);
 
-        if (builder.Configuration.GetConnectionString(connectionName) is string connectionString &&
-            Uri.TryCreate(connectionString, UriKind.Absolute, out var baseAddress))
+        builder.Services.AddOptions<ProfanityFilterOptions>()
+            .Bind(configSection)
+            .Bind(namedConfigSection);
+
+        //builder.Services.Configure<ProfanityFilterOptions>(configSection);
+        //builder.Services.Configure<ProfanityFilterOptions>(namedConfigSection);
+
+        var connectionString = builder.Configuration.GetConnectionString(connectionName)
+            ?? configSection["ApiBaseAddress"]
+            ?? namedConfigSection["ApiBaseAddress"];
+
+        if (connectionString is string potentialUri &&
+            Uri.TryCreate(potentialUri, UriKind.Absolute, out var baseAddress))
         {
+            builder.Services.Configure<ProfanityFilterOptions>(
+                configureOptions: o => o.ApiBaseAddress = baseAddress);
+
             options.ApiBaseAddress = baseAddress;
         }
 
-        configure?.Invoke(options);
+        if (configure is not null)
+        {
+            configure.Invoke(options);
+            builder.Services.PostConfigure(configure);
+        }
 
-        builder.Services.AddOptions<ProfanityFilterOptions>();
         builder.Services.AddLogging();
+        builder.Services.AddHttpClient<IRestClient, DefaultRestClient>((sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<ProfanityFilterOptions>>();
 
-        builder.Services.AddScoped<IRestClient, DefaultRestClient>();
+            client.BaseAddress = options.Value.ApiBaseAddress;
+        });
+
         builder.Services.AddScoped<IRealtimeClient, DefaultRealtimeClient>();
 
         if (serviceKey is null)

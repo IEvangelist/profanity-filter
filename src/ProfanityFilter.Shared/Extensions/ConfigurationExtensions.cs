@@ -7,8 +7,17 @@ namespace Microsoft.Extensions.Configuration;
 
 public static class ConfigurationExtensions
 {
+    /// <summary>
+    /// Determines whether the application is running inside a container.
+    /// </summary>
+    /// <param name="configuration">The configuration instance to check.</param>
+    /// <returns>
+    /// <c>true</c> if the application is running inside a container; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsRunningInContainer(this IConfiguration configuration)
     {
-        return configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER");
+        return configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER")
+            || Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER")
+               is "true" or "TRUE" or "True" or "1";
     }
 }

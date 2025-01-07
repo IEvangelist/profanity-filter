@@ -10,7 +10,7 @@ internal sealed class DefaultRestClient(HttpClient client) : IRestClient
     async Task<IMaybe<ProfanityFilterResponse>> IRestClient.ApplyFilterAsync(ProfanityFilterRequest request)
     {
         using var response = await client.PostAsJsonAsync(
-            "filter", request, JsonSerializationContext.Default.ProfanityFilterRequest);
+            "profanity/filter", request, JsonSerializationContext.Default.ProfanityFilterRequest);
 
         response.EnsureSuccessStatusCode();
 
@@ -23,25 +23,25 @@ internal sealed class DefaultRestClient(HttpClient client) : IRestClient
     /// <inheritdoc />
     Task<IMaybe<string[]>> IRestClient.GetDataByNameAsync(string name)
     {
-        return GetMaybeAsync($"data/{name}", JsonSerializationContext.Default.StringArray);
+        return GetMaybeAsync($"profanity/data/{name}", JsonSerializationContext.Default.StringArray);
     }
 
     /// <inheritdoc />
     Task<IMaybe<string[]>> IRestClient.GetDataNamesAsync()
     {
-        return GetMaybeAsync("data", JsonSerializationContext.Default.StringArray);
+        return GetMaybeAsync("profanity/data", JsonSerializationContext.Default.StringArray);
     }
 
     /// <inheritdoc />
     Task<IMaybe<StrategyResponse[]>> IRestClient.GetStrategiesAsync()
     {
-        return GetMaybeAsync("strategies", JsonSerializationContext.Default.StrategyResponseArray);
+        return GetMaybeAsync("profanity/strategies", JsonSerializationContext.Default.StrategyResponseArray);
     }
 
     /// <inheritdoc />
     Task<IMaybe<FilterTargetResponse[]>> IRestClient.GetTargetsAsync()
     {
-        return GetMaybeAsync("targets", JsonSerializationContext.Default.FilterTargetResponseArray);
+        return GetMaybeAsync("profanity/targets", JsonSerializationContext.Default.FilterTargetResponseArray);
     }
 
     /// <inheritdoc />

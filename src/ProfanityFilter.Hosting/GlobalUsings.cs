@@ -2,8 +2,6 @@
 // Licensed under the MIT License.
 
 global using System.Diagnostics;
-
-global using Aspire.Hosting;
 global using Aspire.Hosting.ApplicationModel;
 
 global using Microsoft.Extensions.DependencyInjection;

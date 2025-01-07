@@ -9,6 +9,11 @@ namespace ProfanityFilter.Client;
 public interface IRealtimeClient
 {
     /// <summary>
+    /// Gets a value indicating whether the client is connected.
+    /// </summary>
+    bool IsConnected { get; }
+
+    /// <summary>
     /// Starts the real-time client asynchronously.
     /// </summary>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
@@ -28,7 +33,7 @@ public interface IRealtimeClient
     /// <param name="liveRequests">An asynchronous stream of profanity filter requests.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>An asynchronous stream of profanity filter responses.</returns>
-    IAsyncEnumerable<ProfanityFilterResponse> LiveStreamAsync(
+    IAsyncEnumerable<ProfanityFilterResponse> StreamAsync(
         IAsyncEnumerable<ProfanityFilterRequest> liveRequests,
         CancellationToken cancellationToken);
 }

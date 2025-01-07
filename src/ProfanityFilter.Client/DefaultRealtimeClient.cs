@@ -4,18 +4,54 @@
 namespace ProfanityFilter.Client;
 
 internal sealed class DefaultRealtimeClient(
+    IConfiguration configuration,
     IOptions<ProfanityFilterOptions> options,
     ILogger<DefaultRealtimeClient> logger) : IRealtimeClient
 {
-    private readonly HubConnection _connection = new HubConnectionBuilder()
-        .WithUrl(options.Value.RealtimeUri)
-        .WithAutomaticReconnect()
-        .WithStatefulReconnect()
-        .Build();
+    private readonly Uri _hubUrl = new UriBuilder(
+        options.Value.ApiBaseAddress ?? throw new ArgumentException("""
+            The API base address must be provided.
+            """))
+    {
+        Path = "profanity/hub"
+    }.Uri;
+
+    private HubConnection? _connection = null;
+
+    [MemberNotNull(nameof(_connection))]
+    private void EnsureInitialized()
+    {
+        _connection ??= new HubConnectionBuilder()
+            .WithUrl(_hubUrl, options =>
+            {
+                // Only apply these options when running in a container.
+                if (!configuration.IsRunningInContainer())
+                {
+                    return;
+                }
+
+                options.UseDefaultCredentials = true;
+                options.HttpMessageHandlerFactory = handler =>
+                {
+                    if (handler is HttpClientHandler clientHandler)
+                    {
+                        clientHandler.ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                    }
+
+                    return handler;
+                };
+            })
+            .WithAutomaticReconnect()
+            .WithStatefulReconnect()
+            .Build();
+    }
 
     /// <inheritdoc />
     async ValueTask IRealtimeClient.StartAsync(CancellationToken cancellationToken)
     {
+        EnsureInitialized();
+
         _connection.Closed += OnHubConnectionClosedAsync;
         _connection.Reconnected += OnHubConnectionReconnectedAsync;
         _connection.Reconnecting += OnHubConnectionReconnectingAsync;
@@ -26,6 +62,8 @@ internal sealed class DefaultRealtimeClient(
     /// <inheritdoc />
     async ValueTask IRealtimeClient.StopAsync(CancellationToken cancellationToken)
     {
+        EnsureInitialized();
+
         _connection.Closed -= OnHubConnectionClosedAsync;
         _connection.Reconnected -= OnHubConnectionReconnectedAsync;
         _connection.Reconnecting -= OnHubConnectionReconnectingAsync;
@@ -55,34 +93,21 @@ internal sealed class DefaultRealtimeClient(
     }
 
     /// <inheritdoc />
-    async IAsyncEnumerable<ProfanityFilterResponse> IRealtimeClient.LiveStreamAsync(
-        IAsyncEnumerable<ProfanityFilterRequest> liveRequests,
-        [EnumeratorCancellation] CancellationToken cancellationToken)
+    bool IRealtimeClient.IsConnected => _connection is
     {
-        var channel = Channel.CreateUnbounded<ProfanityFilterResponse>();
+        State: HubConnectionState.Connected
+    };
 
-        _connection.On<ProfanityFilterResponse>(
-            "live", response => channel.Writer.TryWrite(response));
+    /// <inheritdoc />
+    IAsyncEnumerable<ProfanityFilterResponse> IRealtimeClient.StreamAsync(
+        IAsyncEnumerable<ProfanityFilterRequest> liveRequests,
+        CancellationToken cancellationToken)
+    {
+        EnsureInitialized();
 
-        var sendTask = Task.Run(async () =>
-        {
-            await foreach (var request in liveRequests.WithCancellation(cancellationToken))
-            {
-                await _connection.SendAsync("LiveStream", request, cancellationToken);
-            }
-
-            channel.Writer.Complete();
-        },
-        cancellationToken);
-
-        while (await channel.Reader.WaitToReadAsync(cancellationToken))
-        {
-            while (channel.Reader.TryRead(out var response))
-            {
-                yield return response;
-            }
-        }
-
-        await sendTask;
+        return _connection.StreamAsync<ProfanityFilterResponse>(
+            methodName: "live",
+            arg1: liveRequests,
+            cancellationToken: cancellationToken);
     }
 }

@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\ProfanityFilter.Shared\**\*.cs" Exclude="..\ProfanityFilter.Shared\obj\**\*.*">
-      <Link>Shared\%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Data\ArabicSwearWords.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -49,6 +43,10 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Pathological.Globbing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProfanityFilter.Shared\ProfanityFilter.Shared.csproj" />
   </ItemGroup>
 
 </Project>
