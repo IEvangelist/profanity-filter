@@ -33,6 +33,13 @@ jobs:
 
     - name: Test — ${{ matrix.project }}
       run: |
-        dotnet publish tests/${{ matrix.project }}/ &&
-          cd tests/${{ matrix.project }}/bin/Release/net9.0/linux-x64/publish &&
-          ./${{ matrix.project }}
+        # Publish the test project.
+        dotnet publish --configuration Release tests/${{ matrix.project }}/
+
+        # Change to the test project directory.
+        cd artifacts/publish/${{ matrix.project }}
+        ls
+        cd ./release_linux-x64
+
+        # Call test executable.
+        ./${{ matrix.project }}

@@ -10,7 +10,7 @@
     <!-- Allows the new platform to be called when calling dotnet test -->
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <NoWarn>IDE0005;$(NoWarn)</NoWarn>
+    <NoWarn>IDE0005;IL2104;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
