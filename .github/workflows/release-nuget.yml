@@ -1,0 +1,54 @@
+name: Release NuGet packages
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+          filter: tree:0
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@main
+        with:
+          global-json-file: ./global.json
+  
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test solution
+        shell: bash
+        run: dotnet test --no-restore
+
+      - name: Upload ProfanityFilter.Hosting artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: nuget
+          path: artifacts/package/release/ProfanityFilter.Hosting.nupkg
+
+      - name: Upload ProfanityFilter.Client artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: nuget
+          path: artifacts/package/release/ProfanityFilter.Client.nupkg
+
+      - name: Publish ProfanityFilter.Hosting NuGet package
+        run: |
+          dotnet nuget push --skip-duplicate artifacts/package/release/ProfanityFilter.Hosting.nupkg \
+            --source "https://api.nuget.org/v3/index.json" --api-key "${{ secrets.NUGET_API_KEY }}"
+
+      - name: Publish ProfanityFilter.Client NuGet package
+        run: |
+          dotnet nuget push --skip-duplicate artifacts/package/release/ProfanityFilter.Client.nupkg \
+            --source "https://api.nuget.org/v3/index.json" --api-key "${{ secrets.NUGET_API_KEY }}"

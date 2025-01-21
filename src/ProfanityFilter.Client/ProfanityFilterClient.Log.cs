@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.Client;
 
-public static partial class Log
+internal static partial class Log
 {
     [LoggerMessage(
         Message = """

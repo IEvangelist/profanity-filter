@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.WebApi.Compliance;
 
-public sealed class CharacterRedactor(char redactionCharacter = '█') : Redactor
+internal sealed class CharacterRedactor(char redactionCharacter = '█') : Redactor
 {
     public override int GetRedactedLength(ReadOnlySpan<char> input) => input.Length;
 

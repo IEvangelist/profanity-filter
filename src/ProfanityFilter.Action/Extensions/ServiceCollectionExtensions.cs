@@ -32,7 +32,6 @@ internal static class ServiceCollectionExtensions
             core.WriteInfo($"Repository: {owner}/{repo}");
 
             return new CustomGitHubClient(core, client, owner, repo);
-            
         });
 
         return services;

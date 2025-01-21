@@ -3,8 +3,14 @@
 
 namespace ProfanityFilter.WebApi.Components.Pages;
 
+/// <summary>
+/// The home page.
+/// </summary>
 [StreamRendering]
-public sealed partial class Home : IAsyncDisposable
+public sealed partial class Home(
+    ILogger<Home> logger,
+    IRealtimeClient realtimeClient,
+    ILocalStorageService localStorage) : IAsyncDisposable
 {
     private readonly SystemTimer _debounceTimer = new()
     {
@@ -12,42 +18,16 @@ public sealed partial class Home : IAsyncDisposable
         AutoReset = false
     };
 
-    private readonly IObservable<ProfanityFilterRequest>? _liveRequests;
     private readonly ReplacementStrategy[] _strategies = Enum.GetValues<ReplacementStrategy>();
     private readonly CancellationTokenSource _cts = new();
 
+    private IObservable<ProfanityFilterRequest>? _liveRequests;
     private ReplacementStrategy _selectedStrategy;
     private string? _text = "Content to filter...";
-    private bool _isLoading = false;
-    private bool _isActive = false;
+    private bool _isLoading;
+    private bool _isActive;
 
-    [Inject]
-    public required ILogger<Home> Logger { get; set; }
-
-    [Inject]
-    public required IRealtimeClient RealtimeClient { get; set; }
-
-    [Inject]
-    public required ILocalStorageService LocalStorage { get; set; }
-
-    public Home()
-    {
-        _liveRequests = Observable.FromEventPattern<ElapsedEventHandler, ElapsedEventArgs>(
-                handler => _debounceTimer.Elapsed += handler,
-                handler => _debounceTimer.Elapsed -= handler
-            )
-            .Select(args =>
-            {
-                _isLoading = true;
-
-                return new ProfanityFilterRequest(
-                    _text,
-                    _selectedStrategy,
-                    0
-                );
-            });
-    }
-
+    /// <inheritdoc cref="ComponentBase.OnAfterRenderAsync"/>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender is false)
@@ -55,23 +35,23 @@ public sealed partial class Home : IAsyncDisposable
             return;
         }
 
-        if (await LocalStorage.GetItemAsync<string>("selected-strategy") is { } strategy &&
+        if (await localStorage.GetItemAsync<string>("selected-strategy") is { } strategy &&
             Enum.TryParse<ReplacementStrategy>(strategy, out var selectedStrategy))
         {
             _selectedStrategy = selectedStrategy;
             StateHasChanged();
         }
-        
-        await RealtimeClient.StartAsync();
 
-        Logger.HubStarted();
+        await realtimeClient.StartAsync();
+
+        logger.HubStarted();
 
         _ = StartLiveUpdateStreamAsync();
     }
 
     private async Task StartLiveUpdateStreamAsync()
     {
-        if (!RealtimeClient.IsConnected || _liveRequests is null)
+        if (!realtimeClient.IsConnected || _liveRequests is null)
         {
             return;
         }
@@ -80,11 +60,26 @@ public sealed partial class Home : IAsyncDisposable
         {
             try
             {
+                _liveRequests ??= Observable.FromEventPattern<ElapsedEventHandler, ElapsedEventArgs>(
+                        handler => _debounceTimer.Elapsed += handler,
+                        handler => _debounceTimer.Elapsed -= handler
+                    )
+                    .Select(args =>
+                    {
+                        _isLoading = true;
+
+                        return new ProfanityFilterRequest(
+                            _text ?? "",
+                            _selectedStrategy,
+                            0
+                        );
+                    });
+
                 // Producer requests...
                 var liveRequests = _liveRequests.ToAsyncEnumerable();
 
                 // Consumer responses...
-                await foreach (var response in RealtimeClient.StreamAsync(liveRequests, cancellationToken: _cts.Token))
+                await foreach (var response in realtimeClient.StreamAsync(liveRequests, cancellationToken: _cts.Token))
                 {
                     if (response is null)
                     {
@@ -103,7 +98,7 @@ public sealed partial class Home : IAsyncDisposable
             }
             catch (Exception ex) when (Debugger.IsAttached && ex is not OperationCanceledException)
             {
-                Logger.ErrorProcessProfanity(ex);
+                logger.ErrorProcessProfanity(ex);
 
                 _ = ex;
 
@@ -131,10 +126,10 @@ public sealed partial class Home : IAsyncDisposable
         _selectedStrategy = strategy;
         _isActive = false;
 
-        await LocalStorage.SetItemAsync("selected-strategy", strategy.ToString());
+        await localStorage.SetItemAsync("selected-strategy", strategy.ToString());
     }
 
-    public async ValueTask DisposeAsync()
+    async ValueTask IAsyncDisposable.DisposeAsync()
     {
         _debounceTimer.Stop();
         _debounceTimer.Dispose();
@@ -142,9 +137,9 @@ public sealed partial class Home : IAsyncDisposable
         await _cts.CancelAsync();
         _cts.Dispose();
 
-        if (RealtimeClient is not null)
+        if (realtimeClient is not null)
         {
-            await RealtimeClient.StopAsync();
+            await realtimeClient.StopAsync();
         }
     }
 }

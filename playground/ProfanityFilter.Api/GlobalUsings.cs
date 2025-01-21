@@ -3,4 +3,4 @@
 
 global using Microsoft.AspNetCore.Mvc;
 global using ProfanityFilter.Client;
-global using ProfanityFilter.Shared.Api;
+global using ProfanityFilter.Common.Api;

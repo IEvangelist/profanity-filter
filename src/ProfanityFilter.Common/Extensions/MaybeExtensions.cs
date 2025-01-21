@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared.Extensions;
+namespace ProfanityFilter.Common.Extensions;
 
 /// <summary>
 /// Provides extension methods for the Maybe type.
@@ -13,10 +13,10 @@ public static class MaybeExtensions
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>
     /// <param name="value">The value to convert.</param>
-    /// <returns>An instance of <see cref="IMaybe{T}"/> containing the value if it is not null; otherwise, an instance of <see cref="Nothing{T}"/>.</returns>
+    /// <returns>An instance of <see cref="IMaybe{T}"/> containing the value if it is not null; otherwise, an instance of <see cref="Absent{T}"/>.</returns>
     public static IMaybe<T> AsMaybe<T>(this T? value) => value is null
-        ? new Nothing<T>()
-        : new Something<T>(value);
+        ? new Absent<T>()
+        : new Available<T>(value);
 
     /// <summary>
     /// Chains the current instance of <typeparamref name="TIn"/> to a new instance of <typeparamref name="TOut"/> using the provided function.
@@ -31,7 +31,7 @@ public static class MaybeExtensions
         Func<TIn, TOut> func) =>
         @this switch
         {
-            Something<TIn> s => new Something<TOut>(func.Invoke(s.Value)),
-            _ => new Nothing<TOut>(),
+            Available<TIn> s => new Available<TOut>(func.Invoke(s.Value)),
+            _ => new Absent<TOut>(),
         };
 }

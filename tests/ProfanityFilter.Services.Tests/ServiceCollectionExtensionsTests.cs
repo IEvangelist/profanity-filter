@@ -9,7 +9,7 @@ namespace ProfanityFilter.Services.Tests;
 public class ServiceCollectionExtensionsTests
 {
     [TestMethod]
-    public void AddProfanityFilterServices_AddsServices()
+    public void AddProfanityFilterServicesAddsServices()
     {
         // Arrange
         var services = new ServiceCollection();

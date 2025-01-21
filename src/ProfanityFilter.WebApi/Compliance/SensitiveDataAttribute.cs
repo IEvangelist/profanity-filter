@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.WebApi.Compliance;
 
-public sealed class SensitiveDataAttribute : DataClassificationAttribute
+internal sealed class SensitiveDataAttribute : DataClassificationAttribute
 {
     public SensitiveDataAttribute() : base(DataClassifications.SensitiveData) { }
 }

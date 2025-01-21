@@ -16,7 +16,7 @@ internal sealed class DefaultRealtimeClient(
         Path = "profanity/hub"
     }.Uri;
 
-    private HubConnection? _connection = null;
+    private HubConnection? _connection;
 
     [MemberNotNull(nameof(_connection))]
     private void EnsureInitialized()

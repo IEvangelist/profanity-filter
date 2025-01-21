@@ -9,7 +9,7 @@ public class ServiceCollectionExtensionsTests
     private const string INPUT_TOKEN = nameof(INPUT_TOKEN);
 
     [TestMethod]
-    public void AddProfanityFilter_AddsServices()
+    public void AddProfanityFilterAddsServices()
     {
         Environment.SetEnvironmentVariable(INPUT_TOKEN, "TEST");
 

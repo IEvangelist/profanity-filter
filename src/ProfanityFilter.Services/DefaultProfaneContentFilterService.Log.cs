@@ -1,4 +1,9 @@
-public static partial class Log
+// Copyright (c) David Pine. All rights reserved.
+// Licensed under the MIT License.
+
+namespace ProfanityFilter.Services;
+
+internal static partial class Log
 {
     [LoggerMessage(
         Message = """

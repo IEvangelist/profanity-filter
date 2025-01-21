@@ -1,6 +1,7 @@
 // Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+global using System.Runtime.CompilerServices;
 global using System.Text.Json.Serialization.Metadata;
 
 global using Actions.Core;
@@ -12,6 +13,5 @@ global using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 global using ProfanityFilter.Action.Clients;
 global using ProfanityFilter.Action.Extensions;
-
+global using ProfanityFilter.Common;
 global using ProfanityFilter.Services;
-global using ProfanityFilter.Shared;

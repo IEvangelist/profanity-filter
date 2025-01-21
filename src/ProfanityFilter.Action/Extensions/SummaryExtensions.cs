@@ -8,10 +8,7 @@ internal static partial class SummaryExtensions
     /// <summary>
     /// Adds a markdown level-2 heading: <c>## 🤬 Profanity filter applied</c>.
     /// </summary>
-    internal static Summary AddProfanityAppliedHeading(this Summary summary)
-    {
-        return summary.AddMarkdownHeading("🤬 Profanity filter applied", 2);
-    }
+    internal static Summary AddProfanityAppliedHeading(this Summary summary) => summary.AddMarkdownHeading("🤬 Profanity filter applied", 2);
 
     /// <summary>
     /// Adds a markdown paragraph, including links to the context and user.
@@ -95,12 +92,9 @@ internal static partial class SummaryExtensions
     /// <summary>
     /// Adds a markdown blurb on configuring replacement strategies, with a link.
     /// </summary>
-    internal static Summary AddReplacementStrategyLink(this Summary summary)
-    {
-        return summary.AddRawMarkdown($"""
+    internal static Summary AddReplacementStrategyLink(this Summary summary) => summary.AddRawMarkdown($"""
                 For more information on configuring replacement types, see [Profanity Filter: 😵 Replacement strategies](https://github.com/IEvangelist/profanity-filter?tab=readme-ov-file#-replacement-strategies).
                 """);
-    }
 
     /// <summary>
     /// Adds an HTML collapsible section, enclosing the given

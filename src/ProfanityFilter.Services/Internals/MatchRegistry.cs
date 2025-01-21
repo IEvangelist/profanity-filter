@@ -28,8 +28,5 @@ internal static class MatchRegistry
     /// <summary>
     /// Removes the list of matches from the registry, and returns it for the given <paramref name="parameters"/>.
     /// </summary>
-    internal static List<string>? Unregister(FilterParameters parameters)
-    {
-        return s_registry.TryRemove(parameters, out var list) ? list : null;
-    }
+    internal static List<string>? Unregister(FilterParameters parameters) => s_registry.TryRemove(parameters, out var list) ? list : null;
 }

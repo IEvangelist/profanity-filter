@@ -3,5 +3,5 @@
 
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-global using ProfanityFilter.Shared.Api;
-global using ProfanityFilter.Shared.Optional;
+global using ProfanityFilter.Common.Api;
+global using ProfanityFilter.Common.Monads;

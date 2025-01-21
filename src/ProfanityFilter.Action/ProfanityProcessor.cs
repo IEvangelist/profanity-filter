@@ -29,7 +29,7 @@ internal sealed partial class ProfanityProcessor(
             {
                 PayloadType.PullRequest => HandlePullRequestAsync,
                 PayloadType.Issue => HandleIssueAsync,
-                _  => HandleIssueCommentAsync
+                _ => HandleIssueCommentAsync
             };
 
             var label = payloadType is PayloadType.IssueComment
@@ -76,23 +76,14 @@ internal sealed partial class ProfanityProcessor(
         var isIssue = context.Payload?.Issue is not null;
         var isPullRequest = context.Payload?.PullRequest is not null;
 
-        if (isIssueComment)
-        {
-            return PayloadType.IssueComment;
-        }
-
-        if (isIssue)
-        {
-            return PayloadType.Issue;
-        }
-
-        if (isPullRequest)
-        {
-            return PayloadType.PullRequest;
-        }
-
-        throw new Exception(
-            "The profanity filter GitHub Action only works with issues, issue comments, or pull requests.");
+        return isIssueComment
+            ? PayloadType.IssueComment
+            : isIssue
+                ? PayloadType.Issue
+                : isPullRequest
+                    ? PayloadType.PullRequest
+                    : throw new InvalidOperationException(
+                        "The profanity filter GitHub Action only works with issues, issue comments, or pull requests.");
     }
 
     [MemberNotNullWhen(true, nameof(_context))]

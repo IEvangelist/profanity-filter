@@ -5,6 +5,9 @@
 namespace Microsoft.Extensions.Configuration;
 #pragma warning restore IDE0130 // Namespace does not match folder structure
 
+/// <summary>
+/// Provides extension methods for configuration.
+/// </summary>
 public static class ConfigurationExtensions
 {
     /// <summary>

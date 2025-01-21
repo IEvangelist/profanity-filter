@@ -6,5 +6,5 @@ global using System.Diagnostics.CodeAnalysis;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 
-global using ProfanityFilter.Shared.Api;
-global using ProfanityFilter.Shared.Optional;
+global using ProfanityFilter.Common.Api;
+global using ProfanityFilter.Common.Monads;

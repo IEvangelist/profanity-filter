@@ -1,4 +1,4 @@
-name: Release API
+name: Release API container
 
 on:
   release:

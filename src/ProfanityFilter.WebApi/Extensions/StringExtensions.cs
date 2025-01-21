@@ -1,4 +1,7 @@
-﻿namespace ProfanityFilter.WebApi.Extensions;
+﻿// Copyright (c) David Pine. All rights reserved.
+// Licensed under the MIT License.
+
+namespace ProfanityFilter.WebApi.Extensions;
 
 internal static partial class StringExtensions
 {

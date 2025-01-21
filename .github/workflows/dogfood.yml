@@ -1,4 +1,4 @@
-name: Dogfood
+name: Eat the Dogfood
 
 on:
   issue_comment:

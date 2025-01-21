@@ -42,12 +42,9 @@ internal static class CoreServiceExtensions
 
         // If the result already contains the note, we don't need to add it again.
         // This can occur if a user has already filed an issue, and we've updated the content.
-        if (finalResult.Contains(UpdatedNote))
-        {
-            return finalResult;
-        }
-
-        return $"""
+        return finalResult.Contains(UpdatedNote)
+            ? finalResult
+            : $"""
             {finalResult}
 
             > [!NOTE]
@@ -89,12 +86,9 @@ internal static class CoreServiceExtensions
     {
         var words = core.GetInput(ActionInputs.ManualProfaneWords);
 
-        if (words is null or { Length: 0 })
-        {
-            return default;
-        }
-
-        return words.Split(",", StringSplitOptions.RemoveEmptyEntries)
+        return words is null or { Length: 0 }
+            ? (string[]?)default
+            : words.Split(",", StringSplitOptions.RemoveEmptyEntries)
             .Select(static word => word.Trim())
             .ToArray();
     }
@@ -114,12 +108,9 @@ internal static class CoreServiceExtensions
             {
                 var words = await s_client.GetStringAsync(requestUri);
 
-                if (words is null or { Length: 0 })
-                {
-                    return default;
-                }
-
-                return words.Split(s_newLines, StringSplitOptions.RemoveEmptyEntries)
+                return words is null or { Length: 0 }
+                    ? (string[]?)default
+                    : words.Split(s_newLines, StringSplitOptions.RemoveEmptyEntries)
                     .Select(static word => word.Trim())
                     .ToArray();
             }

@@ -5,6 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>82eaa4db-aed7-4828-8fec-bb9d542765f4</UserSecretsId>
+    <IsAotCompatible>false</IsAotCompatible>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>IDE0005;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

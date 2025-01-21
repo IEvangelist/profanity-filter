@@ -10,5 +10,6 @@ global using Microsoft.Extensions.Logging.Abstractions;
 global using Microsoft.Extensions.Options;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+global using ProfanityFilter.Common;
 global using ProfanityFilter.Services.Extensions;
-global using ProfanityFilter.Shared;
+global using ProfanityFilter.Services.Internals;

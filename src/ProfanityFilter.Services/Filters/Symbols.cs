@@ -65,8 +65,5 @@ file readonly record struct Symbol(char Value, bool Escape = true)
     /// </summary>
     public static implicit operator string(Symbol symbol) => symbol.ToString();
 
-    public override string ToString()
-    {
-        return Escape ? $"\\{Value}" : $"{Value}";
-    }
+    public override string ToString() => Escape ? $"\\{Value}" : $"{Value}";
 }

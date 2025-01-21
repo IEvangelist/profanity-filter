@@ -1,7 +1,9 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Aspire.Hosting;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// Represents metadata for the:
@@ -17,6 +19,6 @@ internal static class ProfanityFilterContainerImageDetails
     /// <remarks>ievangelist/profanity-filter-api</remarks>
     internal const string Image = "ievangelist/profanity-filter-api";
 
-    /// <remarks>2.0.10</remarks>
-    internal const string Tag = "2.0.10";
+    /// <remarks>2.0.11</remarks>
+    internal const string Tag = "2.0.11";
 }

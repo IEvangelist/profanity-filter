@@ -1,7 +1,9 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Aspire.Hosting;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 internal static class ContainerResourceBuilderExtensions
 {
@@ -72,20 +74,31 @@ internal static class ContainerResourceBuilderExtensions
         if (File.Exists(certExportPath))
         {
             // Certificate already exported, return the path.
-            logger.LogDebug("Using previously exported dev cert files '{CertPath}'", certExportPath);
+            logger.UsingPreviouslyExportedDevCertFiles(certExportPath);
+
             return (true, certExportPath);
         }
 
         if (!Directory.Exists(tempDir))
         {
-            logger.LogTrace("Creating directory to export dev cert to '{ExportDir}'", tempDir);
+            logger.CreatingDirectoryToExportDevCert(tempDir);
+
             Directory.CreateDirectory(tempDir);
         }
 
-        string[] args = ["dev-certs", "https", "--export-path", $"\"{certExportPath}\"", "--password", $"\"{password.Value}\""];
+        string[] args =
+        [
+            "dev-certs",
+            "https",
+            "--export-path",
+            $"\"{certExportPath}\"",
+            "--password",
+            $"\"{password.Value}\""
+        ];
         var argsString = string.Join(' ', args);
 
-        logger.LogTrace("Running command to export dev cert: {ExportCmd}", $"dotnet {argsString}");
+        logger.RunningCommandToExportDevCert(argsString);
+
         var exportStartInfo = new ProcessStartInfo
         {
             FileName = "dotnet",
@@ -108,13 +121,14 @@ internal static class ContainerResourceBuilderExtensions
             {
                 if (exportProcess.Start())
                 {
-                    stdOutTask = ConsumeOutput(exportProcess.StandardOutput, msg => logger.LogInformation("> {StandardOutput}", msg));
-                    stdErrTask = ConsumeOutput(exportProcess.StandardError, msg => logger.LogError("! {ErrorOutput}", msg));
+                    stdOutTask = ConsumeOutput(exportProcess.StandardOutput, msg => logger.LogStandardOutput(msg));
+                    stdErrTask = ConsumeOutput(exportProcess.StandardError, msg => logger.LogErrorOutput(msg));
                 }
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Failed to start HTTPS dev certificate export process");
+                logger.FailedToStartHttpsDevCertificateExportProcess(ex);
+
                 return default;
             }
 
@@ -123,22 +137,25 @@ internal static class ContainerResourceBuilderExtensions
 
             if (exited && File.Exists(certExportPath))
             {
-                logger.LogDebug("Dev cert exported to '{CertPath}'", certExportPath);
+                logger.DevCertExported(certExportPath);
+
                 return (true, certExportPath);
             }
 
-            if (exportProcess.HasExited && exportProcess.ExitCode != 0)
+            if (exportProcess is { HasExited: true, ExitCode: not 0 })
             {
-                logger.LogError("HTTPS dev certificate export failed with exit code {ExitCode}", exportProcess.ExitCode);
+                logger.HttpsDevCertExportFailed(exportProcess.ExitCode);
+
             }
             else if (!exportProcess.HasExited)
             {
                 exportProcess.Kill(true);
-                logger.LogError("HTTPS dev certificate export timed out after {TimeoutSeconds} seconds", timeout.TotalSeconds);
+
+                logger.HttpsDevCertExportTimedOut(timeout.TotalSeconds);
             }
             else
             {
-                logger.LogError("HTTPS dev certificate export failed for an unknown reason");
+                logger.HttpsDevCertExportFailedUnknownReason();
             }
 
             return default;
@@ -159,4 +176,66 @@ internal static class ContainerResourceBuilderExtensions
             }
         }
     }
+}
+
+internal static partial class Log
+{
+    [LoggerMessage(Message = "Running command to export dev cert: dotnet {ExportCmd}")]
+    public static partial void RunningCommandToExportDevCert(
+        this ILogger logger,
+        string exportCmd,
+        LogLevel logLevel = LogLevel.Trace);
+
+    [LoggerMessage(Message = "> {StandardOutput}")]
+    public static partial void LogStandardOutput(
+        this ILogger logger,
+        string standardOutput,
+        LogLevel logLevel = LogLevel.Information);
+
+    [LoggerMessage(Message = "! {ErrorOutput}")]
+    public static partial void LogErrorOutput(
+        this ILogger logger,
+        string errorOutput,
+        LogLevel logLevel = LogLevel.Error);
+
+    [LoggerMessage(Message = "Failed to start HTTPS dev certificate export process")]
+    public static partial void FailedToStartHttpsDevCertificateExportProcess(
+        this ILogger logger,
+        Exception exception,
+        LogLevel logLevel = LogLevel.Error);
+
+    [LoggerMessage(Message = "Using previously exported dev cert files '{CertPath}'")]
+    public static partial void UsingPreviouslyExportedDevCertFiles(
+        this ILogger logger,
+        string certPath,
+        LogLevel logLevel = LogLevel.Debug);
+
+    [LoggerMessage(Message = "Creating directory to export dev cert to '{ExportDir}'")]
+    public static partial void CreatingDirectoryToExportDevCert(
+        this ILogger logger,
+        string exportDir,
+        LogLevel logLevel = LogLevel.Trace);
+
+    [LoggerMessage(Message = "Dev cert exported to '{CertPath}'")]
+    public static partial void DevCertExported(
+        this ILogger logger,
+        string certPath,
+        LogLevel logLevel = LogLevel.Debug);
+
+    [LoggerMessage(Message = "HTTPS dev certificate export failed with exit code {ExitCode}")]
+    public static partial void HttpsDevCertExportFailed(
+        this ILogger logger,
+        int exitCode,
+        LogLevel logLevel = LogLevel.Error);
+
+    [LoggerMessage(Message = "HTTPS dev certificate export timed out after {TimeoutSeconds} seconds")]
+    public static partial void HttpsDevCertExportTimedOut(
+        this ILogger logger,
+        double timeoutSeconds,
+        LogLevel logLevel = LogLevel.Error);
+
+    [LoggerMessage(Message = "HTTPS dev certificate export failed for an unknown reason")]
+    public static partial void HttpsDevCertExportFailedUnknownReason(
+        this ILogger logger,
+        LogLevel logLevel = LogLevel.Error);
 }

@@ -16,7 +16,7 @@ internal static class CollectionAssertionExtensions
         }
 
 
-        throw new Exception("Expected collection to contain item, but it did not.");
+        throw new AssertFailedException("Expected collection to contain item, but it did not.");
     }
 
     public static void Single<T>(this CollectionAssert _, IEnumerable<T> collection)
@@ -24,7 +24,7 @@ internal static class CollectionAssertionExtensions
         var count = collection.Count();
         if (count != 1)
         {
-            throw new Exception($"Expected collection to contain single item, but it contained {count} items.");
+            throw new AssertFailedException($"Expected collection to contain single item, but it contained {count} items.");
         }
     }
 }

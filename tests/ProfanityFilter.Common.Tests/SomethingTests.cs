@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared.Tests;
+namespace ProfanityFilter.Common.Tests;
 
 [TestClass]
 public sealed class SomethingTests
@@ -11,7 +11,7 @@ public sealed class SomethingTests
     {
         // Arrange
         var expectedValue = "test value";
-        var something = new Something<string>(expectedValue);
+        var something = new Available<string>(expectedValue);
 
         // Act
         var actualValue = something.Value;
@@ -24,7 +24,7 @@ public sealed class SomethingTests
     public void SomethingShouldBeAssignableToIMaybe()
     {
         // Arrange
-        var something = new Something<int>(42);
+        var something = new Available<int>(42);
 
         // Act & Assert
         Assert.IsInstanceOfType<IMaybe<int>>(something);

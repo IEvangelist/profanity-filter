@@ -5,7 +5,7 @@
 
 namespace ProfanityFilter.WebApi.Components.Pages;
 
-public static partial class Log
+internal static partial class Log
 {
     [LoggerMessage(
         Message = """

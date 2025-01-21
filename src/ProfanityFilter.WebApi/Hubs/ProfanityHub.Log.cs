@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.WebApi.Hubs;
 
-public static partial class Log
+internal static partial class Log
 {
     [LoggerMessage(
         Message = """
@@ -14,15 +14,14 @@ public static partial class Log
         string connectionId,
         LogLevel logLevel = LogLevel.Information);
 
-    //
     [LoggerMessage(
-    Message = """
-        Ending live stream for: {ConnectionId}.
-        """)]
+        Message = """
+            Ending live stream for: {ConnectionId}.
+            """)]
     public static partial void LogEndingStream(
-    this ILogger logger,
-    string connectionId,
-    LogLevel logLevel = LogLevel.Information);
+        this ILogger logger,
+        string connectionId,
+        LogLevel logLevel = LogLevel.Information);
 
     [LoggerMessage(
         Message = """

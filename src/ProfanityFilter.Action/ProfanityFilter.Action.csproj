@@ -9,7 +9,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
     <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
-    <NoWarn>$(NoWarn);NU5104;IL2104;</NoWarn>
+    <NoWarn>$(NoWarn);NU5104;IL2104;IDE0005</NoWarn>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageId>$(AssemblyName)</PackageId>
   </PropertyGroup>
 
   <PropertyGroup>

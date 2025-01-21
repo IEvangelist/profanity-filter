@@ -37,7 +37,7 @@ internal sealed class ProfaneContentReader
     public static async ValueTask<string> ReadAsync(
         string fileName, CancellationToken cancellationToken = default)
     {
-        if (fileName.EndsWith(".txt") is false)
+        if (fileName.EndsWith(".txt", StringComparison.OrdinalIgnoreCase) is false)
         {
             Console.WriteLine($"""
                 Unable to read: '{fileName}'.

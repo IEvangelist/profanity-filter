@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared.Tests;
+namespace ProfanityFilter.Common.Tests;
 
 [TestClass]
 public sealed class NothingTests
@@ -9,9 +9,9 @@ public sealed class NothingTests
     [TestMethod]
     public void NothingIsRepresentedAsSuch()
     {
-        var sut = new Nothing<DateTime>();
+        var sut = new Absent<DateTime>();
 
-        Assert.IsInstanceOfType<Nothing<DateTime>>(sut);
+        Assert.IsInstanceOfType<Absent<DateTime>>(sut);
         Assert.IsNotInstanceOfType<DateTime>(sut);
     }
 }

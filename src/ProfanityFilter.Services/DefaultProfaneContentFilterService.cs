@@ -59,7 +59,7 @@ internal sealed partial class DefaultProfaneContentFilterService(
             return allWords.ToDictionary(
                 static kvp => kvp.Key,
                 static kvp => new ProfaneSourceFilter(kvp.Key, kvp.Value.ToFrozenSet()));
-        }) ?? [];        
+        }) ?? [];
     }
 
     /// <inheritdoc />

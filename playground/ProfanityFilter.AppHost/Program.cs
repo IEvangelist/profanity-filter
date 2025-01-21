@@ -4,7 +4,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
 var filter = builder.AddProfanityFilter("profanity-filter")
-    .WithCustomDataBindMount("./CustomData");
+    .WithCustomDataBindMount("./CustomData")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithImageTag("latest");
 
 builder.AddProject<Projects.ProfanityFilter_Api>("api")
     .WithReference(filter)

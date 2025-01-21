@@ -5,6 +5,7 @@
     <IsAotCompatible>true</IsAotCompatible>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);NU5104</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProfanityFilter.Shared\ProfanityFilter.Shared.csproj" />
+    <ProjectReference Include="..\ProfanityFilter.Common\ProfanityFilter.Common.csproj" />
   </ItemGroup>
 
 </Project>

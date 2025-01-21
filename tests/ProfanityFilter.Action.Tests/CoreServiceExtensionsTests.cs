@@ -1,6 +1,8 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
+using ProfanityFilter.Action.Models;
+
 namespace ProfanityFilter.Action.Tests;
 
 [TestClass]
@@ -21,6 +23,20 @@ public class CoreServiceExtensionsTests
         CollectionAssert.AreEqual(expected, actual);
     }
 
+    private static readonly string[] s_expected =
+    [
+        "WebForms",
+        "Web Forms",
+        "ASP.NET WebForms",
+        "ASP.NET Web Forms",
+        "ASP.NET Core WebForms",
+        "ASP.NET Core Web Forms",
+        "WinForms",
+        "WinForms",
+        "WindowsForms",
+        "Windows Forms",
+    ];
+
     [TestMethod]
     public async Task CoreServiceCorrectlyParseCustomWordList()
     {
@@ -32,19 +48,7 @@ public class CoreServiceExtensionsTests
 
         var actual = await sut.GetCustomProfaneWordsAsync();
 
-        CollectionAssert.AreEqual(
-        new string[] {
-            "WebForms",
-            "Web Forms",
-            "ASP.NET WebForms",
-            "ASP.NET Web Forms",
-            "ASP.NET Core WebForms",
-            "ASP.NET Core Web Forms",
-            "WinForms",
-            "WinForms",
-            "WindowsForms",
-            "Windows Forms",
-        }, actual);
+        CollectionAssert.AreEqual(s_expected, actual);
     }
 
     [TestMethod]

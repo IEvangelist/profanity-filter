@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared.Tests;
+namespace ProfanityFilter.Common.Tests;
 
 [TestClass]
 public class MaybeExtensionsTests
@@ -12,8 +12,8 @@ public class MaybeExtensionsTests
         var value = "test";
         var result = value.AsMaybe();
 
-        Assert.IsInstanceOfType<Something<string>>(result);
-        Assert.AreEqual(value, ((Something<string>)result).Value);
+        Assert.IsInstanceOfType<Available<string>>(result);
+        Assert.AreEqual(value, ((Available<string>)result).Value);
     }
 
     [TestMethod]
@@ -22,31 +22,31 @@ public class MaybeExtensionsTests
         string? value = null;
         var result = value.AsMaybe();
 
-        Assert.IsInstanceOfType<Nothing<string>>(result);
+        Assert.IsInstanceOfType<Absent<string>>(result);
     }
 
     [TestMethod]
     public void ChainWithSomethingReturnsTransformedSomething()
     {
-        var initial = new Something<int>(5);
+        var initial = new Available<int>(5);
         var result = initial.Chain(x => x * 2).Chain(x => x * 3.1);
 
-        Assert.IsInstanceOfType<Something<double>>(result);
-        Assert.AreEqual(31d, ((Something<double>)result).Value);
+        Assert.IsInstanceOfType<Available<double>>(result);
+        Assert.AreEqual(31d, ((Available<double>)result).Value);
 
-        var stringSomething = result.Chain(x => (x / 2).ToString());
+        var stringSomething = result.Chain(x => (x / 2).ToString(CultureInfo.InvariantCulture));
 
-        Assert.IsInstanceOfType<Something<string>>(stringSomething);
-        Assert.AreEqual("15.5", ((Something<string>)stringSomething).Value);
+        Assert.IsInstanceOfType<Available<string>>(stringSomething);
+        Assert.AreEqual("15.5", ((Available<string>)stringSomething).Value);
     }
 
     [TestMethod]
     public void ChainWithNothingReturnsNothing()
     {
-        var initial = new Nothing<int>();
+        var initial = new Absent<int>();
         var result = initial.Chain(x => x * 2);
 
-        Assert.IsInstanceOfType<Nothing<int>>(result);
+        Assert.IsInstanceOfType<Absent<int>>(result);
     }
 }
 

@@ -11,6 +11,9 @@ public class DefaultProfaneContentFilterServiceTests
 #pragma warning disable CA1859 // Use concrete types when possible for improved performance
     private IProfaneContentFilterService _sut;
 #pragma warning restore CA1859 // Use concrete types when possible for improved performance
+
+    private static readonly string[] s_webFormsArray = ["WebForms"];
+
     public DefaultProfaneContentFilterServiceTests() => _sut = new DefaultProfaneContentFilterService(
         cache: new MemoryCache(Options.Create<MemoryCacheOptions>(new())),
         logger: NullLogger<DefaultProfaneContentFilterService>.Instance);
@@ -32,7 +35,7 @@ public class DefaultProfaneContentFilterServiceTests
     [DataRow("This is a sentence with the word crap and shit.", @"This is a sentence with the word \*\*\*\* and \*\*\*\*.")]
     [DataRow("This is a sentence with the word crap and shit and fuck.", @"This is a sentence with the word \*\*\*\* and \*\*\*\* and \*\*\*\*.")]
     [DataRow("This is a sentence with the word crap and shit and fuck and ass.", @"This is a sentence with the word \*\*\*\* and \*\*\*\* and \*\*\*\* and \*\*\*.")]
-    public async Task FilterProfanityAsync_Returns_Expected_Result(string? input, string? expectedResult)
+    public async Task FilterProfanityAsyncReturnsExpectedResult(string? input, string? expectedResult)
     {
         // Act
         var result = await _sut.FilterProfanityAsync(input!,
@@ -52,13 +55,13 @@ public class DefaultProfaneContentFilterServiceTests
     }
 
     [TestMethod]
-    public async Task FilterProfanityAsyncMultipleParameters_Returns_Valid_Results()
+    public async Task FilterProfanityAsyncMultipleParametersReturnsValidResults()
     {
         var input = "I love WebForms!";
 
         var set = new HashSet<ProfaneSourceFilter>
         {
-            new("Custom", new[] { "WebForms" }.ToFrozenSet())
+            new("Custom", s_webFormsArray.ToFrozenSet())
         };
 
         // Act
@@ -85,7 +88,7 @@ public class DefaultProfaneContentFilterServiceTests
     }
 
     [TestMethod]
-    public async Task FilterProfanityAsyncWithEmoji_Returns_Valid_Result()
+    public async Task FilterProfanityAsyncWithEmojiReturnsValidResult()
     {
         var input = "This is fucking bullshit!";
 
@@ -100,7 +103,7 @@ public class DefaultProfaneContentFilterServiceTests
     }
 
     [TestMethod]
-    public async Task FilterProfanityAsyncWithManualProfaneWords_ReturnsExpectedResult()
+    public async Task FilterProfanityAsyncWithManualProfaneWordsReturnsExpectedResult()
     {
         var input = "Does this get filtered if I say WebForms?! Well, does it?";
 
@@ -110,7 +113,7 @@ public class DefaultProfaneContentFilterServiceTests
             {
                 AdditionalFilterSources =
                 [
-                    new("ManualProfaneWords", (new string[] { "WebForms" }).ToFrozenSet())
+                    new("ManualProfaneWords", s_webFormsArray.ToFrozenSet())
                 ]
             });
 
@@ -178,7 +181,7 @@ public class DefaultProfaneContentFilterServiceTests
     }
 
     [TestMethod]
-    public async Task FilterProfanityAsyncWithMiddleAsterisk_ReturnsMultiStep_Result()
+    public async Task FilterProfanityAsyncWithMiddleAsteriskReturnsMultiStepResult()
     {
         var input = "Lots of fucking words like manky and arrusa!";
 
@@ -195,15 +198,15 @@ public class DefaultProfaneContentFilterServiceTests
         Assert.AreEqual(3, result.Steps.Count(static step => step.IsFiltered));
 
         CollectionAssert.That.Contains(result.Steps,
-            static step => step.ProfaneSourceData.EndsWith("GoogleBannedWords.txt"));
+            static step => step.ProfaneSourceData.EndsWith("GoogleBannedWords.txt", StringComparison.OrdinalIgnoreCase));
         CollectionAssert.That.Contains(result.Steps,
-            static step => step.ProfaneSourceData.EndsWith("BritishSwearWords.txt"));
+            static step => step.ProfaneSourceData.EndsWith("BritishSwearWords.txt", StringComparison.OrdinalIgnoreCase));
         CollectionAssert.That.Contains(result.Steps,
-            static step => step.ProfaneSourceData.EndsWith("ItalianSwearWords.txt"));
+            static step => step.ProfaneSourceData.EndsWith("ItalianSwearWords.txt", StringComparison.OrdinalIgnoreCase));
     }
 
     [TestMethod]
-    public async Task FilterProfanityAsyncWithCustomData_ReturnsMultiStep_Result()
+    public async Task FilterProfanityAsyncWithCustomDataReturnsMultiStepResult()
     {
         string[] customWords = ["Silverlight", "WebForms"];
         Directory.CreateDirectory("CustomData");
@@ -225,6 +228,6 @@ public class DefaultProfaneContentFilterServiceTests
         Assert.AreEqual(1, result.Steps.Count(static step => step.IsFiltered));
 
         CollectionAssert.That.Contains(result.Steps,
-            static step => step.ProfaneSourceData.EndsWith("CustomWords.txt"));
+            static step => step.ProfaneSourceData.EndsWith("CustomWords.txt", StringComparison.OrdinalIgnoreCase));
     }
 }

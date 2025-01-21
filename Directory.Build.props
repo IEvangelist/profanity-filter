@@ -6,5 +6,36 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <LangVersion>preview</LangVersion>
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+
+        <UseArtifactsOutput>true</UseArtifactsOutput>
+        <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+        <Features>strict</Features>
+        <DebugType>embedded</DebugType>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <AnalysisMode>recommended</AnalysisMode>
+        <IsAotCompatible>true</IsAotCompatible>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <ReportAnalyzer>true</ReportAnalyzer>
+
+        <NoWarn>@(NoWarn);NU1903</NoWarn>
+        
+        <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors> 
+
+        <Authors>David Pine</Authors>
+        <Copyright>© 2023-$([System.DateTime]::Now.ToString('yyyy')) David Pine</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>dotnet;dotnetcore;csharp;github;actions;</PackageTags>
+        <PackageProjectUrl>https://github.com/IEvangelist/profanity-filter</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/IEvangelist/profanity-filter</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
     </PropertyGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared;
+namespace ProfanityFilter.Common;
 
 /// <summary>
 /// Specifies the strategy to use when replacing a profane word.

@@ -9,6 +9,8 @@
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     <!-- Allows the new platform to be called when calling dotnet test -->
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>IDE0005;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ProfanityFilter.Shared\ProfanityFilter.Shared.csproj" />
+    <ProjectReference Include="..\..\src\ProfanityFilter.Common\ProfanityFilter.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Action;
+namespace ProfanityFilter.Action.Models;
 
 internal static class ActionInputs
 {

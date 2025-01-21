@@ -3,7 +3,7 @@
 
 namespace ProfanityFilter.WebApi.Hubs;
 
-public sealed class ProfanityHub(
+internal sealed class ProfanityHub(
     IProfaneContentFilterService filter,
     ILogger<ProfanityHub> logger) : Hub
 {

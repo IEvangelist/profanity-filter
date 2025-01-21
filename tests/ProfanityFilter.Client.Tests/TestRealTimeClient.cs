@@ -3,20 +3,13 @@
 
 namespace ProfanityFilter.Client.Tests;
 
-internal class TestRealTimeClient : IRealtimeClient
+internal sealed class TestRealTimeClient : IRealtimeClient
 {
-    IAsyncEnumerable<ProfanityFilterResponse> IRealtimeClient.StreamAsync(IAsyncEnumerable<ProfanityFilterRequest> liveRequests, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    bool IRealtimeClient.IsConnected { get; }
 
-    ValueTask IRealtimeClient.StartAsync(CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    IAsyncEnumerable<ProfanityFilterResponse> IRealtimeClient.StreamAsync(IAsyncEnumerable<ProfanityFilterRequest> liveRequests, CancellationToken cancellationToken) => throw new NotImplementedException();
 
-    ValueTask IRealtimeClient.StopAsync(CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    ValueTask IRealtimeClient.StartAsync(CancellationToken cancellationToken) => throw new NotImplementedException();
+
+    ValueTask IRealtimeClient.StopAsync(CancellationToken cancellationToken) => throw new NotImplementedException();
 }

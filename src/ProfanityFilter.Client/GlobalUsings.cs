@@ -13,7 +13,7 @@ global using Microsoft.Extensions.Options;
 
 global using ProfanityFilter.Client;
 global using ProfanityFilter.Client.Options;
-global using ProfanityFilter.Shared;
-global using ProfanityFilter.Shared.Api;
-global using ProfanityFilter.Shared.Extensions;
-global using ProfanityFilter.Shared.Optional;
+global using ProfanityFilter.Common;
+global using ProfanityFilter.Common.Api;
+global using ProfanityFilter.Common.Extensions;
+global using ProfanityFilter.Common.Monads;

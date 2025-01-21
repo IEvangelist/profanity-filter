@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared.Optional;
+namespace ProfanityFilter.Common.Monads;
 
 /// <summary>
 /// Represents an optional value that may or may not be present.

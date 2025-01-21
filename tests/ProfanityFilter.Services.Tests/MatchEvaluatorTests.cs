@@ -1,8 +1,6 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using ProfanityFilter.Services.Internals;
-
 namespace ProfanityFilter.Services.Tests;
 
 [TestClass]
@@ -12,7 +10,7 @@ public class MatchEvaluatorTests
     [DataRow(FilterTarget.Body, "Test", @"\*\*\*\*")]
     [DataRow(FilterTarget.Body, "swear", @"\*\*\*\*\*")]
     [DataRow(FilterTarget.Title, "swear", @"*****")]
-    public void AsteriskEvaluator_Returns_Expected_Result(FilterTarget target, string input, string expected)
+    public void AsteriskEvaluatorReturnsExpectedResult(FilterTarget target, string input, string expected)
     {
         var regex = TestRegex.Instance();
         var match = regex.Match(input);
@@ -25,7 +23,7 @@ public class MatchEvaluatorTests
     }
 
     [TestMethod]
-    public void RandomAsteriskEvaluator_Returns_Expected_Result()
+    public void RandomAsteriskEvaluatorReturnsExpectedResult()
     {
         var input = "Test";
         var regex = TestRegex.Instance();
@@ -40,7 +38,7 @@ public class MatchEvaluatorTests
     }
 
     [TestMethod]
-    public void GrawlixEvaluator_Returns_Expected_Result()
+    public void GrawlixEvaluatorReturnsExpectedResult()
     {
         var input = "someReallyLongSwearWordOrPhrase";
         var regex = TestRegex.Instance();
@@ -55,7 +53,7 @@ public class MatchEvaluatorTests
     }
 
     [TestMethod]
-    public void BoldGrawlixEvaluator_Returns_Expected_Result()
+    public void BoldGrawlixEvaluatorReturnsExpectedResult()
     {
         var input = "swear";
         var regex = TestRegex.Instance();
@@ -70,7 +68,7 @@ public class MatchEvaluatorTests
     }
 
     [TestMethod]
-    public void EmojiEvaluator_Returns_Expected_Result()
+    public void EmojiEvaluatorReturnsExpectedResult()
     {
         var input = "Test";
         var regex = TestRegex.Instance();
@@ -88,7 +86,7 @@ public class MatchEvaluatorTests
     [DataRow(FilterTarget.Body, "swear", @"sw\*\*r")]
     [DataRow(FilterTarget.Title, "Test", @"T*st")]
     [DataRow(FilterTarget.Title, "swear", @"sw**r")]
-    public void VowelAsteriskEvaluator_Returns_Expected_Result(FilterTarget target, string input, string expected)
+    public void VowelAsteriskEvaluatorReturnsExpectedResult(FilterTarget target, string input, string expected)
     {
         var regex = TestRegex.Instance();
         var match = regex.Match(input);
@@ -105,7 +103,7 @@ public class MatchEvaluatorTests
     [DataRow(FilterTarget.Body, "swear", @"s\*\*\*r")]
     [DataRow(FilterTarget.Title, "Test", @"T**t")]
     [DataRow(FilterTarget.Title, "swear", @"s***r")]
-    public void MiddleAsteriskEvaluator_Returns_Expected_Result(FilterTarget target, string input, string expected)
+    public void MiddleAsteriskEvaluatorReturnsExpectedResult(FilterTarget target, string input, string expected)
     {
         var regex = TestRegex.Instance();
         var match = regex.Match(input);
@@ -120,7 +118,7 @@ public class MatchEvaluatorTests
     [TestMethod]
     [DataRow("Test", @"bleep")]
     [DataRow("swear", @"bleep")]
-    public void BleepEvaluator_Returns_Expected_Result(string input, string expected)
+    public void BleepEvaluatorReturnsExpectedResult(string input, string expected)
     {
         var regex = TestRegex.Instance();
         var match = regex.Match(input);
@@ -135,7 +133,7 @@ public class MatchEvaluatorTests
     [TestMethod]
     [DataRow("Test", @"████")]
     [DataRow("swear", @"█████")]
-    public void RedactedBlackRectangleEvaluator_Returns_Expected_Result(string input, string expected)
+    public void RedactedBlackRectangleEvaluatorReturnsExpectedResult(string input, string expected)
     {
         var regex = TestRegex.Instance();
         var match = regex.Match(input);
@@ -150,7 +148,7 @@ public class MatchEvaluatorTests
     [TestMethod]
     [DataRow("Test", @"~~Test~~")]
     [DataRow("swear", @"~~swear~~")]
-    public void StrikeThroughEvaluator_Returns_Expected_Result(string input, string expected)
+    public void StrikeThroughEvaluatorReturnsExpectedResult(string input, string expected)
     {
         var regex = TestRegex.Instance();
         var match = regex.Match(input);
@@ -165,7 +163,7 @@ public class MatchEvaluatorTests
     [TestMethod]
     [DataRow("Test", @"____")]
     [DataRow("swear", @"_____")]
-    public void UnderscoresEvaluator_Returns_Expected_Result(string input, string expected)
+    public void UnderscoresEvaluatorReturnsExpectedResult(string input, string expected)
     {
         var regex = TestRegex.Instance();
         var match = regex.Match(input);
@@ -178,7 +176,7 @@ public class MatchEvaluatorTests
     }
 
     [TestMethod]
-    public void MiddleSwearEmojiEvaluator_Returns_Expected_Result()
+    public void MiddleSwearEmojiEvaluatorReturnsExpectedResult()
     {
         var input = "Test";
         var regex = TestRegex.Instance();
@@ -192,7 +190,7 @@ public class MatchEvaluatorTests
     }
 }
 
-internal partial class TestRegex
+internal sealed partial class TestRegex
 {
     [GeneratedRegex("(.+)")]
     internal static partial Regex Instance();

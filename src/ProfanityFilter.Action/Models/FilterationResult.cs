@@ -15,7 +15,7 @@ internal readonly record struct FiltrationResult(
     /// <summary>
     /// Represents a non-filtered result.
     /// </summary>
-    internal static FiltrationResult NotFiltered { get; } = new();
+    internal static FiltrationResult NotFiltered { get; }
 
     /// <summary>
     /// Gets a value indicating whether the tile or body is filtered.

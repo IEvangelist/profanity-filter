@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared.Api;
+namespace ProfanityFilter.Common.Api;
 
 /// <summary>
 /// A representation of a profanity-filter response object.
@@ -13,6 +13,7 @@ namespace ProfanityFilter.Shared.Api;
 /// <param name="ReplacementStrategy">The replacement strategy used.</param>
 /// <param name="FiltrationSteps">An array of steps representing the
 /// filtration process, step-by-step.</param>
+/// <param name="Matches">An optional set of matches.</param>
 public sealed record class ProfanityFilterResponse(
     [property:MemberNotNullWhen(
         true,
@@ -26,6 +27,12 @@ public sealed record class ProfanityFilterResponse(
     ProfanityFilterStep[]? FiltrationSteps = default,
     string[]? Matches = default)
 {
+    /// <summary>
+    /// Creates a new instance of <see cref="ProfanityFilterResponse"/> from the given <see cref="FilterResult"/> and <see cref="ReplacementStrategy"/>.
+    /// </summary>
+    /// <param name="result">The filter result containing the filtration details.</param>
+    /// <param name="strategy">The replacement strategy used during filtration.</param>
+    /// <returns>A new instance of <see cref="ProfanityFilterResponse"/>.</returns>
     public static ProfanityFilterResponse From(
         FilterResult result, ReplacementStrategy strategy) =>
         new(

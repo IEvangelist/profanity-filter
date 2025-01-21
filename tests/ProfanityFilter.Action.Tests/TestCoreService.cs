@@ -1,11 +1,9 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Runtime.CompilerServices;
-
 namespace ProfanityFilter.Action.Tests;
 
-internal class TestCoreService(Dictionary<string, string> testInputs) : ICoreService
+internal sealed class TestCoreService(Dictionary<string, string> testInputs) : ICoreService
 {
     internal enum BufferType { Info, Debug, Notice, Warning, Error };
 

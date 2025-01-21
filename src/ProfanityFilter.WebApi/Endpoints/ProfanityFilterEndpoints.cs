@@ -26,7 +26,7 @@ internal static partial class ProfanityFilterEndpoints
 
         profanity.MapPost("filter", OnApplyFilterAsync)
             .WithOpenApi()
-            .Produces(200, typeof(ProfanityFilterResponse))
+            .Produces<ProfanityFilterResponse>(200)
             .ProducesValidationProblem()
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .WithSummary("""
@@ -36,7 +36,7 @@ internal static partial class ProfanityFilterEndpoints
 
         profanity.MapGet("strategies", OnGetStrategies)
             .WithOpenApi()
-            .Produces(200, typeof(StrategyResponse[]))
+            .Produces<StrategyResponse[]>(200)
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .CacheOutput()
             .WithSummary("""
@@ -46,7 +46,7 @@ internal static partial class ProfanityFilterEndpoints
 
         profanity.MapGet("targets", OnGetTargets)
             .WithOpenApi()
-            .Produces(200, typeof(FilterTargetResponse[]))
+            .Produces<FilterTargetResponse[]>(200)
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .CacheOutput()
             .WithSummary("""
@@ -59,7 +59,7 @@ internal static partial class ProfanityFilterEndpoints
 
         data.MapGet("", OnGetDataNamesAsync)
             .WithOpenApi()
-            .Produces(200, typeof(string[]))
+            .Produces<string[]>(200)
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .CacheOutput()
             .WithSummary("""
@@ -69,7 +69,7 @@ internal static partial class ProfanityFilterEndpoints
 
         data.MapGet("{name}", OnGetDataByNameAsync)
             .WithOpenApi()
-            .Produces(200, typeof(string[]))
+            .Produces<string[]>(200)
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .CacheOutput()
             .WithSummary("""

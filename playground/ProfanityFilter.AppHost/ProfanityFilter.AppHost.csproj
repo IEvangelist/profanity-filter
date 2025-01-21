@@ -9,6 +9,8 @@
     <Nullable>enable</Nullable>
     <IsAspireHost>true</IsAspireHost>
     <UserSecretsId>e5321ea8-a659-4588-a117-d53dc2c6a5cc</UserSecretsId>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <NoWarn>IDE0005;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

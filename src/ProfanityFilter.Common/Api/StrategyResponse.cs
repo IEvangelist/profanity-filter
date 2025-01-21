@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared.Api;
+namespace ProfanityFilter.Common.Api;
 
 /// <summary>
 /// A representation of a strategy response object.
@@ -14,6 +14,11 @@ public sealed record class StrategyResponse(
     int Value,
     string Description)
 {
+    /// <summary>
+    /// Converts a <see cref="ReplacementStrategy"/> to a <see cref="StrategyResponse"/>.
+    /// </summary>
+    /// <param name="strategy">The replacement strategy to convert.</param>
+    /// <returns>A <see cref="StrategyResponse"/> representing the strategy.</returns>
     public static implicit operator StrategyResponse(ReplacementStrategy strategy)
     {
         var description = strategy switch

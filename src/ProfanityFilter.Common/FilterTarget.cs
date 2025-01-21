@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared;
+namespace ProfanityFilter.Common;
 
 /// <summary>
 /// Represents the filter target, meaning whether the filter is

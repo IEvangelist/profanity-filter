@@ -1,20 +1,20 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared;
+namespace ProfanityFilter.Common;
 
 /// <summary>
 /// <inheritdoc cref="JsonSerializerContext" />
 /// Including the following types:
 /// <list type="bullet">
-/// <item><see cref="Shared.FilterParameters"/></item>
-/// <item><see cref="Shared.FilterResult"/></item>
-/// <item><see cref="Shared.FilterStep"/></item>
-/// <item><see cref="Shared.FilterTarget"/></item>
-/// <item><see cref="Shared.ProfaneSourceFilter"/></item>
+/// <item><see cref="Common.FilterParameters"/></item>
+/// <item><see cref="Common.FilterResult"/></item>
+/// <item><see cref="Common.FilterStep"/></item>
+/// <item><see cref="Common.FilterTarget"/></item>
+/// <item><see cref="Common.ProfaneSourceFilter"/></item>
 /// <item><see cref="Api.ProfanityFilterRequest"/></item>
 /// <item><see cref="Api.ProfanityFilterResponse"/></item>
-/// <item><see cref="Shared.ReplacementStrategy"/></item>
+/// <item><see cref="Common.ReplacementStrategy"/></item>
 /// <item><see cref="Api.StrategyResponse"/></item>
 /// </list>
 /// </summary>

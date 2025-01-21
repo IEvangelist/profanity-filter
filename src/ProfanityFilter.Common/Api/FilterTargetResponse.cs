@@ -1,13 +1,24 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-namespace ProfanityFilter.Shared.Api;
+namespace ProfanityFilter.Common.Api;
 
+/// <summary>
+/// Represents a response for a filter target.
+/// </summary>
+/// <param name="Name">The name of the filter target.</param>
+/// <param name="Value">The value of the filter target.</param>
+/// <param name="Description">The description of the filter target.</param>
 public sealed record class FilterTargetResponse(
     string Name,
     int Value,
     string Description)
 {
+    /// <summary>
+    /// Converts a <see cref="FilterTarget"/> to a <see cref="FilterTargetResponse"/>.
+    /// </summary>
+    /// <param name="target">The filter target to convert.</param>
+    /// <returns>A <see cref="FilterTargetResponse"/> representing the filter target.</returns>
     public static implicit operator FilterTargetResponse(FilterTarget target)
     {
         var description = target switch

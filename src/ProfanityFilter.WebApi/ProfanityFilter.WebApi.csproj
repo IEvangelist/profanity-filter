@@ -8,6 +8,9 @@
     <UserSecretsId>c381930b-4a15-4c4d-8d19-b5070cbb9fd6</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <InvariantGlobalization>true</InvariantGlobalization>
+    <IsAotCompatible>false</IsAotCompatible>
+    <NoWarn>$(NoWarn);IDE0005</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>

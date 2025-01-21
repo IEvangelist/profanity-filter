@@ -14,11 +14,6 @@ public sealed class ProfanityFilterOptions
     public const string SectionName = "ProfanityFilter";
 
     /// <summary>
-    /// Gets or sets the default strategy for replacing profane words.
-    /// </summary>
-    public ReplacementStrategy DefaultReplacementStrategy { get; set; }
-
-    /// <summary>
     /// Gets or sets the base address of the API.
     /// </summary>
     public Uri? ApiBaseAddress { get; set; }
