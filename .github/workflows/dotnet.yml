@@ -19,7 +19,7 @@ jobs:
           - ProfanityFilter.Action.Tests
           - ProfanityFilter.Client.Tests
           - ProfanityFilter.Services.Tests
-          - ProfanityFilter.Shared.Tests
+          - ProfanityFilter.Common.Tests
 
     steps:
     - uses: actions/checkout@main
