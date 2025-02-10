@@ -19,6 +19,6 @@ internal static class ProfanityFilterContainerImageDetails
     /// <remarks>ievangelist/profanity-filter-api</remarks>
     internal const string Image = "ievangelist/profanity-filter-api";
 
-    /// <remarks>2.0.11</remarks>
-    internal const string Tag = "2.0.11";
+    /// <remarks>9.0.1</remarks>
+    internal const string Tag = "9.0.1";
 }
