@@ -31,16 +31,22 @@ jobs:
         shell: bash
         run: dotnet test --no-restore
 
+      - name: Upload test logs
+        uses: actions/upload-artifact@main
+        with:
+          name: test-logs
+          path: /artifacts/bin/*/release_linux-x64/TestResults/*.log
+
       - name: Upload ProfanityFilter.Hosting artifact
         uses: actions/upload-artifact@main
         with:
-          name: nuget
+          name: hosting-nuget
           path: artifacts/package/release/ProfanityFilter.Hosting.nupkg
 
       - name: Upload ProfanityFilter.Client artifact
         uses: actions/upload-artifact@main
         with:
-          name: nuget
+          name: client-nuget
           path: artifacts/package/release/ProfanityFilter.Client.nupkg
 
       - name: Publish ProfanityFilter.Hosting NuGet package
