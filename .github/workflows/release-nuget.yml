@@ -14,8 +14,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           checkName: build
-          ref: ${{ github.ref }}
-          repo: ${{ github.repository }}
 
   publish:
     runs-on: ubuntu-latest
