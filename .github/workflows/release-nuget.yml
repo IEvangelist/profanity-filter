@@ -6,9 +6,20 @@ on:
       - '**'
 
 jobs:
+  wait-for-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Wait for .NET build and test"
+        uses: fountainhead/action-wait-for-check@v1.2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Build .NET"
+          ref: ${{ github.ref }}
+          repo: ${{ github.repository }}
+
   publish:
     runs-on: ubuntu-latest
-
+    needs: wait-for-build
     steps:
       - name: Checkout repository
         uses: actions/checkout@main
@@ -24,37 +35,8 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Publish test projects
-        run: |
-          dotnet publish --configuration Release tests/ProfanityFilter.Action.Tests/
-          dotnet publish --configuration Release tests/ProfanityFilter.Client.Tests/
-          dotnet publish --configuration Release tests/ProfanityFilter.Services.Tests/
-          dotnet publish --configuration Release tests/ProfanityFilter.Common.Tests/
-
-      - name: Run tests
-        run: |
-          cd artifacts/publish/ProfanityFilter.Action.Tests/release_linux-x64
-          ./ProfanityFilter.Action.Tests
-          cd ../../..
-
-          cd artifacts/publish/ProfanityFilter.Client.Tests/release_linux-x64
-          ./ProfanityFilter.Client.Tests
-          cd ../../..
-
-          cd artifacts/publish/ProfanityFilter.Services.Tests/release_linux-x64
-          ./ProfanityFilter.Services.Tests
-          cd ../../..
-
-          cd artifacts/publish/ProfanityFilter.Common.Tests/release_linux-x64
-          ./ProfanityFilter.Common.Tests
-          cd ../../..
-
-      - name: Upload test logs
-        if: always()
-        uses: actions/upload-artifact@main
-        with:
-          name: test-logs
-          path: /artifacts/bin/*/release_linux-x64/TestResults/*.log
+      - name: Build solution
+        run: dotnet build --configuration Release
 
       - name: Upload ProfanityFilter.Hosting artifact
         uses: actions/upload-artifact@main
