@@ -13,7 +13,7 @@ jobs:
         uses: fountainhead/action-wait-for-check@v1.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: "Build .NET"
+          checkName: build
           ref: ${{ github.ref }}
           repo: ${{ github.repository }}
 
