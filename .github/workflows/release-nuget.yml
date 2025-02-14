@@ -24,14 +24,33 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+      - name: Publish test projects
+        run: |
+          dotnet publish --configuration Release tests/ProfanityFilter.Action.Tests/
+          dotnet publish --configuration Release tests/ProfanityFilter.Client.Tests/
+          dotnet publish --configuration Release tests/ProfanityFilter.Services.Tests/
+          dotnet publish --configuration Release tests/ProfanityFilter.Common.Tests/
 
-      - name: Test solution
-        shell: bash
-        run: dotnet test --no-restore
+      - name: Run tests
+        run: |
+          cd artifacts/publish/ProfanityFilter.Action.Tests/release_linux-x64
+          ./ProfanityFilter.Action.Tests
+          cd ../../..
+
+          cd artifacts/publish/ProfanityFilter.Client.Tests/release_linux-x64
+          ./ProfanityFilter.Client.Tests
+          cd ../../..
+
+          cd artifacts/publish/ProfanityFilter.Services.Tests/release_linux-x64
+          ./ProfanityFilter.Services.Tests
+          cd ../../..
+
+          cd artifacts/publish/ProfanityFilter.Common.Tests/release_linux-x64
+          ./ProfanityFilter.Common.Tests
+          cd ../../..
 
       - name: Upload test logs
+        if: always()
         uses: actions/upload-artifact@main
         with:
           name: test-logs

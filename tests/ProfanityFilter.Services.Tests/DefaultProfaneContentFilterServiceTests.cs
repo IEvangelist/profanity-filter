@@ -8,9 +8,7 @@ public class DefaultProfaneContentFilterServiceTests
 {
     private const string Path = "CustomData/CustomWords.txt";
 
-#pragma warning disable CA1859 // Use concrete types when possible for improved performance
-    private IProfaneContentFilterService _sut;
-#pragma warning restore CA1859 // Use concrete types when possible for improved performance
+    private DefaultProfaneContentFilterService _sut;
 
     private static readonly string[] s_webFormsArray = ["WebForms"];
 
@@ -39,7 +37,7 @@ public class DefaultProfaneContentFilterServiceTests
     {
         // Act
         var result = await _sut.FilterProfanityAsync(input!,
-            new(ReplacementStrategy.Asterisk, FilterTarget.Body));
+            new(ReplacementStrategy.Asterisk, FilterTarget.Body), CancellationToken.None);
 
         // Assert
         Assert.AreEqual(expectedResult, result.FinalOutput ?? input);
@@ -69,13 +67,13 @@ public class DefaultProfaneContentFilterServiceTests
             new(ReplacementStrategy.Bleep, FilterTarget.Title)
             {
                 AdditionalFilterSources = set
-            });
+            }, CancellationToken.None);
 
         var bodyResult = await _sut.FilterProfanityAsync(input,
             new(ReplacementStrategy.Emoji, FilterTarget.Body)
             {
                 AdditionalFilterSources = set
-            });
+            }, CancellationToken.None);
 
         // Assert
         Assert.AreEqual("I love bleep!", titleResult.FinalOutput);
@@ -94,7 +92,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         // Act
         var result = await _sut.FilterProfanityAsync(input,
-            new(ReplacementStrategy.Emoji, FilterTarget.Body));
+            new(ReplacementStrategy.Emoji, FilterTarget.Body), CancellationToken.None);
 
         // Assert
         Assert.AreNotEqual(input, result.FinalOutput);
@@ -115,7 +113,7 @@ public class DefaultProfaneContentFilterServiceTests
                 [
                     new("ManualProfaneWords", s_webFormsArray.ToFrozenSet())
                 ]
-            });
+            }, CancellationToken.None);
 
         // Assert
         Assert.IsTrue(result.IsFiltered);
@@ -174,7 +172,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         // Act
         var result = await _sut.FilterProfanityAsync(input,
-            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body));
+            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body), CancellationToken.None);
 
         // Assert
         Assert.IsFalse(result.IsFiltered);
@@ -187,7 +185,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         // Act
         var result = await _sut.FilterProfanityAsync(input,
-            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body));
+            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body), CancellationToken.None);
 
         // Assert
         Assert.IsTrue(result.IsFiltered);
@@ -217,7 +215,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         // Act
         var result = await _sut.FilterProfanityAsync(input,
-            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body));
+            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body), CancellationToken.None);
 
         // Assert
         Assert.IsTrue(result.IsFiltered);
