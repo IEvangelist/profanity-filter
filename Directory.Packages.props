@@ -30,12 +30,12 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.6.0" />
+    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.6.2" />
     <PackageVersion Include="MinVer" Version="6.0.0" />
-    <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.25112.8" />
+    <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.25119.7" />
     <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.24562.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.8.0" />
-    <PackageVersion Include="MSTest.Analyzers" Version="3.8.0" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.8.2" />
+    <PackageVersion Include="MSTest.Analyzers" Version="3.8.2" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="9.0.0" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
