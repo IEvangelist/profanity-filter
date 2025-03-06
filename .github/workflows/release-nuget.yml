@@ -40,20 +40,20 @@ jobs:
         uses: actions/upload-artifact@main
         with:
           name: hosting-nuget
-          path: artifacts/package/release/ProfanityFilter.Hosting.nupkg
+          path: artifacts/package/release/ProfanityFilter.Hosting.*.nupkg
 
       - name: Upload ProfanityFilter.Client artifact
         uses: actions/upload-artifact@main
         with:
           name: client-nuget
-          path: artifacts/package/release/ProfanityFilter.Client.nupkg
+          path: artifacts/package/release/ProfanityFilter.Client.*.nupkg
 
       - name: Publish ProfanityFilter.Hosting NuGet package
         run: |
-          dotnet nuget push --skip-duplicate artifacts/package/release/ProfanityFilter.Hosting.nupkg \
+          dotnet nuget push --skip-duplicate "artifacts/package/release/ProfanityFilter.Hosting.*.nupkg" \
             --source "https://api.nuget.org/v3/index.json" --api-key "${{ secrets.NUGET_API_KEY }}"
 
       - name: Publish ProfanityFilter.Client NuGet package
         run: |
-          dotnet nuget push --skip-duplicate artifacts/package/release/ProfanityFilter.Client.nupkg \
+          dotnet nuget push --skip-duplicate "artifacts/package/release/ProfanityFilter.Client.*.nupkg" \
             --source "https://api.nuget.org/v3/index.json" --api-key "${{ secrets.NUGET_API_KEY }}"
