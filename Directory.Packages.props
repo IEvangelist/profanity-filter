@@ -5,44 +5,44 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Aspire.Hosting" Version="9.1.0" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.1.0" />
+    <PackageVersion Include="Aspire.Hosting" Version="9.3.2" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.3.1" />
     <PackageVersion Include="Blazor.LocalStorage" Version="9.0.1" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="GitHub.Actions.Core" Version="9.0.0" />
     <PackageVersion Include="GitHub.Actions.Octokit" Version="9.0.0" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="2.3.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="9.0.6" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="9.3.0" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.3" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Compliance.Redaction" Version="9.6.0" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.6" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="9.0.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.6.2" />
+    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.7.3" />
     <PackageVersion Include="MinVer" Version="6.0.0" />
-    <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.25119.7" />
-    <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.25119.7" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.8.2" />
-    <PackageVersion Include="MSTest.Analyzers" Version="3.8.2" />
+    <PackageVersion Include="MSTest.Engine" Version="1.0.0-alpha.25317.1" />
+    <PackageVersion Include="MSTest.SourceGeneration" Version="1.0.0-alpha.25317.1" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.9.3" />
+    <PackageVersion Include="MSTest.Analyzers" Version="3.9.3" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
-    <PackageVersion Include="Pathological.Globbing" Version="9.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.3.1" />
-    <PackageVersion Include="Markdig" Version="0.40.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.3" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.3" />
-    <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
+    <PackageVersion Include="Pathological.Globbing" Version="9.1.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.1" />
+    <PackageVersion Include="Markdig" Version="0.41.3" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.6" />
+    <PackageVersion Include="System.Linq.Async" Version="6.0.3" />
     <PackageVersion Include="System.Reactive" Version="6.0.1" />
   </ItemGroup>
 </Project>
