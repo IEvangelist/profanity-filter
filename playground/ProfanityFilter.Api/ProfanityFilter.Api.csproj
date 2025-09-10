@@ -16,6 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" VersionOverride="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" VersionOverride="9.0.9" />
+  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" VersionOverride="9.0.9" />
+  <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" VersionOverride="9.0.9" />
+  <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="9.0.9" />
     <ProjectReference Include="..\..\src\ProfanityFilter.Client\ProfanityFilter.Client.csproj" />
   </ItemGroup>
 
