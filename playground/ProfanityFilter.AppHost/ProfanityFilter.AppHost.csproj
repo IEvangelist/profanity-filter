@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" VersionOverride="9.5.0" />
     <Folder Include="CustomData\" />
   </ItemGroup>
 
