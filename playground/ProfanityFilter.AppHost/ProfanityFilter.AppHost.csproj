@@ -23,6 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" VersionOverride="9.5.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" VersionOverride="9.0.10" />
+  <PackageReference Include="Microsoft.Extensions.DependencyInjection" VersionOverride="9.0.10" />
+  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" VersionOverride="9.0.10" />
+  <PackageReference Include="Microsoft.Extensions.Hosting" VersionOverride="9.0.10" />
+  <PackageReference Include="Microsoft.Extensions.Http" VersionOverride="9.0.10" />
     <Folder Include="CustomData\" />
   </ItemGroup>
 
