@@ -86,6 +86,8 @@ internal static class ContainerResourceBuilderExtensions
             Directory.CreateDirectory(tempDir);
         }
 
+        var passwordValue = await password.GetValueAsync(CancellationToken.None);
+
         string[] args =
         [
             "dev-certs",
@@ -93,7 +95,7 @@ internal static class ContainerResourceBuilderExtensions
             "--export-path",
             $"\"{certExportPath}\"",
             "--password",
-            $"\"{password.Value}\""
+            $"\"{passwordValue}\""
         ];
         var argsString = string.Join(' ', args);
 

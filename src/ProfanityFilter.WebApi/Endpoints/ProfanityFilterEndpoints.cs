@@ -19,13 +19,11 @@ internal static partial class ProfanityFilterEndpoints
                     HttpTransportType.LongPolling;
             })
             // Doesn't actually work, consider AsyncAPI per Safia!
-            .WithOpenApi()
             .WithSummary("""
                 The profanity filter hub endpoint, used for live bi-directional updates.
                 """);
 
         profanity.MapPost("filter", OnApplyFilterAsync)
-            .WithOpenApi()
             .Produces<ProfanityFilterResponse>(200)
             .ProducesValidationProblem()
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
@@ -35,7 +33,6 @@ internal static partial class ProfanityFilterEndpoints
             .WithHttpLogging(HttpLoggingFields.All);
 
         profanity.MapGet("strategies", OnGetStrategies)
-            .WithOpenApi()
             .Produces<StrategyResponse[]>(200)
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .CacheOutput()
@@ -45,7 +42,6 @@ internal static partial class ProfanityFilterEndpoints
             .WithHttpLogging(HttpLoggingFields.All);
 
         profanity.MapGet("targets", OnGetTargets)
-            .WithOpenApi()
             .Produces<FilterTargetResponse[]>(200)
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .CacheOutput()
@@ -58,7 +54,6 @@ internal static partial class ProfanityFilterEndpoints
             .DisableAntiforgery();
 
         data.MapGet("", OnGetDataNamesAsync)
-            .WithOpenApi()
             .Produces<string[]>(200)
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .CacheOutput()
@@ -68,7 +63,6 @@ internal static partial class ProfanityFilterEndpoints
             .WithHttpLogging(HttpLoggingFields.All);
 
         data.MapGet("{name}", OnGetDataByNameAsync)
-            .WithOpenApi()
             .Produces<string[]>(200)
             .WithRequestTimeout(TimeSpan.FromSeconds(10))
             .CacheOutput()
