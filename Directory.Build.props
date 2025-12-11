@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <DefaultTargetFramework>net9.0</DefaultTargetFramework>
+        <DefaultTargetFramework>net10.0</DefaultTargetFramework>
         <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -27,7 +27,7 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors> 
 
         <Authors>David Pine</Authors>
-        <Copyright>© 2023-$([System.DateTime]::Now.ToString('yyyy')) David Pine</Copyright>
+        <Copyright>Â© 2023-$([System.DateTime]::Now.ToString('yyyy')) David Pine</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageTags>dotnet;dotnetcore;csharp;github;actions;</PackageTags>
