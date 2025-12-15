@@ -14,20 +14,29 @@ jobs:
         with:
           fetch-depth: 0
           filter: tree:0
+          ref: ${{ github.ref }}
 
       - name: Setup .NET
         uses: actions/setup-dotnet@main
         with:
           global-json-file: ./global.json
 
+      - name: Fetch all tags
+        run: git fetch --force --tags
+
       - name: Show git and .NET info (debug)
         run: |
           git --version
+          echo "GitHub ref: ${{ github.ref }}"
+          echo "GitHub ref_name: ${{ github.ref_name }}"
           echo "Current ref: $(git rev-parse --abbrev-ref HEAD)"
+          echo "Current SHA: $(git rev-parse HEAD)"
           echo "Tags pointing at HEAD:"
           git tag --points-at HEAD || true
           echo "Describe exact tag (if any):"
           git describe --tags --exact-match || echo 'no exact tag on HEAD'
+          echo "All tags:"
+          git tag -l | tail -10
           echo "Recent commits:"
           git --no-pager log --oneline -n 5
           echo "\nDotnet info:"
@@ -40,10 +49,14 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Pack projects (MinVer provides version)
+        env:
+          MINVERBUILDMETADATA: ""
+          MINVERTAGPREFIX: v
         run: |
           mkdir -p artifacts/package/release
-          dotnet pack src/ProfanityFilter.Hosting/ProfanityFilter.Hosting.csproj -c Release -o artifacts/package/release /p:IncludeSymbols=false
-          dotnet pack src/ProfanityFilter.Client/ProfanityFilter.Client.csproj -c Release -o artifacts/package/release /p:IncludeSymbols=false
+          echo "Packing with tag: ${{ github.ref_name }}"
+          dotnet pack src/ProfanityFilter.Hosting/ProfanityFilter.Hosting.csproj -c Release -o artifacts/package/release /p:IncludeSymbols=false /p:MinVerTagPrefix=v
+          dotnet pack src/ProfanityFilter.Client/ProfanityFilter.Client.csproj -c Release -o artifacts/package/release /p:IncludeSymbols=false /p:MinVerTagPrefix=v
 
       - name: List created packages
         run: ls -la artifacts/package/release || true
