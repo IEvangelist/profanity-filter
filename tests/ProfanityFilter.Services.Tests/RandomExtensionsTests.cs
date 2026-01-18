@@ -16,7 +16,7 @@ public class RandomExtensionsTests
         var result = source.RandomItemsWithLimitToOne(3, "");
 
         // Assert
-        Assert.AreEqual(3, result.Length);
+        Assert.HasCount(3, result);
     }
 
     [TestMethod]
@@ -29,7 +29,7 @@ public class RandomExtensionsTests
         var result = source.RandomItemsWithLimitToOne(3, "a");
 
         // Assert
-        Assert.AreEqual(3, result.Length);
+        Assert.HasCount(3, result);
         // CollectionAssert.That.Single(result.Where(str => str is "a"));
     }
 

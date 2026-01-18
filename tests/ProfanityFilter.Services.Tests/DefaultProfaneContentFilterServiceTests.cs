@@ -44,7 +44,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         if (result.IsFiltered)
         {
-            Assert.IsTrue(result.Matches.Count > 0);
+            Assert.IsNotEmpty(result.Matches);
         }
         else
         {
@@ -97,7 +97,7 @@ public class DefaultProfaneContentFilterServiceTests
         // Assert
         Assert.AreNotEqual(input, result.FinalOutput);
         Assert.IsTrue(result.IsFiltered);
-        Assert.AreEqual(2, result.Matches.Count);
+        Assert.HasCount(2, result.Matches);
     }
 
     [TestMethod]
@@ -222,7 +222,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         Assert.AreEqual(@"My least favorite web technologies are S\*\*\*\*\*\*\*\*\*t and W\*\*\*\*\*\*s!", result.FinalOutput);
 
-        Assert.AreEqual(10, result.Steps.Count);
+        Assert.HasCount(10, result.Steps);
         Assert.AreEqual(1, result.Steps.Count(static step => step.IsFiltered));
 
         CollectionAssert.That.Contains(result.Steps,

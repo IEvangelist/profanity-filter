@@ -1,0 +1,84 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-accent: #8b5cf6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+}
+
+html {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+body {
+  @apply bg-gradient-to-br from-zinc-950 via-neutral-950 to-zinc-950 text-zinc-300;
+  background-attachment: fixed;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-zinc-900 rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-700 rounded hover:bg-zinc-600;
+}
+
+/* Markdown output styling */
+.markdown-output {
+  @apply prose prose-invert prose-sm max-w-none;
+}
+
+.markdown-output p {
+  @apply my-2;
+}
+
+.markdown-output code {
+  @apply bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400;
+}
+
+.markdown-output pre {
+  @apply bg-zinc-900 p-4 rounded-lg overflow-x-auto;
+}
+
+/* Glass morphism effect */
+.glass {
+  @apply backdrop-blur-xl bg-zinc-900/70 border border-zinc-700/50 shadow-xl shadow-black/20;
+}
+
+/* Panel hover effect */
+.glass:hover {
+  @apply border-zinc-600/50;
+}
+
+/* Subtle glow effects */
+.glow-amber {
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+}
+
+.glow-blue {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+/* Pulse animation for streaming */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.5s ease-in-out infinite;
+}
