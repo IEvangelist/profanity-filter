@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Sparkles, Copy, Check, AlertTriangle, Zap, Github, RefreshCw, Sun, Moon, Monitor } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import { fetchStrategies, createSignalRConnection, LiveStreamClient } from './api';
 import type { StrategyResponse, ProfanityFilterResponse } from './types';
 import type { HubConnection } from '@microsoft/signalr';
@@ -8,7 +9,9 @@ import StrategyDropdown from './components/StrategyDropdown';
 
 export default function App() {
   const [text, setText] = useState('');
-  const [strategy, setStrategy] = useState('Asterisk');
+  const [strategy, setStrategy] = useState(() => {
+    return localStorage.getItem('strategy') || 'Asterisk';
+  });
   const [strategies, setStrategies] = useState<StrategyResponse[]>([]);
   const [result, setResult] = useState<ProfanityFilterResponse | null>(null);
   const [isLiveMode, setIsLiveMode] = useState(true);
@@ -24,6 +27,11 @@ export default function App() {
   const connectionRef = useRef<HubConnection | null>(null);
   const liveClientRef = useRef<LiveStreamClient | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Strategy persistence
+  useEffect(() => {
+    localStorage.setItem('strategy', strategy);
+  }, [strategy]);
 
   // Theme management
   useEffect(() => {
@@ -75,7 +83,11 @@ export default function App() {
       try {
         const strategiesData = await fetchStrategies();
         setStrategies(strategiesData);
-        if (strategiesData.length > 0) {
+        // Use stored strategy if valid, otherwise use first available
+        const storedStrategy = localStorage.getItem('strategy');
+        if (storedStrategy && strategiesData.some(s => s.name === storedStrategy)) {
+          setStrategy(storedStrategy);
+        } else if (strategiesData.length > 0) {
           setStrategy(strategiesData[0].name);
         }
       } catch (err) {
@@ -359,7 +371,7 @@ export default function App() {
               <div className="flex-1 p-4 overflow-auto min-h-0">
                 {result ? (
                   <div className="markdown-output">
-                    <ReactMarkdown>{result.filteredText}</ReactMarkdown>
+                    <ReactMarkdown rehypePlugins={[rehypeRaw]}>{result.filteredText}</ReactMarkdown>
                   </div>
                 ) : (
                   <div className="h-full flex items-center justify-center opacity-60">

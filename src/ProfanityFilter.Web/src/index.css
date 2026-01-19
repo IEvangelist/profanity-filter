@@ -91,7 +91,7 @@ html.light select option {
 }
 
 html.light .markdown-output {
-  @apply prose prose-base max-w-none;
+  @apply prose prose-xl max-w-none leading-relaxed;
 }
 
 /* Custom scrollbar - thin and theme-aware */
@@ -201,7 +201,7 @@ html.light .dropdown-check {
 
 /* Markdown output styling */
 .markdown-output {
-  @apply prose prose-invert prose-base max-w-none;
+  @apply prose prose-invert prose-xl max-w-none leading-relaxed;
 }
 
 .markdown-output p {
