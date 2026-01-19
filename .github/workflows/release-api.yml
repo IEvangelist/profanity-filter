@@ -33,6 +33,12 @@ jobs:
 
       - uses: actions/setup-dotnet@main
 
+      - name: Install Aspire CLI
+        run: curl -sSL https://aspire.dev/install.sh | bash
+
+      - name: Output Aspire CLI version
+        run: aspire --version
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -40,19 +46,23 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish app
-        working-directory: ./src/ProfanityFilter.WebApi
-        run: |
-          dotnet publish -c Release \
-            /t:PublishContainer \
-            -p DebugType=none \
-            -p ContainerRegistry=ghcr.io \
-            -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
-            -p ContainerRepository=${{ env.IMAGE_NAME }} \
-            -bl
+      - name: Deploy with Aspire
+        working-directory: ./playground
+        run: aspire deploy
 
-      - uses: actions/upload-artifact@main
-        if: always()
-        with:
-          name: msbuild.binlog
-          path: src/ProfanityFilter.WebApi/msbuild.binlog
+      # - name: Publish app
+      #   working-directory: ./src/ProfanityFilter.WebApi
+      #   run: |
+      #     dotnet publish -c Release \
+      #       /t:PublishContainer \
+      #       -p DebugType=none \
+      #       -p ContainerRegistry=ghcr.io \
+      #       -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
+      #       -p ContainerRepository=${{ env.IMAGE_NAME }} \
+      #       -bl
+
+      # - uses: actions/upload-artifact@main
+      #   if: always()
+      #   with:
+      #     name: msbuild.binlog
+      #     path: src/ProfanityFilter.WebApi/msbuild.binlog
