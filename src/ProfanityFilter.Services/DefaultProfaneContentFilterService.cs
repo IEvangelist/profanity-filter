@@ -38,14 +38,17 @@ internal sealed partial class DefaultProfaneContentFilterService(
 
                     if (string.IsNullOrWhiteSpace(content) is false)
                     {
-                        var words = content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                        var words = content.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries);
                         for (var index = 0; index < words.Length; ++index)
                         {
-                            var word = words[index];
+                            var word = words[index].Trim();
 
-                            var escapedWord = Regex.Escape(word);
+                            if (string.IsNullOrWhiteSpace(word) is false)
+                            {
+                                var escapedWord = Regex.Escape(word);
 
-                            allWords[fileName].Add(escapedWord);
+                                allWords[fileName].Add(escapedWord);
+                            }
                         }
                     }
                 })
