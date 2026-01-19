@@ -64,9 +64,9 @@ export default function App() {
   };
 
   const getThemeIcon = () => {
-    if (theme === 'auto') return <Monitor className="w-5 h-5 text-zinc-400 hover:text-white" />;
-    if (theme === 'dark') return <Moon className="w-5 h-5 text-zinc-400 hover:text-white" />;
-    return <Sun className="w-5 h-5 text-amber-400 hover:text-amber-300" />;
+    if (theme === 'auto') return <Monitor className="w-5 h-5" />;
+    if (theme === 'dark') return <Moon className="w-5 h-5" />;
+    return <Sun className="w-5 h-5 text-orange-500" />;
   };
 
   // Load strategies on mount
@@ -206,14 +206,14 @@ export default function App() {
       <header className="glass border-b border-white/10 px-4 sm:px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 shadow-lg shadow-orange-500/40 glow-amber animate-pulse-soft">
+            <div className="p-2.5 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-red-500 shadow-lg shadow-orange-500/50 ring-4 ring-orange-500/20 glow-amber animate-pulse-soft">
               <span className="text-2xl" role="img" aria-label="swear">🤬</span>
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-300 via-orange-400 to-pink-500 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-pink-500 bg-clip-text text-transparent">
                 Profanity Filter
               </h1>
-              <p className="text-sm text-zinc-400 hidden sm:block">✨ Real-time potty mouth detector ✨</p>
+              <p className="text-sm hidden sm:block">✨ Real-time potty mouth detector ✨</p>
             </div>
           </div>
 
@@ -221,8 +221,8 @@ export default function App() {
             {/* Connection Status */}
             {isLiveMode && (
               <div className="flex items-center gap-2 text-base">
-                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`} />
-                <span className="text-zinc-400 hidden sm:inline">
+                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                <span className="hidden sm:inline">
                   {isConnected ? 'Live' : 'Connecting...'}
                 </span>
               </div>
@@ -232,9 +232,9 @@ export default function App() {
               href="https://github.com/IEvangelist/profanity-filter"
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
             >
-              <Github className="w-5 h-5 text-zinc-400 hover:text-white" />
+              <Github className="w-5 h-5" />
             </a>
 
             <button
@@ -275,7 +275,7 @@ export default function App() {
                 <div className="ml-auto flex items-center gap-2">
                   <button
                     onClick={handleReset}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
                   >
                     <RefreshCw className="w-5 h-5" />
                     <span className="hidden sm:inline">Reset</span>
@@ -285,8 +285,8 @@ export default function App() {
                     onClick={() => setIsLiveMode(!isLiveMode)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base transition-colors ${
                       isLiveMode
-                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                        : 'text-zinc-400 hover:text-white hover:bg-white/10'
+                        ? 'bg-blue-500/20 text-blue-600 border border-blue-500/50'
+                        : 'hover:bg-black/10 dark:hover:bg-white/10'
                     }`}
                   >
                     <Zap className="w-5 h-5" />
@@ -308,12 +308,12 @@ export default function App() {
                   data-gramm="false"
                   data-gramm_editor="false"
                   data-enable-grammarly="false"
-                  className="w-full h-full resize-none bg-transparent text-xl leading-relaxed placeholder:text-zinc-600 focus:outline-none caret-amber-400"
+                  className="w-full h-full resize-none bg-transparent text-xl leading-relaxed placeholder:text-zinc-500 focus:outline-none caret-amber-400 cursor-text"
                 />
               </div>
 
               {/* Input Footer */}
-              <div className="px-4 py-3 border-t border-white/10 flex items-center justify-between text-base text-zinc-400">
+              <div className="px-4 py-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between text-base">
                 <span>{text.length} characters</span>
                 {isProcessing && (
                   <span className="flex items-center gap-2 text-blue-400">
@@ -338,7 +338,7 @@ export default function App() {
                 {result && (
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base text-zinc-400 hover:text-white hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
                   >
                     {copied ? (
                       <>
@@ -362,7 +362,7 @@ export default function App() {
                     <ReactMarkdown>{result.filteredText}</ReactMarkdown>
                   </div>
                 ) : (
-                  <div className="h-full flex items-center justify-center text-zinc-500">
+                  <div className="h-full flex items-center justify-center opacity-60">
                     <p>Filtered text will appear here...</p>
                   </div>
                 )}
@@ -373,20 +373,20 @@ export default function App() {
                 <div className="px-4 py-3 border-t border-white/10">
                   <div className="flex flex-wrap items-center gap-4 text-base">
                     <div className="flex items-center gap-2">
-                      <span className={`w-2 h-2 rounded-full ${result.containsProfanity ? 'bg-amber-400' : 'bg-green-400'}`} />
-                      <span className="text-zinc-400">
+                      <span className={`w-2 h-2 rounded-full ${result.containsProfanity ? 'bg-amber-500' : 'bg-green-500'}`} />
+                      <span>
                         {result.containsProfanity ? 'Profanity detected' : 'Clean text'}
                       </span>
                     </div>
                     {result.containsProfanity && (
                       <>
-                        <span className="text-zinc-500">|</span>
-                        <span className="text-zinc-400">
-                          <span className="text-white font-medium">{result.matchCount}</span> match{result.matchCount !== 1 ? 'es' : ''}
+                        <span className="opacity-50">|</span>
+                        <span>
+                          <span className="font-medium">{result.matchCount}</span> match{result.matchCount !== 1 ? 'es' : ''}
                         </span>
-                        <span className="text-zinc-500">|</span>
-                        <span className="text-zinc-400">
-                          Strategy: <span className="text-purple-400">{result.replacementStrategy}</span>
+                        <span className="opacity-50">|</span>
+                        <span>
+                          Strategy: <span className="text-purple-600">{result.replacementStrategy}</span>
                         </span>
                       </>
                     )}
@@ -397,7 +397,7 @@ export default function App() {
                       {result.matches.map((match, i) => (
                         <span
                           key={i}
-                          className="px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded text-sm text-amber-400"
+                          className="px-2 py-1 bg-amber-500/20 border border-amber-500/30 rounded text-sm text-amber-600"
                         >
                           {match}
                         </span>
@@ -412,18 +412,18 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="glass border-t border-white/10 px-4 py-3">
-        <div className="max-w-7xl mx-auto flex items-center justify-between text-sm text-zinc-500">
+      <footer className="glass border-t border-black/10 dark:border-white/10 px-4 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
             <span>Built with</span>
-            <a href="https://aspire.dev" target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">Aspire</a>
+            <a href="https://aspire.dev" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-500 transition-colors">Aspire</a>
             <span>&</span>
-            <span className="text-blue-400">React</span>
+            <span className="text-blue-600">React</span>
             <span className="ml-1">🚀</span>
           </div>
           <div className="flex items-center gap-1">
             <span>© 2026</span>
-            <a href="https://davidpine.dev" target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white transition-colors">David Pine</a>
+            <a href="https://davidpine.dev" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">David Pine</a>
           </div>
         </div>
       </footer>

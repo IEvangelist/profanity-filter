@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --color-primary: #3b82f6;
   --color-primary-dark: #2563eb;
@@ -14,38 +16,74 @@ html {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
-/* Dark theme (default) */
+/* Dark theme (default) - dimmed, not pure black */
 html.dark body,
 body {
-  @apply bg-gradient-to-br from-zinc-950 via-neutral-950 to-zinc-950 text-zinc-300;
+  @apply bg-gradient-to-br from-zinc-800 via-neutral-800 to-zinc-800 text-gray-100;
   background-attachment: fixed;
 }
 
 /* Light theme */
 html.light body {
-  @apply bg-gradient-to-br from-slate-100 via-gray-50 to-slate-100 text-zinc-800;
+  @apply bg-gradient-to-br from-slate-100 via-gray-50 to-slate-100 text-gray-700;
   background-attachment: fixed;
 }
 
-/* Light theme adjustments */
+/* Light theme glass effect */
 html.light .glass {
-  @apply backdrop-blur-xl bg-white/80 border border-zinc-300/50 shadow-xl shadow-black/5;
+  @apply backdrop-blur-xl bg-white/80 border border-gray-200 shadow-lg shadow-black/5;
 }
 
 html.light .glass:hover {
-  @apply border-zinc-400/50;
+  @apply border-gray-300;
 }
 
+/* Light theme text - use gray-600 for body, gray-700 for emphasis */
+html.light header,
+html.light footer {
+  color: #4b5563; /* gray-600 */
+}
+
+html.light header svg,
+html.light footer svg {
+  color: #374151; /* gray-700 */
+}
+
+html.light main {
+  color: #374151; /* gray-700 */
+}
+
+/* Light theme colored text */
+html.light .text-purple-600 {
+  color: #7c3aed !important; /* purple-600 */
+}
+
+html.light .text-blue-600 {
+  color: #2563eb !important; /* blue-600 */
+}
+
+/* Light theme markdown */
 html.light .markdown-output code {
-  @apply bg-zinc-200 text-amber-600;
+  @apply bg-gray-200 text-amber-600;
 }
 
 html.light .markdown-output pre {
-  @apply bg-zinc-100;
+  @apply bg-gray-100;
 }
 
 html.light textarea::placeholder {
-  @apply text-zinc-400;
+  @apply text-zinc-500;
+}
+
+/* Text input caret styling */
+textarea {
+  caret-shape: bar;
+}
+
+@supports (caret-shape: bar) {
+  textarea {
+    caret-shape: bar;
+  }
 }
 
 html.light select option {
@@ -72,11 +110,11 @@ html.light * {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-zinc-900 rounded;
+  @apply bg-zinc-700 rounded;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-zinc-600 rounded hover:bg-zinc-500;
+  @apply bg-zinc-500 rounded hover:bg-zinc-400;
 }
 
 html.light ::-webkit-scrollbar-track {
@@ -89,23 +127,23 @@ html.light ::-webkit-scrollbar-thumb {
 
 /* Strategy Dropdown - theme-aware */
 .dropdown-trigger {
-  @apply bg-zinc-800 border border-zinc-700;
+  @apply bg-zinc-700 border border-zinc-600;
 }
 
 .dropdown-trigger:hover {
-  @apply border-zinc-600;
+  @apply border-zinc-500;
 }
 
 .dropdown-trigger-text {
-  @apply text-zinc-200;
+  @apply text-white;
 }
 
 .dropdown-menu {
-  @apply bg-zinc-900 border border-zinc-700 shadow-black/20;
+  @apply bg-zinc-700 border border-zinc-600 shadow-black/20;
 }
 
 .dropdown-option:hover {
-  @apply bg-zinc-800;
+  @apply bg-zinc-600;
 }
 
 .dropdown-option.selected {
@@ -113,7 +151,7 @@ html.light ::-webkit-scrollbar-thumb {
 }
 
 .dropdown-option-text {
-  @apply text-zinc-300;
+  @apply text-white;
 }
 
 .dropdown-option.selected .dropdown-option-text {
@@ -134,7 +172,7 @@ html.light .dropdown-trigger:hover {
 }
 
 html.light .dropdown-trigger-text {
-  @apply text-zinc-800;
+  @apply text-black;
 }
 
 html.light .dropdown-menu {
@@ -150,7 +188,7 @@ html.light .dropdown-option.selected {
 }
 
 html.light .dropdown-option-text {
-  @apply text-zinc-700;
+  @apply text-black;
 }
 
 html.light .dropdown-option.selected .dropdown-option-text {
@@ -171,21 +209,21 @@ html.light .dropdown-check {
 }
 
 .markdown-output code {
-  @apply bg-zinc-800 px-1.5 py-0.5 rounded text-amber-400;
+  @apply bg-zinc-700 px-1.5 py-0.5 rounded text-amber-400;
 }
 
 .markdown-output pre {
-  @apply bg-zinc-900 p-4 rounded-lg overflow-x-auto;
+  @apply bg-zinc-700 p-4 rounded-lg overflow-x-auto;
 }
 
 /* Glass morphism effect */
 .glass {
-  @apply backdrop-blur-xl bg-zinc-900/70 border border-zinc-700/50 shadow-xl shadow-black/20;
+  @apply backdrop-blur-xl bg-zinc-700/60 border border-zinc-600/50 shadow-xl shadow-black/10;
 }
 
 /* Panel hover effect */
 .glass:hover {
-  @apply border-zinc-600/50;
+  @apply border-zinc-500/50;
 }
 
 /* Subtle glow effects */
