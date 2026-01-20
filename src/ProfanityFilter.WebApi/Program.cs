@@ -25,7 +25,7 @@ var app = builder.Build();
 
 app.MapOpenApi();
 app.MapScalarApiReference();
-app.MapStaticAssets();
+app.UseStaticFiles();
 app.UseHttpsRedirection();
 app.MapProfanityFilterEndpoints();
 app.MapFallbackToFile("index.html");

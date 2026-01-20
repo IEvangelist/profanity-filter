@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Sparkles, Copy, Check, AlertTriangle, Zap, Github, RefreshCw, Sun, Moon, Monitor } from 'lucide-react';
+import { Sparkles, Copy, Check, AlertTriangle, Zap, Github, RefreshCw, Sun, Moon, Monitor, FileJson } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { fetchStrategies, createSignalRConnection, LiveStreamClient } from './api';
@@ -239,6 +239,16 @@ export default function App() {
                 </span>
               </div>
             )}
+
+            <a
+              href="/scalar/v1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+              title="OpenAPI Reference"
+            >
+              <FileJson className="w-5 h-5" />
+            </a>
 
             <a
               href="https://github.com/IEvangelist/profanity-filter"
