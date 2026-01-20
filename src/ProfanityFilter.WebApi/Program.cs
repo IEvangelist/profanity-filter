@@ -28,6 +28,7 @@ app.MapScalarApiReference();
 app.MapStaticAssets();
 app.UseHttpsRedirection();
 app.MapProfanityFilterEndpoints();
+app.MapFallbackToFile("index.html");
 
 app.Run();
 
