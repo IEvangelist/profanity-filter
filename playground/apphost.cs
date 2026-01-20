@@ -5,23 +5,34 @@
 #:package Aspire.Hosting.Docker
 #:package Aspire.Hosting.JavaScript
 #:project ../src/ProfanityFilter.WebApi/ProfanityFilter.WebApi.csproj
+#:property NoWarn=$(NoWarn);ASPIREPUBLISHERS001;ASPIRECOMPUTE001;ASPIREPIPELINES003;ASPIRECOMPUTE003;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddDockerComposeEnvironment("compose")
-    .WithProperties(env =>
-    {
-        env.DefaultContainerRegistry = "ghcr.io";
-    });
+_ = builder.AddDockerComposeEnvironment("compose");
+
+var releaseVersion = builder.AddParameterFromConfiguration(
+    "release-version", "RELEASE_VERSION");
+
+var imageName = builder.AddParameterFromConfiguration(
+    "image-name", "IMAGE_NAME");
+
+var ghco = builder.AddContainerRegistry("github-container-registry", "ghcr.io");
 
 var webApi = builder.AddProject<Projects.ProfanityFilter_WebApi>("webapi")
     .WithExternalHttpEndpoints()
-    .PublishAsDockerComposeService()
-    .WithImagePushOptions(context =>
+    .WithContainerRegistry(ghco)
+    .WithImagePushOptions(async context =>
     {
-        context.Options.RemoteImageName = "ievangelist/profanity-filter-api";
-        context.Options.RemoteImageTag = 
-            Environment.GetEnvironmentVariable("RELEASE_VERSION") ?? "latest";
+        context.Options.RemoteImageTag = await releaseVersion.Resource.GetValueAsync(context.CancellationToken)
+            ?? "latest";
+        context.Options.RemoteImageName = await imageName.Resource.GetValueAsync(context.CancellationToken)
+            ?? "ievangelist/profanity-filter-api";
+    })
+    .WithUrlForEndpoint("https", url =>
+    {
+        url.DisplayText = "Scalar (HTTPS)";
+        url.Url = "/scalar/v1";
     });
 
 // Web app connects to WebApi which handles the profanity filtering

@@ -9,8 +9,7 @@ builder.Services.AddRedaction(static redaction =>
     redaction.SetRedactor<CharacterRedactor>(
         classifications: [DataClassifications.SensitiveData]));
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 builder.Services.AddMemoryCache();
 
@@ -24,8 +23,9 @@ builder.Services.ConfigureHttpJsonOptions(
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.MapOpenApi();
+app.MapScalarApiReference();
+app.MapStaticAssets();
 app.UseHttpsRedirection();
 app.MapProfanityFilterEndpoints();
 
