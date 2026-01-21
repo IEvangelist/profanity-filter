@@ -12,6 +12,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# aspire deploy output
+aspire-output/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

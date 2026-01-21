@@ -30,12 +30,12 @@ app.MapScalarApiReference(options =>
     options.Theme = ScalarTheme.Mars;
     options.CustomCss = """
         .dark-mode {
-            --scalar-color-accent: #f97316;
-            --scalar-background-accent: #f973161f;
+            --scalar-color-accent: #10b981;
+            --scalar-background-accent: #10b9811f;
         }
         .light-mode {
-            --scalar-color-accent: #ea580c;
-            --scalar-background-accent: #ea580c1f;
+            --scalar-color-accent: #059669;
+            --scalar-background-accent: #0596691f;
         }
         """;
 });

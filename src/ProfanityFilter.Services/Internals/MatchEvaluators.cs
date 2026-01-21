@@ -73,7 +73,7 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
-    /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random emoji from 
+    /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random emoji from
     /// a predefined list of hand-selected replacements.
     /// </summary>
     internal static MatchEvaluator EmojiEvaluator(FilterParameters parameters) =>
@@ -87,7 +87,7 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
-    /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random anger emoji from 
+    /// A <see cref="MatchEvaluator"/> that replaces a matched profanity with a random anger emoji from
     /// a predefined list of hand-selected replacements.
     /// </summary>
     internal static MatchEvaluator AngerEmojiEvaluator(FilterParameters parameters) =>
@@ -136,7 +136,7 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
-    /// A <see cref="MatchEvaluator"/> that replaces the characters between the first and last 
+    /// A <see cref="MatchEvaluator"/> that replaces the characters between the first and last
     /// characters of a match with asterisks.
     /// </summary>
     internal static MatchEvaluator MiddleAsteriskEvaluator(FilterParameters parameters) =>
@@ -242,7 +242,8 @@ internal static class MatchEvaluators
         };
 
     /// <summary>
-    /// A <see cref="MatchEvaluator"/> that replaces a matched string with the <c>~~struck through~~</c> markdown.
+    /// A <see cref="MatchEvaluator"/> that replaces a matched string with the <c>&lt;del&gt;struck through&lt;/del&gt;</c> HTML.
+    /// Uses zero-width non-joiner (ZWNJ) to prevent re-matching by subsequent word lists.
     /// </summary>
     internal static MatchEvaluator StrikeThroughEvaluator(FilterParameters parameters) =>
         string (match) =>
@@ -256,7 +257,8 @@ internal static class MatchEvaluators
 
             var value = match.ValueSpan;
 
-            return $"~~{value}~~";
+            // Use ZWNJ (U+200C) after <del> to break word boundary and prevent re-matching
+            return $"<del>\u200C{value}\u200C</del>";
         };
 
     /// <summary>

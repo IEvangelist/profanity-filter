@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Sparkles, Copy, Check, AlertTriangle, Zap, Github, RefreshCw, Sun, Moon, Monitor, FileJson } from 'lucide-react';
+import { Sparkles, Copy, Check, AlertTriangle, Zap, Github, RefreshCw, Sun, Moon, Monitor, FileJson, Send } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
-import { fetchStrategies, createSignalRConnection, LiveStreamClient } from './api';
+import remarkGfm from 'remark-gfm';
+import { fetchStrategies, createSignalRConnection, LiveStreamClient, filterText } from './api';
 import type { StrategyResponse, ProfanityFilterResponse } from './types';
 import type { HubConnection } from '@microsoft/signalr';
 import StrategyDropdown from './components/StrategyDropdown';
@@ -16,8 +17,10 @@ export default function App() {
   const [result, setResult] = useState<ProfanityFilterResponse | null>(null);
   const [isLiveMode, setIsLiveMode] = useState(true);
   const [isConnected, setIsConnected] = useState(false);
+  const [showConnected, setShowConnected] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [theme, setTheme] = useState<'auto' | 'dark' | 'light'>(() => {
     const stored = localStorage.getItem('theme');
@@ -32,6 +35,16 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('strategy', strategy);
   }, [strategy]);
+
+  // Delay showing connected status by 500ms
+  useEffect(() => {
+    if (isConnected) {
+      const timer = setTimeout(() => setShowConnected(true), 500);
+      return () => clearTimeout(timer);
+    } else {
+      setShowConnected(false);
+    }
+  }, [isConnected]);
 
   // Theme management
   useEffect(() => {
@@ -207,9 +220,30 @@ export default function App() {
     }
   };
 
+  const handleManualFilter = async () => {
+    if (!text.trim()) return;
+    
+    setIsProcessing(true);
+    try {
+      const response = await filterText({
+        text,
+        strategy,
+        target: 'Body',
+      });
+      setResult(response);
+    } catch (err) {
+      console.error('Filter error:', err);
+      setError('Failed to filter text. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   const handleReset = () => {
+    setIsResetting(true);
     setText('');
     setResult(null);
+    setTimeout(() => setIsResetting(false), 500);
   };
 
   return (
@@ -231,14 +265,21 @@ export default function App() {
 
           <div className="flex items-center gap-4">
             {/* Connection Status */}
-            {isLiveMode && (
-              <div className="flex items-center gap-2 text-base">
-                <span className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                <span className="hidden sm:inline">
-                  {isConnected ? 'Live' : 'Connecting...'}
-                </span>
-              </div>
-            )}
+            <div className="flex items-center gap-2 text-base transition-all duration-500">
+              {isLiveMode ? (
+                <>
+                  <span className={`w-2 h-2 rounded-full transition-colors duration-500 ${showConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                  <span className="hidden sm:inline transition-opacity duration-500">
+                    {showConnected ? 'Live' : 'Connecting...'}
+                  </span>
+                </>
+              ) : (
+                <div className="flex items-center gap-2 text-zinc-500">
+                  <span className="w-2 h-2 rounded-full bg-zinc-500 transition-colors duration-500" />
+                  <span className="hidden sm:inline">Disconnected</span>
+                </div>
+              )}
+            </div>
 
             <a
               href="/scalar/v1"
@@ -297,21 +338,32 @@ export default function App() {
                 <div className="ml-auto flex items-center gap-2">
                   <button
                     onClick={handleReset}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors cursor-pointer"
                   >
-                    <RefreshCw className="w-5 h-5" />
+                    <RefreshCw className={`w-5 h-5 transition-transform ${isResetting ? 'animate-spin' : ''}`} />
                     <span className="hidden sm:inline">Reset</span>
                   </button>
 
+                  {!isLiveMode && (
+                    <button
+                      onClick={handleManualFilter}
+                      disabled={!text.trim() || isProcessing}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base bg-amber-500/20 text-amber-500 border border-amber-500/50 hover:bg-amber-500/30 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Send className="w-5 h-5" />
+                      <span className="hidden sm:inline">Filter</span>
+                    </button>
+                  )}
+
                   <button
                     onClick={() => setIsLiveMode(!isLiveMode)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base transition-colors cursor-pointer ${
                       isLiveMode
                         ? 'bg-blue-500/20 text-blue-600 border border-blue-500/50'
                         : 'hover:bg-black/10 dark:hover:bg-white/10'
                     }`}
                   >
-                    <Zap className="w-5 h-5" />
+                    <Zap className="w-5 h-5" fill={isLiveMode ? 'currentColor' : 'none'} />
                     <span className="hidden sm:inline">Live</span>
                   </button>
                 </div>
@@ -322,7 +374,7 @@ export default function App() {
                 <textarea
                   value={text}
                   onChange={(e) => handleTextChange(e.target.value)}
-                  placeholder="Enter text to filter for profanity..."
+                  placeholder={isLiveMode ? "Start typing to filter profanity in real-time..." : "Enter text and click Filter to check for profanity..."}
                   autoComplete="off"
                   autoCorrect="off"
                   autoCapitalize="off"
@@ -360,7 +412,7 @@ export default function App() {
                 {result && (
                   <button
                     onClick={handleCopy}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-base hover:bg-black/10 dark:hover:bg-white/10 transition-colors cursor-pointer"
                   >
                     {copied ? (
                       <>
@@ -381,7 +433,7 @@ export default function App() {
               <div className="flex-1 p-4 overflow-auto min-h-0">
                 {result ? (
                   <div className="markdown-output">
-                    <ReactMarkdown rehypePlugins={[rehypeRaw]}>{result.filteredText}</ReactMarkdown>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{result.filteredText}</ReactMarkdown>
                   </div>
                 ) : (
                   <div className="h-full flex items-center justify-center opacity-60">

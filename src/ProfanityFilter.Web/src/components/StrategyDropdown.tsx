@@ -23,7 +23,7 @@ const getStrategyIcon = (strategyName: string): React.ReactNode => {
     'FirstLetterThenAsterisk': <EyeOff className="w-5 h-5 text-amber-400" />,
     'VowelAsterisk': <span className="text-base font-mono text-amber-400">a*</span>,
     'Bleep': <Volume2 className="w-5 h-5 text-blue-400" />,
-    'RedactedRectangle': <Square className="w-5 h-5 text-zinc-400" />,
+    'RedactedRectangle': <Square className="w-5 h-5 text-zinc-400" fill="currentColor" />,
     'StrikeThrough': <Strikethrough className="w-5 h-5 text-zinc-400" />,
     'Underscores': <Minus className="w-5 h-5 text-zinc-400" />,
     'Grawlix': <span className="text-base font-bold text-pink-400">#$@!</span>,

@@ -146,8 +146,8 @@ public class MatchEvaluatorTests
     }
 
     [TestMethod]
-    [DataRow("Test", @"~~Test~~")]
-    [DataRow("swear", @"~~swear~~")]
+    [DataRow("Test", "<del>\u200CTest\u200C</del>")]
+    [DataRow("swear", "<del>\u200Cswear\u200C</del>")]
     public void StrikeThroughEvaluatorReturnsExpectedResult(string input, string expected)
     {
         var regex = TestRegex.Instance();

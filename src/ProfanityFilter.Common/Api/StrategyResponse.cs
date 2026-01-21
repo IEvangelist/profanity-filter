@@ -33,7 +33,7 @@ public sealed record class StrategyResponse(
             ReplacementStrategy.VowelAsterisk => "Represents a replacement strategy where vowels in a profane word are replaced with asterisk.",
             ReplacementStrategy.Bleep => "Represents a replacement strategy where the profanity is replaced with the word \"bleep\".",
             ReplacementStrategy.RedactedRectangle => "Represents a replacement strategy where the profane word has each letter replaced with the rectangle symbol <c>█</c>.",
-            ReplacementStrategy.StrikeThrough => "Represents a replacement strategy where the profane word is <c>~~struck through~~</c>.",
+            ReplacementStrategy.StrikeThrough => "Represents a replacement strategy where the profane word is wrapped in <c>&lt;del&gt;</c> HTML tags for strikethrough rendering.",
             ReplacementStrategy.Underscores => "Represents a replacement strategy where the profane word is replaced by underscores.",
             ReplacementStrategy.Grawlix => "Represents a replacement strategy where the profane word is replaced by grawlix, for example <c>\"#$@!\"</c>.",
             ReplacementStrategy.BoldGrawlix => "Represents a replacement strategy where the profane word is replaced by bold grawlix, for example <c>\"#$@!\"</c>.",
