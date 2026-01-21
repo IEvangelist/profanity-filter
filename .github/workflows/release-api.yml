@@ -11,6 +11,7 @@ on:
 
 env:
   IMAGE_NAME: ievangelist/profanity-filter-api
+  MSBUILDDEBUGENGINE: 1 # Enable MSBuild binary logging
 
 jobs:
   deploy:
@@ -58,7 +59,7 @@ jobs:
 
       - name: 🚀 Deploy with Aspire
         working-directory: ./playground
-        run: aspire deploy --environment production -- -bl
+        run: aspire deploy --environment production
 
       - name: 📦 Upload build log
         uses: actions/upload-artifact@main
