@@ -27,6 +27,7 @@ app.MapOpenApi();
 app.MapScalarApiReference(options =>
 {
     options.Title = "🤬 Profanity Filter: API";
+    options.Favicon = "/favicon.svg";
     options.Theme = ScalarTheme.Mars;
     options.CustomCss = """
         .dark-mode {
