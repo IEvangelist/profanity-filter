@@ -26,13 +26,7 @@ internal sealed class ProfanityHub(
             var result = await filter.FilterProfanityAsync(
                 request.Text, parameters, cancellationToken);
 
-            if (result is null or { FinalOutput: null })
-            {
-                logger.LogInvalidFilterResult(Context.ConnectionId);
-
-                yield break;
-            }
-
+            // Always return a response, even if no profanity was found
             yield return ProfanityFilterResponse.From(result, request.Strategy);
         }
 

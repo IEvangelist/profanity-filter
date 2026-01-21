@@ -7,8 +7,6 @@
     <OutputType>exe</OutputType>
     <PublishAot>true</PublishAot>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
-    <!-- Allows the new platform to be called when calling dotnet test -->
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591;IL2104;IDE0005;$(NoWarn)</NoWarn>
   </PropertyGroup>

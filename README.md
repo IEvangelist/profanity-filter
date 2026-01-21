@@ -108,7 +108,7 @@ Each replacement strategy corresponds to a different way of replacing profane co
 | `random-asterisk` | `*` - `****` | Replaces profane content with a random number of asterisks. |
 | `first-letter-then-asterisk` | `f***` | Replaces profane content with asterisks after the first letter. |
 | `vowel-asterisk` | `sh*t` | Replaces profane content with asterisks, but only the vowels. |
-| `strike-through` | ~~`shit`~~ | Encloses profane content with `~~` causing strikethrough rendering. |
+| `strike-through` | <del>shit</del> | Encloses profane content with `<del>` HTML tags causing strikethrough rendering. |
 | `underscores` | `____` | Replaces profane content with underscores `_`. |
 
 The value of the `replacement-strategy` input is case-insensitive, and accepts hyphened alternatives (such as `anger-emoji`) as well.

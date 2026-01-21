@@ -9,44 +9,41 @@ builder.Services.AddRedaction(static redaction =>
     redaction.SetRedactor<CharacterRedactor>(
         classifications: [DataClassifications.SensitiveData]));
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
-builder.Services.AddLocalStorageServices();
 builder.Services.AddMemoryCache();
 
-builder.Services.AddSignalR(static options => options.EnableDetailedErrors = true);
-
-builder.Services.AddAntiforgery();
-builder.Services.AddDataProtection()
-    .UseCryptographicAlgorithms(new()
-    {
-        EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
-        ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
-    })
-    .PersistKeysToFileSystem(new DirectoryInfo(@"/var/tmp"));
+builder.Services.AddSignalR(static options => options.EnableDetailedErrors = true)
+    .AddJsonProtocol(static options => AssignJsonSerializerContext(options.PayloadSerializerOptions));
 
 builder.Services.AddProfanityFilterServices();
-
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
 
 builder.Services.ConfigureHttpJsonOptions(
     static options => AssignJsonSerializerContext(options.SerializerOptions));
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
-app.UseHttpsRedirection();
+app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    options.Title = "🤬 Profanity Filter: API";
+    options.Favicon = "/favicon.svg";
+    options.Theme = ScalarTheme.Mars;
+    options.CustomCss = """
+        .dark-mode {
+            --scalar-color-accent: #10b981;
+            --scalar-background-accent: #10b9811f;
+        }
+        .light-mode {
+            --scalar-color-accent: #059669;
+            --scalar-background-accent: #0596691f;
+        }
+        """;
+});
 app.UseStaticFiles();
-app.UseAntiforgery();
+app.UseHttpsRedirection();
 app.MapProfanityFilterEndpoints();
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapFallbackToFile("index.html");
 
 app.Run();
 

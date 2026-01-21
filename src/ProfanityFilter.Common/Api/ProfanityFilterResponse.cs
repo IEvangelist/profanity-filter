@@ -38,7 +38,7 @@ public sealed record class ProfanityFilterResponse(
         new(
                 ContainsProfanity: result.IsFiltered,
                 InputText: result.Input ?? "",
-                FilteredText: result.FinalOutput,
+                FilteredText: result.FinalOutput ?? result.Input ?? "",
                 ReplacementStrategy: strategy,
                 FiltrationSteps: [.. result.Steps?.Where(static s => s.IsFiltered) ?? []],
                 Matches: [.. result.Matches ?? []]

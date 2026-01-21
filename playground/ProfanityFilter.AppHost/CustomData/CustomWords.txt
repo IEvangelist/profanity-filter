@@ -1,4 +1,0 @@
-IsPostBack
-WebForms
-SilverLight
-SOAP

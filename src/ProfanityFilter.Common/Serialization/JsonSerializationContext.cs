@@ -24,7 +24,7 @@ namespace ProfanityFilter.Common;
     UseStringEnumConverter = true,
     AllowTrailingCommas = true,
     NumberHandling = JsonNumberHandling.AllowReadingFromString,
-    PropertyNameCaseInsensitive = false,
+    PropertyNameCaseInsensitive = true,
     IncludeFields = true)]
 [JsonSerializable(typeof(FilterParameters))]
 [JsonSerializable(typeof(FilterResult))]

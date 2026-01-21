@@ -7,10 +7,11 @@ internal sealed class ProfaneContentReader
 {
     private static readonly Lazy<GlobOptions> s_globOptions = new(() =>
     {
-        EnsureWorkingDirectory();
-
+        var basePath = GetBasePath();
+        
         var builder = new GlobOptionsBuilder()
-            .WithPatterns(["**/Data/*.txt", "**/CustomData/*.txt"]);
+            .WithBasePath(basePath)
+            .WithPatterns(["Data/*.txt", "CustomData/*.txt", "**/Data/*.txt", "**/CustomData/*.txt"]);
 
         return builder.Build();
     });
@@ -74,14 +75,16 @@ internal sealed class ProfaneContentReader
         return text ?? "";
     }
 
-    private static void EnsureWorkingDirectory()
+    private static string GetBasePath()
     {
-        var currentDirectory = Directory.GetCurrentDirectory();
-
-        // When running as a GitHub Action, we need to be in the /app directory.
-        if (currentDirectory is "/github/workspace" && Directory.Exists("/app"))
+        // When running as a GitHub Action, use the /app directory.
+        if (Directory.GetCurrentDirectory() is "/github/workspace" && Directory.Exists("/app"))
         {
-            Directory.SetCurrentDirectory("/app");
+            return "/app";
         }
+
+        // Use the application's base directory where the executable and data files are located.
+        // This is more reliable than the current working directory.
+        return AppContext.BaseDirectory;
     }
 }

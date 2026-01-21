@@ -1,0 +1,250 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
+  --color-accent: #8b5cf6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+}
+
+html {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Dark theme (default) - dimmed, not pure black */
+html.dark body,
+body {
+  @apply bg-gradient-to-br from-zinc-800 via-neutral-800 to-zinc-800 text-gray-100;
+  background-attachment: fixed;
+}
+
+/* Light theme */
+html.light body {
+  @apply bg-gradient-to-br from-slate-100 via-gray-50 to-slate-100 text-gray-700;
+  background-attachment: fixed;
+}
+
+/* Light theme glass effect */
+html.light .glass {
+  @apply backdrop-blur-xl bg-white/80 border border-gray-200 shadow-lg shadow-black/5;
+}
+
+html.light .glass:hover {
+  @apply border-gray-300;
+}
+
+/* Light theme text - use gray-600 for body, gray-700 for emphasis */
+html.light header,
+html.light footer {
+  color: #4b5563; /* gray-600 */
+}
+
+html.light header svg,
+html.light footer svg {
+  color: #374151; /* gray-700 */
+}
+
+html.light main {
+  color: #374151; /* gray-700 */
+}
+
+/* Light theme colored text */
+html.light .text-purple-600 {
+  color: #7c3aed !important; /* purple-600 */
+}
+
+html.light .text-blue-600 {
+  color: #2563eb !important; /* blue-600 */
+}
+
+/* Light theme markdown */
+html.light .markdown-output code {
+  @apply bg-gray-200 text-amber-600;
+}
+
+html.light .markdown-output pre {
+  @apply bg-gray-100;
+}
+
+html.light textarea::placeholder {
+  @apply text-zinc-500;
+}
+
+/* Text input caret styling */
+textarea {
+  caret-shape: bar;
+}
+
+@supports (caret-shape: bar) {
+  textarea {
+    caret-shape: bar;
+  }
+}
+
+html.light select option {
+  @apply bg-white text-zinc-800;
+}
+
+html.light .markdown-output {
+  @apply prose prose-xl max-w-none leading-relaxed;
+}
+
+/* Custom scrollbar - thin and theme-aware */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #52525b #27272a;
+}
+
+html.light * {
+  scrollbar-color: #a1a1aa #e4e4e7;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-zinc-700 rounded;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-500 rounded hover:bg-zinc-400;
+}
+
+html.light ::-webkit-scrollbar-track {
+  @apply bg-zinc-200 rounded;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  @apply bg-zinc-400 rounded hover:bg-zinc-500;
+}
+
+/* Strategy Dropdown - theme-aware */
+.dropdown-trigger {
+  @apply bg-zinc-700 border border-zinc-600;
+}
+
+.dropdown-trigger:hover {
+  @apply border-zinc-500;
+}
+
+.dropdown-trigger-text {
+  @apply text-white;
+}
+
+.dropdown-menu {
+  @apply bg-zinc-700 border border-zinc-600 shadow-black/20;
+}
+
+.dropdown-option:hover {
+  @apply bg-zinc-600;
+}
+
+.dropdown-option.selected {
+  @apply bg-amber-500/10;
+}
+
+.dropdown-option-text {
+  @apply text-white;
+}
+
+.dropdown-option.selected .dropdown-option-text {
+  @apply text-amber-400 font-medium;
+}
+
+.dropdown-check {
+  @apply text-amber-400;
+}
+
+/* Light theme dropdown */
+html.light .dropdown-trigger {
+  @apply bg-white border-zinc-300;
+}
+
+html.light .dropdown-trigger:hover {
+  @apply border-zinc-400;
+}
+
+html.light .dropdown-trigger-text {
+  @apply text-black;
+}
+
+html.light .dropdown-menu {
+  @apply bg-white border-zinc-300 shadow-black/10;
+}
+
+html.light .dropdown-option:hover {
+  @apply bg-zinc-100;
+}
+
+html.light .dropdown-option.selected {
+  @apply bg-amber-100;
+}
+
+html.light .dropdown-option-text {
+  @apply text-black;
+}
+
+html.light .dropdown-option.selected .dropdown-option-text {
+  @apply text-amber-600 font-medium;
+}
+
+html.light .dropdown-check {
+  @apply text-amber-600;
+}
+
+/* Markdown output styling */
+.markdown-output {
+  @apply prose prose-invert prose-xl max-w-none leading-relaxed;
+}
+
+.markdown-output p {
+  @apply my-2;
+}
+
+.markdown-output code {
+  @apply bg-zinc-700 px-1.5 py-0.5 rounded text-amber-400;
+}
+
+.markdown-output pre {
+  @apply bg-zinc-700 p-4 rounded-lg overflow-x-auto;
+}
+
+/* Glass morphism effect */
+.glass {
+  @apply backdrop-blur-xl bg-zinc-700/60 border border-zinc-600/50 shadow-xl shadow-black/10;
+}
+
+/* Panel hover effect */
+.glass:hover {
+  @apply border-zinc-500/50;
+}
+
+/* Subtle glow effects */
+.glow-amber {
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.15);
+}
+
+.glow-blue {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+}
+
+/* Pulse animation for streaming */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.5s ease-in-out infinite;
+}

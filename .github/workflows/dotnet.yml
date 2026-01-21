@@ -24,16 +24,18 @@ jobs:
           - ProfanityFilter.Common.Tests
 
     steps:
-    - uses: actions/checkout@main
-    - name: Setup .NET
+    - name: 📥 Checkout
+      uses: actions/checkout@main
+
+    - name: 💜 Setup .NET
       uses: actions/setup-dotnet@main
       with:
         global-json-file: ./global.json
 
-    - name: Restore dependencies
+    - name: 📦 Restore dependencies
       run: dotnet restore
 
-    - name: Test — ${{ matrix.project }}
+    - name: 🧪 Test — ${{ matrix.project }}
       run: |
         # Publish the test project.
         dotnet publish --configuration Release tests/${{ matrix.project }}/

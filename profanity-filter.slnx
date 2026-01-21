@@ -1,0 +1,33 @@
+<Solution>
+  <Folder Name="/playground/">
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/dogfood.yml" />
+    <File Path=".github/workflows/dotnet.yml" />
+    <File Path=".github/workflows/release-api.yml" />
+    <File Path=".github/workflows/release-nuget.yml" />
+    <File Path=".github/workflows/release.yml" />
+    <File Path="action.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ProfanityFilter.Action/ProfanityFilter.Action.csproj" />
+    <Project Path="src/ProfanityFilter.Client/ProfanityFilter.Client.csproj" />
+    <Project Path="src/ProfanityFilter.Common/ProfanityFilter.Common.csproj" />
+    <Project Path="src/ProfanityFilter.Hosting/ProfanityFilter.Hosting.csproj" />
+    <Project Path="src/ProfanityFilter.Services/ProfanityFilter.Services.csproj" />
+    <Project Path="src/ProfanityFilter.WebApi/ProfanityFilter.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ProfanityFilter.Action.Tests/ProfanityFilter.Action.Tests.csproj" />
+    <Project Path="tests/ProfanityFilter.Client.Tests/ProfanityFilter.Client.Tests.csproj" />
+    <Project Path="tests/ProfanityFilter.Common.Tests/ProfanityFilter.Common.Tests.csproj" />
+    <Project Path="tests/ProfanityFilter.Services.Tests/ProfanityFilter.Services.Tests.csproj" />
+  </Folder>
+</Solution>

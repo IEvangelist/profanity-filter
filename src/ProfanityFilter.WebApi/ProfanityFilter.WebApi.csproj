@@ -29,11 +29,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazor.LocalStorage" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-    <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="Markdig" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
+    <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
     <PackageReference Include="Microsoft.Extensions.Compliance.Redaction" />
     <PackageReference Include="System.Linq.Async" />
