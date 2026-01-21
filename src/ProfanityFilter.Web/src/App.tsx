@@ -311,12 +311,25 @@ export default function App() {
         </div>
       </header>
 
-      {/* Error Banner */}
+      {/* Error Overlay */}
       {error && (
-        <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-3">
-          <div className="max-w-7xl mx-auto flex items-center gap-2 text-red-400 text-base">
-            <AlertTriangle className="w-5 h-5 shrink-0" />
-            <span>{error}</span>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="glass rounded-2xl p-6 max-w-md mx-4 shadow-2xl border border-red-500/30">
+            <div className="flex items-start gap-4">
+              <div className="p-3 rounded-full bg-red-500/20">
+                <AlertTriangle className="w-6 h-6 text-red-400" />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-red-400 mb-2">Connection Error</h3>
+                <p className="text-base opacity-80">{error}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setError(null)}
+              className="mt-4 w-full py-2 px-4 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 transition-colors cursor-pointer"
+            >
+              Dismiss
+            </button>
           </div>
         </div>
       )}
@@ -496,7 +509,7 @@ export default function App() {
             <span className="ml-1">🚀</span>
           </div>
           <div className="flex items-center gap-1">
-            <span>© 2026</span>
+            <span>© {new Date().getFullYear()}</span>
             <a href="https://davidpine.dev" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">David Pine</a>
           </div>
         </div>

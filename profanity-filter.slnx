@@ -1,6 +1,5 @@
 <Solution>
   <Folder Name="/playground/">
-    <Project Path="playground/ProfanityFilter.Api/ProfanityFilter.Api.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".dockerignore" />
