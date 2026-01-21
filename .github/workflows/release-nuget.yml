@@ -9,22 +9,22 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository (full history)
+      - name: 📥 Checkout repository (full history)
         uses: actions/checkout@main
         with:
           fetch-depth: 0
           filter: tree:0
           ref: ${{ github.ref }}
 
-      - name: Setup .NET
+      - name: 💜 Setup .NET
         uses: actions/setup-dotnet@main
         with:
           global-json-file: ./global.json
 
-      - name: Fetch all tags
+      - name: 🏷️ Fetch all tags
         run: git fetch --force --tags
 
-      - name: Show git and .NET info (debug)
+      - name: 🔍 Show git and .NET info (debug)
         run: |
           git --version
           echo "GitHub ref: ${{ github.ref }}"
@@ -42,35 +42,35 @@ jobs:
           echo "\nDotnet info:"
           dotnet --info
 
-      - name: Restore dependencies
+      - name: 📦 Restore dependencies
         run: dotnet restore
 
-      - name: Build solution (skip auto-packing)
+      - name: 🔨 Build solution (skip auto-packing)
         run: dotnet build --configuration Release /p:GeneratePackageOnBuild=false
 
-      - name: Pack projects with explicit version from tag
+      - name: 📦 Pack projects with explicit version from tag
         run: |
           TAG_VERSION="${{ github.ref_name }}"
           echo "Packing with explicit version: $TAG_VERSION"
           dotnet pack src/ProfanityFilter.Hosting/ProfanityFilter.Hosting.csproj -c Release -o artifacts/package/release --no-build /p:IncludeSymbols=false /p:Version=$TAG_VERSION /p:PackageVersion=$TAG_VERSION
           dotnet pack src/ProfanityFilter.Client/ProfanityFilter.Client.csproj -c Release -o artifacts/package/release --no-build /p:IncludeSymbols=false /p:Version=$TAG_VERSION /p:PackageVersion=$TAG_VERSION
 
-      - name: List created packages
+      - name: 📋 List created packages
         run: ls -la artifacts/package/release || true
 
-      - name: Upload ProfanityFilter.Hosting artifact
+      - name: ⬆️ Upload ProfanityFilter.Hosting artifact
         uses: actions/upload-artifact@main
         with:
           name: hosting-nuget
           path: artifacts/package/release/ProfanityFilter.Hosting.*.nupkg
 
-      - name: Upload ProfanityFilter.Client artifact
+      - name: ⬆️ Upload ProfanityFilter.Client artifact
         uses: actions/upload-artifact@main
         with:
           name: client-nuget
           path: artifacts/package/release/ProfanityFilter.Client.*.nupkg
 
-      - name: Publish NuGet packages
+      - name: 🚀 Publish NuGet packages
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |

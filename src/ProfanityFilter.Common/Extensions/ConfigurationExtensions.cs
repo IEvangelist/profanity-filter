@@ -10,6 +10,8 @@ namespace Microsoft.Extensions.Configuration;
 /// </summary>
 public static class ConfigurationExtensions
 {
+    private const string DotNetRunningInContainerKey = "DOTNET_RUNNING_IN_CONTAINER";
+
     /// <summary>
     /// Determines whether the application is running inside a container.
     /// </summary>
@@ -19,8 +21,8 @@ public static class ConfigurationExtensions
     /// </returns>
     public static bool IsRunningInContainer(this IConfiguration configuration)
     {
-        return configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER")
-            || Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER")
+        return configuration.GetValue<bool>(DotNetRunningInContainerKey)
+            || Environment.GetEnvironmentVariable(DotNetRunningInContainerKey)
                is "true" or "TRUE" or "True" or "1";
     }
 }

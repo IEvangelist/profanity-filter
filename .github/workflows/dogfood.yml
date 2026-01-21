@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Profanity filter
+    - name: 🤬 Profanity filter
       if: ${{ github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]'  }}
       uses: IEvangelist/profanity-filter@main
       id: profanity-filter

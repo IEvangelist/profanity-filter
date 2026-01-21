@@ -20,49 +20,49 @@ jobs:
       packages: write
 
     steps:
-      - name: Check out the repo
+      - name: 📥 Check out the repo
         uses: actions/checkout@main
 
-      - name: Get the version
+      - name: 🏷️ Get the version
         if: ${{ github.event_name != 'workflow_dispatch' }}
         run: echo "RELEASE_VERSION=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
 
-      - name: Get the version
+      - name: 🏷️ Get the version
         if: ${{ github.event_name == 'workflow_dispatch' }}
         run: echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
 
-      - uses: actions/setup-dotnet@main
+      - name: 💜 Setup .NET
+        uses: actions/setup-dotnet@main
 
-      - name: Install Aspire CLI
+      - name: ✨ Install Aspire CLI
         run: curl -sSL https://aspire.dev/install.sh | bash
 
-      - name: Output Aspire CLI version
+      - name: 📋 Output Aspire CLI version
         run: aspire --version
 
-      - name: Login to GitHub Container Registry
+      - name: 🔐 Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy with Aspire
+      - name: 💾 Cache Aspire deployment state
+        uses: actions/cache@v4
+        with:
+          path: ~/.aspire/deployments
+          key: aspire-deploy-${{ hashFiles('**/apphost.cs') }}-${{ github.ref }}
+          restore-keys: |
+            aspire-deploy-${{ hashFiles('**/apphost.cs') }}-
+            aspire-deploy-
+
+      - name: 🚀 Deploy with Aspire
         working-directory: ./playground
-        run: aspire deploy
+        run: aspire deploy --environment production -- -bl
 
-      # - name: Publish app
-      #   working-directory: ./src/ProfanityFilter.WebApi
-      #   run: |
-      #     dotnet publish -c Release \
-      #       /t:PublishContainer \
-      #       -p DebugType=none \
-      #       -p ContainerRegistry=ghcr.io \
-      #       -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
-      #       -p ContainerRepository=${{ env.IMAGE_NAME }} \
-      #       -bl
-
-      # - uses: actions/upload-artifact@main
-      #   if: always()
-      #   with:
-      #     name: msbuild.binlog
-      #     path: src/ProfanityFilter.WebApi/msbuild.binlog
+      - name: 📦 Upload build log
+        uses: actions/upload-artifact@main
+        if: always()
+        with:
+          name: msbuild.binlog
+          path: src/ProfanityFilter.WebApi/msbuild.binlog
