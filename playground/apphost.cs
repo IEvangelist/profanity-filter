@@ -4,8 +4,11 @@
 #:sdk Aspire.AppHost.Sdk@13.1.0
 #:package Aspire.Hosting.Docker
 #:package Aspire.Hosting.JavaScript
+#:package ProfanityFilter.Hosting
 #:project ../src/ProfanityFilter.WebApi/ProfanityFilter.WebApi.csproj
-#:property NoWarn=$(NoWarn);ASPIREPUBLISHERS001;ASPIRECOMPUTE001;ASPIREPIPELINES003;ASPIRECOMPUTE003;
+#:property NoWarn=$(NoWarn);ASPIREPUBLISHERS001;ASPIRECOMPUTE001;ASPIREPIPELINES003;ASPIRECOMPUTE003;ASPIRECERTIFICATES001;
+
+using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -21,6 +24,7 @@ var ghco = builder.AddContainerRegistry("github-container-registry", "ghcr.io");
 
 var webApi = builder.AddProject<Projects.ProfanityFilter_WebApi>("webapi")
     .WithExternalHttpEndpoints()
+    .WithEnvironment("PROFANITY_FILTER_CUSTOM_DATA_PATH", Path.GetFullPath("CustomData"))
     .WithContainerRegistry(ghco)
     .WithImagePushOptions(async context =>
     {
@@ -42,5 +46,18 @@ var web = builder.AddViteApp("web", "../src/ProfanityFilter.Web")
     .WaitFor(webApi);
 
 webApi.PublishWithContainerFiles(web, "wwwroot");
+
+// For local consumers, add a profanity filter resource
+if (builder.Environment.IsDevelopment())
+{
+    _ = builder.AddProfanityFilter("profanity-filter")
+        .WithHttpsDeveloperCertificate()
+        .WithCustomDataBindMount("./CustomData");
+
+    _ = builder.AddProfanityFilter("priview-filter")
+        .WithImageTag("10.0.1-preview.011")
+        .WithHttpsDeveloperCertificate()
+        .WithCustomDataBindMount("./CustomData");
+}
 
 builder.Build().Run();

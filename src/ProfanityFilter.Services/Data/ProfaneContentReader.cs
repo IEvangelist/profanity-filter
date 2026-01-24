@@ -5,6 +5,8 @@ namespace ProfanityFilter.Services.Data;
 
 internal sealed class ProfaneContentReader
 {
+    private const string CustomDataPathEnvVar = "PROFANITY_FILTER_CUSTOM_DATA_PATH";
+
     private static readonly Lazy<GlobOptions> s_globOptions = new(() =>
     {
         var basePath = GetBasePath();
@@ -12,6 +14,13 @@ internal sealed class ProfaneContentReader
         var builder = new GlobOptionsBuilder()
             .WithBasePath(basePath)
             .WithPatterns(["Data/*.txt", "CustomData/*.txt", "**/Data/*.txt", "**/CustomData/*.txt"]);
+
+        // If a custom data path is specified via environment variable, add patterns for it
+        var customDataPath = Environment.GetEnvironmentVariable(CustomDataPathEnvVar);
+        if (!string.IsNullOrEmpty(customDataPath) && Directory.Exists(customDataPath))
+        {
+            builder = builder.WithPatterns([Path.Combine(customDataPath, "*.txt")]);
+        }
 
         return builder.Build();
     });
