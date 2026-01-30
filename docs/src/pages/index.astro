@@ -1,0 +1,298 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Potty Mouth - GitHub Action Profanity Filter">
+  <div class="hero">
+    <div class="hero-container">
+      <h1 class="hero-title">
+        <span class="emoji">🤬</span>
+        <br />
+        Potty Mouth
+      </h1>
+      <p class="hero-subtitle">
+        A GitHub Action profanity filter written in .NET
+      </p>
+      <p class="hero-description">
+        Automatically detect and filter profane content in issues, pull requests, and comments. 
+        Maintains over 4,900 swear words from nine different languages.
+      </p>
+      <div class="hero-actions">
+        <a href="/profanity-filter/getting-started" class="btn btn-primary">Get Started</a>
+        <a href="https://github.com/IEvangelist/profanity-filter" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">View on GitHub</a>
+      </div>
+      <div class="hero-badges">
+        <img src="https://github.com/IEvangelist/profanity-filter/actions/workflows/dotnet.yml/badge.svg" alt=".NET Build Status" />
+        <img src="https://github.com/IEvangelist/profanity-filter/actions/workflows/dogfood.yml/badge.svg" alt="Dogfood Status" />
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="features-container">
+      <h2>Why Potty Mouth?</h2>
+      <p class="features-intro">
+        Not everyone who creates issues or pull requests uses appropriate language. 
+        With this action in your repository's GitHub workflow, it can be 🌈 and 🐎.
+      </p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🌍</div>
+          <h3>Multi-Language Support</h3>
+          <p>Detects profanity in 9 different languages with over 4,900 swear words.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎭</div>
+          <h3>13 Replacement Strategies</h3>
+          <p>Choose from asterisks, emojis, grawlix, redaction, and more to filter content.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Fast & Efficient</h3>
+          <p>Built with .NET Native AOT for blazing-fast performance in your workflows.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔧</div>
+          <h3>Highly Configurable</h3>
+          <p>Customize reactions, labels, notes, and add your own custom word lists.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Detailed Reporting</h3>
+          <p>Get comprehensive job summaries showing all filtered content.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🏷️</div>
+          <h3>Automatic Labeling</h3>
+          <p>Automatically labels issues and PRs containing profane content.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-section">
+    <div class="cta-container">
+      <h2>Ready to clean up your repository?</h2>
+      <p>Get started in minutes with our comprehensive documentation.</p>
+      <a href="/profanity-filter/getting-started" class="btn btn-primary btn-large">Get Started Now</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 100%);
+    color: white;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .hero-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .hero-title .emoji {
+    font-size: 5rem;
+    display: inline-block;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.95;
+  }
+
+  .hero-description {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+  }
+
+  .btn-primary {
+    background: white;
+    color: var(--accent);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: white;
+    border-color: white;
+  }
+
+  .btn-secondary:hover {
+    background: white;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .btn-large {
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .features {
+    padding: 4rem 2rem;
+    background: var(--background);
+  }
+
+  .features-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .features-container h2 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+  }
+
+  .features-intro {
+    text-align: center;
+    font-size: 1.125rem;
+    margin-bottom: 3rem;
+    color: var(--foreground);
+    opacity: 0.8;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .feature-card {
+    background: var(--sidebar-bg);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--foreground);
+  }
+
+  .feature-card p {
+    color: var(--foreground);
+    opacity: 0.8;
+    line-height: 1.6;
+  }
+
+  .cta-section {
+    background: var(--sidebar-bg);
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .cta-container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .cta-container h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+  }
+
+  .cta-container p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    color: var(--foreground);
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.5rem;
+    }
+
+    .hero-title .emoji {
+      font-size: 3rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+    }
+
+    .features-container h2,
+    .cta-container h2 {
+      font-size: 2rem;
+    }
+
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

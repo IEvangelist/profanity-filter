@@ -1,0 +1,384 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Examples - Potty Mouth" 
+  description="Real-world examples and use cases for the Potty Mouth GitHub Action"
+>
+  <div class="docs-container">
+    <article class="docs-content">
+      <h1>Examples</h1>
+      <p class="lead">
+        Explore different configurations and use cases for the Potty Mouth action.
+      </p>
+
+      <section>
+        <h2>Basic Configuration</h2>
+        <p>
+          The simplest configuration that filters profanity from issues and pull requests using the default asterisk replacement.
+        </p>
+        <pre><code>name: Profanity filter
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, edited, reopened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  apply-filter:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Scan for profanity
+      uses: IEvangelist/profanity-filter@main
+      with:
+        token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;</code></pre>
+      </section>
+
+      <section>
+        <h2>Fun Emoji Replacement</h2>
+        <p>
+          Replace profane words with fun emojis to keep things lighthearted.
+        </p>
+        <pre><code>- name: Scan for profanity
+  uses: IEvangelist/profanity-filter@main
+  with:
+    token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+    replacement-strategy: Emoji
+    include-confused-reaction: true</code></pre>
+      </section>
+
+      <section>
+        <h2>Professional Redaction</h2>
+        <p>
+          Use rectangle redaction for a more professional appearance.
+        </p>
+        <pre><code>- name: Scan for profanity
+  uses: IEvangelist/profanity-filter@main
+  with:
+    token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+    replacement-strategy: RedactedRectangle
+    include-updated-note: false</code></pre>
+      </section>
+
+      <section>
+        <h2>Comic Book Style (Grawlix)</h2>
+        <p>
+          Use grawlix symbols like in comic books for a creative touch.
+        </p>
+        <pre><code>- name: Scan for profanity
+  uses: IEvangelist/profanity-filter@main
+  with:
+    token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+    replacement-strategy: BoldGrawlix</code></pre>
+      </section>
+
+      <section>
+        <h2>Custom Word List</h2>
+        <p>
+          Add your own custom words to the filter using a comma-separated list.
+        </p>
+        <pre><code>- name: Scan for profanity
+  uses: IEvangelist/profanity-filter@main
+  with:
+    token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+    replacement-strategy: FirstLetterThenAsterisk
+    manual-profane-words: "spam,junk,inappropriate"</code></pre>
+      </section>
+
+      <section>
+        <h2>Custom Word List from URL</h2>
+        <p>
+          Load custom profane words from a remote URL. The URL should return a newline-delimited list of words.
+        </p>
+        <pre><code>- name: Scan for profanity
+  uses: IEvangelist/profanity-filter@main
+  with:
+    token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+    replacement-strategy: VowelAsterisk
+    custom-profane-words-url: "https://example.com/custom-words.txt"</code></pre>
+      </section>
+
+      <section>
+        <h2>Filter Comments Only</h2>
+        <p>
+          Configure the action to only filter comments, not the original issue or PR content.
+        </p>
+        <pre><code>name: Profanity filter
+
+on:
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  apply-filter:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Scan comments for profanity
+      if: $&#123;&#123; github.actor != 'dependabot[bot]' &#125;&#125;
+      uses: IEvangelist/profanity-filter@main
+      with:
+        token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+        replacement-strategy: MiddleSwearEmoji</code></pre>
+      </section>
+
+      <section>
+        <h2>Exclude Bot Activity</h2>
+        <p>
+          Prevent the action from running on bot-generated content to avoid unnecessary workflow runs.
+        </p>
+        <pre><code>- name: Scan for profanity
+  if: $&#123;&#123; github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]' && github.actor != 'renovate[bot]' &#125;&#125;
+  uses: IEvangelist/profanity-filter@main
+  with:
+    token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+    replacement-strategy: Asterisk</code></pre>
+      </section>
+
+      <section>
+        <h2>Multiple Repositories</h2>
+        <p>
+          You can use the same workflow configuration across multiple repositories in your organization. 
+          Consider creating a reusable workflow:
+        </p>
+        
+        <h3>Reusable Workflow (.github/workflows/profanity-filter-reusable.yml)</h3>
+        <pre><code>name: Reusable profanity filter
+
+on:
+  workflow_call:
+    inputs:
+      replacement-strategy:
+        type: string
+        default: 'emoji'
+        required: false
+
+jobs:
+  apply-filter:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Scan for profanity
+      uses: IEvangelist/profanity-filter@main
+      with:
+        token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+        replacement-strategy: $&#123;&#123; inputs.replacement-strategy &#125;&#125;</code></pre>
+
+        <h3>Calling the Reusable Workflow</h3>
+        <pre><code>name: Apply profanity filter
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, edited, reopened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  filter:
+    uses: ./.github/workflows/profanity-filter-reusable.yml
+    with:
+      replacement-strategy: 'FirstLetterThenAsterisk'</code></pre>
+      </section>
+
+      <section>
+        <h2>Advanced: Combining with Other Actions</h2>
+        <p>
+          You can combine the profanity filter with other actions in your workflow:
+        </p>
+        <pre><code>name: PR Checks
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+permissions:
+  issues: write
+  pull-requests: write
+  contents: read
+
+jobs:
+  pr-validation:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Check PR title
+      uses: amannn/action-semantic-pull-request@v5
+      env:
+        GITHUB_TOKEN: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+    
+    - name: Filter profanity
+      uses: IEvangelist/profanity-filter@main
+      with:
+        token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+        replacement-strategy: Emoji
+    
+    - name: Add labels
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.addLabels(&#123;
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.issue.number,
+            labels: ['needs-review']
+          &#125;)</code></pre>
+      </section>
+
+      <section>
+        <h2>What Gets Filtered?</h2>
+        <p>
+          The action scans and filters the following content:
+        </p>
+        <ul>
+          <li><strong>Issue titles</strong> - The title of the issue</li>
+          <li><strong>Issue bodies</strong> - The main content/description of the issue</li>
+          <li><strong>Pull request titles</strong> - The title of the pull request</li>
+          <li><strong>Pull request bodies</strong> - The main content/description of the pull request</li>
+          <li><strong>Comments</strong> - All comments on issues and pull requests</li>
+        </ul>
+        <p>
+          The action does <strong>not</strong> filter:
+        </p>
+        <ul>
+          <li>Code content in the repository</li>
+          <li>Commit messages</li>
+          <li>File names or paths</li>
+          <li>Review comments on specific lines of code</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Testing Your Configuration</h2>
+        <p>
+          To test your profanity filter configuration:
+        </p>
+        <ol>
+          <li>Create a test issue or pull request with some mild profanity</li>
+          <li>Check the Actions tab to see if the workflow runs successfully</li>
+          <li>Verify that the profanity was replaced according to your strategy</li>
+          <li>Check that the label was applied (if configured)</li>
+          <li>Review the job summary for detailed information</li>
+        </ol>
+        <div class="callout callout-tip">
+          <strong>Tip:</strong> Use a private repository for testing to avoid public embarrassment while setting up your configuration!
+        </div>
+      </section>
+
+      <section>
+        <h2>Best Practices</h2>
+        <ul>
+          <li><strong>Exclude bots:</strong> Always use conditionals to exclude bot accounts to reduce unnecessary runs</li>
+          <li><strong>Choose appropriate strategies:</strong> Select a replacement strategy that matches your project's tone</li>
+          <li><strong>Test first:</strong> Test your configuration in a private repo before deploying to public projects</li>
+          <li><strong>Be transparent:</strong> Keep <code>include-updated-note</code> as <code>true</code> to maintain transparency</li>
+          <li><strong>Create the label:</strong> Don't forget to create the "profane content 🤬" label in your repository</li>
+          <li><strong>Monitor the job summaries:</strong> Review job summaries regularly to ensure the filter is working as expected</li>
+        </ul>
+      </section>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .docs-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .docs-content {
+    line-height: 1.8;
+  }
+
+  .docs-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--foreground);
+    opacity: 0.8;
+    margin-bottom: 2rem;
+  }
+
+  .docs-content h2 {
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+
+  .docs-content h3 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+  }
+
+  .docs-content section {
+    margin-bottom: 2rem;
+  }
+
+  .docs-content ul,
+  .docs-content ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+  }
+
+  .docs-content li {
+    margin: 0.5rem 0;
+  }
+
+  .docs-content p {
+    margin: 1rem 0;
+  }
+
+  .callout {
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid;
+  }
+
+  .callout-tip {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: #10b981;
+  }
+
+  .callout strong {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .docs-content h1 {
+      font-size: 2rem;
+    }
+
+    .docs-content h2 {
+      font-size: 1.5rem;
+    }
+
+    .docs-content h3 {
+      font-size: 1.25rem;
+    }
+  }
+</style>

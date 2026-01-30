@@ -1,0 +1,274 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Getting Started - Potty Mouth" 
+  description="Learn how to configure Potty Mouth GitHub Action in your repository"
+>
+  <div class="docs-container">
+    <article class="docs-content">
+      <h1>Getting Started</h1>
+      <p class="lead">
+        Learn how to add the Potty Mouth profanity filter to your GitHub repository in just a few minutes.
+      </p>
+
+      <section>
+        <h2>Prerequisites</h2>
+        <ul>
+          <li>A GitHub repository</li>
+          <li>Basic understanding of GitHub Actions</li>
+          <li>Permissions to create workflows in your repository</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Quick Start</h2>
+        <p>
+          The fastest way to get started is to create a new workflow file in your repository.
+        </p>
+
+        <h3>1. Create the Workflow File</h3>
+        <p>
+          Create a new file in your repository at <code>.github/workflows/profanity-filter.yml</code>
+        </p>
+
+        <h3>2. Add the Configuration</h3>
+        <p>
+          Copy and paste the following configuration into your workflow file:
+        </p>
+
+        <pre><code>name: Profanity filter
+
+on:
+  issue_comment:
+    types: [created, edited]
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, edited, reopened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  apply-filter:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Scan issue or pull request for profanity
+      if: $&#123;&#123; github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]' &#125;&#125;
+      uses: IEvangelist/profanity-filter@main
+      id: profanity-filter
+      with:
+        token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+        replacement-strategy: Emoji</code></pre>
+
+        <h3>3. Commit and Push</h3>
+        <p>
+          Commit the workflow file and push it to your repository. The action will now run automatically 
+          whenever issues or pull requests are created, edited, or reopened.
+        </p>
+      </section>
+
+      <section>
+        <h2>Adding to an Existing Workflow</h2>
+        <p>
+          If you already have a workflow that triggers on issues or pull requests, you can simply add 
+          the profanity filter as a new step:
+        </p>
+
+        <pre><code>- name: Scan issue or pull request for profanity
+  if: $&#123;&#123; github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]' &#125;&#125;
+  uses: IEvangelist/profanity-filter@main
+  id: profanity-filter
+  with:
+    token: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+    replacement-strategy: FirstLetterThenAsterisk</code></pre>
+
+        <div class="callout callout-important">
+          <strong>Important:</strong> Ensure your existing workflow has the appropriate permissions 
+          with <code>issues: write</code> and <code>pull-requests: write</code> so the profanity filter's 
+          <code>$&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;</code> can apply filters.
+        </div>
+      </section>
+
+      <section>
+        <h2>Required Label</h2>
+        <p>
+          The action looks for a label with the name <code>"profane content 🤬"</code>. 
+          If this label exists in your repository, it will be automatically applied to any 
+          issue or pull request where profane content is detected.
+        </p>
+
+        <h3>Creating the Label</h3>
+        <ol>
+          <li>Go to your repository's Issues tab</li>
+          <li>Click on "Labels"</li>
+          <li>Click "New label"</li>
+          <li>Set the name to: <code>profane content 🤬</code></li>
+          <li>Choose a color (red recommended)</li>
+          <li>Click "Create label"</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Workflow Triggers</h2>
+        <p>
+          The action is designed to work with the following GitHub event types:
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Types</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>issues</code></td>
+              <td><code>opened</code>, <code>edited</code>, <code>reopened</code></td>
+              <td>Triggers when an issue is opened, edited, or reopened</td>
+            </tr>
+            <tr>
+              <td><code>pull_request</code></td>
+              <td><code>opened</code>, <code>edited</code>, <code>reopened</code></td>
+              <td>Triggers when a pull request is opened, edited, or reopened</td>
+            </tr>
+            <tr>
+              <td><code>issue_comment</code></td>
+              <td><code>created</code>, <code>edited</code></td>
+              <td>Triggers when a comment is created or edited on issues or PRs</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>What Happens When Profanity is Detected?</h2>
+        <p>
+          When the action detects profane content, it will:
+        </p>
+
+        <ol>
+          <li><strong>Replace the content:</strong> Profane words are replaced using your chosen replacement strategy</li>
+          <li><strong>React (optional):</strong> Adds a confused 😕 reaction if configured</li>
+          <li><strong>Label:</strong> Applies the "profane content 🤬" label if it exists</li>
+          <li><strong>Report:</strong> Generates a detailed job summary showing what was filtered</li>
+        </ol>
+
+        <div class="callout callout-note">
+          <strong>Note:</strong> By default, the action adds a note to the issue or PR body indicating 
+          that content was filtered. You can disable this with the <code>include-updated-note</code> input.
+        </div>
+      </section>
+
+      <section>
+        <h2>Next Steps</h2>
+        <ul>
+          <li><a href="/profanity-filter/api">Explore the API</a> to learn about all configuration options</li>
+          <li><a href="/profanity-filter/examples">Check out examples</a> for different use cases</li>
+          <li><a href="https://github.com/IEvangelist/profanity-filter" target="_blank" rel="noopener noreferrer">Star the project on GitHub</a></li>
+        </ul>
+      </section>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .docs-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .docs-content {
+    line-height: 1.8;
+  }
+
+  .docs-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--foreground);
+    opacity: 0.8;
+    margin-bottom: 2rem;
+  }
+
+  .docs-content h2 {
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+
+  .docs-content h3 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+  }
+
+  .docs-content section {
+    margin-bottom: 2rem;
+  }
+
+  .docs-content ul,
+  .docs-content ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+  }
+
+  .docs-content li {
+    margin: 0.5rem 0;
+  }
+
+  .docs-content p {
+    margin: 1rem 0;
+  }
+
+  .callout {
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid;
+  }
+
+  .callout-note {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+  }
+
+  .callout-important {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+  }
+
+  .callout strong {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .docs-content h1 {
+      font-size: 2rem;
+    }
+
+    .docs-content h2 {
+      font-size: 1.5rem;
+    }
+
+    .docs-content h3 {
+      font-size: 1.25rem;
+    }
+  }
+</style>

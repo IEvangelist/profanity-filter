@@ -1,0 +1,21 @@
+{
+  "name": "profanity-filter-docs",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.15.8",
+    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/sitemap": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.0",
+    "typescript": "^5.7.0"
+  }
+}
