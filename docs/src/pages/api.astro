@@ -1,0 +1,432 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="API Documentation - Potty Mouth" 
+  description="Complete API documentation for the Potty Mouth GitHub Action"
+>
+  <div class="docs-container">
+    <article class="docs-content">
+      <h1>API Documentation</h1>
+      <p class="lead">
+        Complete reference for all inputs, outputs, and configuration options available in the Potty Mouth action.
+      </p>
+
+      <section>
+        <h2>Inputs</h2>
+        <p>
+          The action accepts the following inputs to customize its behavior:
+        </p>
+
+        <div class="input-card">
+          <h3><code>token</code> <span class="badge badge-required">Required</span></h3>
+          <p>
+            The GitHub token used to update issues or pull requests.
+          </p>
+          <p><strong>Type:</strong> <code>string</code></p>
+          <p><strong>Example:</strong> <code>$&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;</code></p>
+        </div>
+
+        <div class="input-card">
+          <h3><code>replacement-strategy</code> <span class="badge badge-optional">Optional</span></h3>
+          <p>
+            The type of replacement method to use when profane content is filtered.
+          </p>
+          <p><strong>Type:</strong> <code>string</code></p>
+          <p><strong>Default:</strong> <code>asterisk</code></p>
+          <p><strong>See:</strong> <a href="#replacement-strategies">Replacement Strategies</a></p>
+        </div>
+
+        <div class="input-card">
+          <h3><code>include-updated-note</code> <span class="badge badge-optional">Optional</span></h3>
+          <p>
+            Whether to include a note in the issue or pull request body indicating that content was filtered.
+          </p>
+          <p><strong>Type:</strong> <code>boolean</code></p>
+          <p><strong>Default:</strong> <code>true</code></p>
+          <p><strong>Example:</strong> <code>"false"</code></p>
+        </div>
+
+        <div class="input-card">
+          <h3><code>include-confused-reaction</code> <span class="badge badge-optional">Optional</span></h3>
+          <p>
+            Whether to react to the issue or pull request with the confused 😕 reaction when profanity is detected.
+          </p>
+          <p><strong>Type:</strong> <code>boolean</code></p>
+          <p><strong>Default:</strong> <code>false</code></p>
+          <p><strong>Example:</strong> <code>"true"</code></p>
+        </div>
+
+        <div class="input-card">
+          <h3><code>manual-profane-words</code> <span class="badge badge-optional">Optional</span></h3>
+          <p>
+            A comma-separated list of additional profane words to include in the filter.
+          </p>
+          <p><strong>Type:</strong> <code>string</code></p>
+          <p><strong>Example:</strong> <code>"badword1,badword2,badword3"</code></p>
+        </div>
+
+        <div class="input-card">
+          <h3><code>custom-profane-words-url</code> <span class="badge badge-optional">Optional</span></h3>
+          <p>
+            A URL that returns a newline-delimited list of custom profane words to include in the filter.
+          </p>
+          <p><strong>Type:</strong> <code>string</code></p>
+          <p><strong>Example:</strong> <code>"https://example.com/custom-words.txt"</code></p>
+        </div>
+      </section>
+
+      <section id="replacement-strategies">
+        <h2>Replacement Strategies</h2>
+        <p>
+          Each replacement strategy provides a different way to replace profane content. 
+          The value is case-insensitive and accepts hyphened alternatives.
+        </p>
+
+        <div class="strategy-grid">
+          <div class="strategy-card">
+            <h4><code>asterisk</code></h4>
+            <p>Replaces profane content with asterisks.</p>
+            <div class="example">Example: <code>****</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>emoji</code></h4>
+            <p>Replaces profane content with a random emoji.</p>
+            <div class="example">Example: <code>💩</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>grawlix</code></h4>
+            <p>Replaces profane content with grawlix symbols.</p>
+            <div class="example">Example: <code>#%$!</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>bold-grawlix</code></h4>
+            <p>Replaces profane content with bold grawlix symbols.</p>
+            <div class="example">Example: <strong><code>#%$!</code></strong></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>bleep</code></h4>
+            <p>Replaces profane content with the word "bleep".</p>
+            <div class="example">Example: <code>bleep</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>redacted-rectangle</code></h4>
+            <p>Replaces profane content with rectangles to redact content.</p>
+            <div class="example">Example: <code>████</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>anger-emoji</code></h4>
+            <p>Replaces profane content with a random anger emoji.</p>
+            <div class="example">Example: <code>😡</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>middle-asterisk</code></h4>
+            <p>Replaces profane content with asterisks, but only in the middle.</p>
+            <div class="example">Example: <code>f**k</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>middle-swear-emoji</code></h4>
+            <p>Replaces profane content with a swear emoji in the middle.</p>
+            <div class="example">Example: <code>f🤬k</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>random-asterisk</code></h4>
+            <p>Replaces profane content with a random number of asterisks.</p>
+            <div class="example">Example: <code>*</code> - <code>****</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>first-letter-then-asterisk</code></h4>
+            <p>Replaces profane content with asterisks after the first letter.</p>
+            <div class="example">Example: <code>f***</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>vowel-asterisk</code></h4>
+            <p>Replaces profane content with asterisks, but only the vowels.</p>
+            <div class="example">Example: <code>sh*t</code></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>strike-through</code></h4>
+            <p>Encloses profane content with strikethrough HTML tags.</p>
+            <div class="example">Example: <del>profanity</del></div>
+          </div>
+
+          <div class="strategy-card">
+            <h4><code>underscores</code></h4>
+            <p>Replaces profane content with underscores.</p>
+            <div class="example">Example: <code>____</code></div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <strong>Tip:</strong> All asterisk replacement strategies are escaped with a backslash <code>\</code> 
+          to prevent markdown from rendering the asterisks as bold text. No need to escape these values yourself. 
+          This excludes title updates, as markdown is supported there.
+        </div>
+      </section>
+
+      <section>
+        <h2>Language Support</h2>
+        <p>
+          The action maintains over 4,900 swear words from nine different languages:
+        </p>
+        <ul>
+          <li>Arabic (ar)</li>
+          <li>Czech (cs)</li>
+          <li>Danish (da)</li>
+          <li>German (de)</li>
+          <li>English (en)</li>
+          <li>Esperanto (eo)</li>
+          <li>Spanish (es)</li>
+          <li>Persian (fa)</li>
+          <li>Finnish (fi)</li>
+        </ul>
+        <p>
+          For a complete list of all supported words, see the 
+          <a href="https://github.com/IEvangelist/profanity-filter/tree/main/src/ProfanityFilter.Services/Data" target="_blank" rel="noopener noreferrer">data directory</a> 
+          in the repository.
+        </p>
+      </section>
+
+      <section>
+        <h2>Permissions</h2>
+        <p>
+          The action requires the following permissions to function properly:
+        </p>
+        <pre><code>permissions:
+  issues: write
+  pull-requests: write</code></pre>
+        <p>
+          These permissions allow the action to update issues and pull requests when profane content is detected.
+        </p>
+      </section>
+
+      <section>
+        <h2>Label Requirements</h2>
+        <p>
+          The action looks for a label with the exact name:
+        </p>
+        <div class="label-display">
+          <span class="label">profane content 🤬</span>
+        </div>
+        <p>
+          If this label exists in your repository, it will be automatically applied to any issue or 
+          pull request where profane content is filtered. The label must be created manually in your 
+          repository's settings.
+        </p>
+      </section>
+
+      <section>
+        <h2>Job Summary</h2>
+        <p>
+          When profane content is detected and filtered, the action generates a detailed job summary that includes:
+        </p>
+        <ul>
+          <li>The issue or pull request number and title</li>
+          <li>A table showing all filtered words and their replacements</li>
+          <li>The replacement strategy used</li>
+          <li>Whether a label was applied</li>
+          <li>Whether a reaction was added</li>
+        </ul>
+        <p>
+          This summary is visible in the Actions tab of your repository for each workflow run.
+        </p>
+      </section>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .docs-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  .docs-content {
+    line-height: 1.8;
+  }
+
+  .docs-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+  }
+
+  .lead {
+    font-size: 1.25rem;
+    color: var(--foreground);
+    opacity: 0.8;
+    margin-bottom: 2rem;
+  }
+
+  .docs-content h2 {
+    font-size: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    color: var(--foreground);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+
+  .docs-content h3 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--foreground);
+  }
+
+  .docs-content h4 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+
+  .docs-content section {
+    margin-bottom: 2rem;
+  }
+
+  .docs-content ul {
+    margin: 1rem 0;
+    padding-left: 2rem;
+  }
+
+  .docs-content li {
+    margin: 0.5rem 0;
+  }
+
+  .docs-content p {
+    margin: 1rem 0;
+  }
+
+  .input-card {
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .input-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .input-card p {
+    margin: 0.75rem 0;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .badge-required {
+    background: #ef4444;
+    color: white;
+  }
+
+  .badge-optional {
+    background: #6b7280;
+    color: white;
+  }
+
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .strategy-card {
+    background: var(--sidebar-bg);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+
+  .strategy-card h4 {
+    margin-top: 0;
+  }
+
+  .strategy-card p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+  }
+
+  .example {
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    background: var(--code-bg);
+    border-radius: 0.25rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+  }
+
+  .callout {
+    padding: 1rem 1.5rem;
+    border-radius: 0.5rem;
+    margin: 1.5rem 0;
+    border-left: 4px solid;
+  }
+
+  .callout-tip {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: #10b981;
+  }
+
+  .callout strong {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .label-display {
+    text-align: center;
+    margin: 2rem 0;
+  }
+
+  .label {
+    display: inline-block;
+    background: #dc2626;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+
+  @media (max-width: 768px) {
+    .docs-content h1 {
+      font-size: 2rem;
+    }
+
+    .docs-content h2 {
+      font-size: 1.5rem;
+    }
+
+    .docs-content h3 {
+      font-size: 1.25rem;
+    }
+
+    .strategy-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
