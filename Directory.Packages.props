@@ -32,16 +32,16 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.2" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="2.0.2" />
+    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="2.1.0" />
     <PackageVersion Include="MinVer" Version="7.0.0" />
-    <PackageVersion Include="MSTest.Engine" Version="2.0.0-alpha.25561.4" />
-    <PackageVersion Include="MSTest.SourceGeneration" Version="2.0.0-alpha.25561.4" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.0.2" />
-    <PackageVersion Include="MSTest.Analyzers" Version="4.0.2" />
+    <PackageVersion Include="MSTest.Engine" Version="2.0.0-alpha.26103.11" />
+    <PackageVersion Include="MSTest.SourceGeneration" Version="2.0.0-alpha.26103.11" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.1.0" />
+    <PackageVersion Include="MSTest.Analyzers" Version="4.1.0" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="9.1.0" />
     <PackageVersion Include="ProfanityFilter.Hosting" Version="9.0.7-alpha.0.10" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.21" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.33" />
     <PackageVersion Include="Markdig" Version="0.44.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.2" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.2" />
