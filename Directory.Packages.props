@@ -17,7 +17,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="10.0.2" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="10.0.2" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.3" />
@@ -41,7 +41,7 @@
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="9.1.0" />
     <PackageVersion Include="ProfanityFilter.Hosting" Version="9.0.7-alpha.0.10" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.41" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.12.47" />
     <PackageVersion Include="Markdig" Version="0.44.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.2" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.3" />
