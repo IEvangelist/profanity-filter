@@ -3,6 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CodeBlock from '../components/CodeBlock.astro';
 import Callout from '../components/Callout.astro';
 import FeatureCard from '../components/FeatureCard.astro';
+import SectionEyebrow from '../components/SectionEyebrow.astro';
+import { Icon } from 'astro-icon/components';
 
 const base = import.meta.env.BASE_URL;
 
@@ -67,14 +69,15 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
     <div class="glow pointer-events-none absolute inset-x-0 top-0 h-[480px]"></div>
 
     <div class="relative max-w-5xl mx-auto px-6 lg:px-8 pt-16 pb-12 sm:pt-20">
-      <span class="inline-block text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Aspire integration</span>
+      <SectionEyebrow icon="lucide:boxes" label="Aspire integration" />
       <h1 class="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-ink-900 dark:text-white">
         A profanity filter, on tap, in your AppHost.
       </h1>
       <p class="mt-5 text-lg sm:text-xl leading-relaxed text-ink-600 dark:text-ink-300 max-w-3xl">
         The
-        <a href="https://www.nuget.org/packages/ProfanityFilter.Hosting" target="_blank" rel="noopener noreferrer" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
-          📦 ProfanityFilter.Hosting
+        <a href="https://www.nuget.org/packages/ProfanityFilter.Hosting" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+          <Icon name="lucide:package" class="h-4 w-4" />
+          ProfanityFilter.Hosting
         </a>
         package wraps the Potty Mouth API as a first-class
         <code class="font-mono text-base px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">ContainerResource</code>.
@@ -83,16 +86,20 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
       </p>
 
       <div class="mt-7 flex flex-wrap items-center gap-2">
-        <span class="inline-flex items-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30 px-2.5 py-1 text-xs font-medium">
+        <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="lucide:zap" class="h-3.5 w-3.5" />
           Aspire 13.3
         </span>
-        <span class="inline-flex items-center rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/30 px-2.5 py-1 text-xs font-medium">
+        <span class="inline-flex items-center gap-1 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="lucide:hash" class="h-3.5 w-3.5" />
           C# AppHost
         </span>
-        <span class="inline-flex items-center rounded-full bg-violet-500/10 text-violet-700 dark:text-violet-300 ring-1 ring-violet-500/30 px-2.5 py-1 text-xs font-medium">
+        <span class="inline-flex items-center gap-1 rounded-full bg-violet-500/10 text-violet-700 dark:text-violet-300 ring-1 ring-violet-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="lucide:braces" class="h-3.5 w-3.5" />
           TypeScript AppHost
         </span>
-        <span class="inline-flex items-center rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500/30 px-2.5 py-1 text-xs font-medium">
+        <span class="inline-flex items-center gap-1 rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="lucide:container" class="h-3.5 w-3.5" />
           ghcr.io/ievangelist/profanity-filter-api
         </span>
       </div>
@@ -114,7 +121,10 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
   </section>
 
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">Install</h2>
+    <h2 class="flex items-center gap-2.5 text-3xl font-bold tracking-tight text-ink-900 dark:text-white">
+      <Icon name="lucide:download" class="h-7 w-7 text-brand-600 dark:text-brand-400" />
+      Install
+    </h2>
     <p class="mt-3 text-ink-600 dark:text-ink-300">
       Add the package to your AppHost project.
     </p>
@@ -130,7 +140,10 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
   </section>
 
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">C# AppHost</h2>
+    <h2 class="flex items-center gap-2.5 text-3xl font-bold tracking-tight text-ink-900 dark:text-white">
+      <Icon name="lucide:hash" class="h-7 w-7 text-brand-600 dark:text-brand-400" />
+      C# AppHost
+    </h2>
     <p class="mt-3 text-ink-600 dark:text-ink-300">
       Call <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">AddProfanityFilter</code>
       on your <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">IDistributedApplicationBuilder</code>,
@@ -142,7 +155,10 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
   </section>
 
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">TypeScript AppHost</h2>
+    <h2 class="flex items-center gap-2.5 text-3xl font-bold tracking-tight text-ink-900 dark:text-white">
+      <Icon name="lucide:braces" class="h-7 w-7 text-brand-600 dark:text-brand-400" />
+      TypeScript AppHost
+    </h2>
     <p class="mt-3 text-ink-600 dark:text-ink-300">
       Thanks to <a href="https://aspire.dev/extensibility/multi-language-integration-authoring/" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-400 hover:underline">Aspire&rsquo;s multi-language authoring</a>,
       the same package generates a typed TypeScript SDK at AppHost build time. The C# implementation runs as-is &mdash;
@@ -162,7 +178,10 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
   </section>
 
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">Reference it from your code</h2>
+    <h2 class="flex items-center gap-2.5 text-3xl font-bold tracking-tight text-ink-900 dark:text-white">
+      <Icon name="lucide:link-2" class="h-7 w-7 text-brand-600 dark:text-brand-400" />
+      Reference it from your code
+    </h2>
     <p class="mt-3 text-ink-600 dark:text-ink-300">
       The resource implements
       <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">IResourceWithConnectionString</code>,
@@ -171,15 +190,19 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
     <CodeBlock code={consumerCsharp} lang="csharp" filename="Program.cs" />
     <p class="mt-3 text-ink-600 dark:text-ink-400 text-sm">
       Pair this with
-      <a href="https://www.nuget.org/packages/ProfanityFilter.Client" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-400 hover:underline">
-        📦 ProfanityFilter.Client
+      <a href="https://www.nuget.org/packages/ProfanityFilter.Client" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-brand-600 dark:text-brand-400 hover:underline">
+        <Icon name="lucide:package" class="h-3.5 w-3.5" />
+        ProfanityFilter.Client
       </a>
       to skip the boilerplate &mdash; it ships a strongly-typed client over the same HTTP API.
     </p>
   </section>
 
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">Custom word lists</h2>
+    <h2 class="flex items-center gap-2.5 text-3xl font-bold tracking-tight text-ink-900 dark:text-white">
+      <Icon name="lucide:folder-tree" class="h-7 w-7 text-brand-600 dark:text-brand-400" />
+      Custom word lists
+    </h2>
     <p class="mt-3 text-ink-600 dark:text-ink-300">
       Ship project-specific terms with
       <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">WithCustomDataBindMount</code>.
@@ -191,7 +214,10 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
   </section>
 
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
-    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">API surface</h2>
+    <h2 class="flex items-center gap-2.5 text-3xl font-bold tracking-tight text-ink-900 dark:text-white">
+      <Icon name="lucide:table" class="h-7 w-7 text-brand-600 dark:text-brand-400" />
+      API surface
+    </h2>
     <div class="mt-6 overflow-hidden rounded-2xl border border-ink-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.02]">
       <table class="w-full text-sm">
         <thead class="bg-ink-50 dark:bg-white/[0.03] text-left text-xs uppercase tracking-wider text-ink-500 dark:text-ink-400">
@@ -226,13 +252,15 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
         rel="noopener noreferrer"
         class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold transition-colors"
       >
+        <Icon name="lucide:package" class="h-4 w-4" />
         ProfanityFilter.Hosting on NuGet
-        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        <Icon name="lucide:arrow-up-right" class="h-4 w-4" />
       </a>
       <a
         href={`${base}/api`}
-        class="inline-flex items-center justify-center h-11 px-5 rounded-lg border border-ink-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.06] text-ink-900 dark:text-ink-100 font-semibold transition-colors"
+        class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg border border-ink-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.06] text-ink-900 dark:text-ink-100 font-semibold transition-colors"
       >
+        <Icon name="lucide:book-marked" class="h-4 w-4" />
         Action reference
       </a>
     </div>

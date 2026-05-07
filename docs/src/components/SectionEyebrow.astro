@@ -1,0 +1,17 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  icon: string;
+  label: string;
+  /** Tailwind text color classes for the icon + label. */
+  tone?: string;
+}
+
+const { icon: iconName, label, tone = 'text-brand-600 dark:text-brand-400' } = Astro.props;
+---
+
+<span class:list={['inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider', tone]}>
+  <Icon name={iconName} class="h-3.5 w-3.5" />
+  {label}
+</span>

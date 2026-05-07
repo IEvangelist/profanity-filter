@@ -1,14 +1,24 @@
 ---
+import { Icon } from 'astro-icon/components';
+
 interface Props {
   value: string;
   label: string;
   hint?: string;
+  icon?: string;
 }
 
-const { value, label, hint } = Astro.props;
+const { value, label, hint, icon } = Astro.props;
 ---
 
 <div class="text-center">
+  {icon && (
+    <div class="mb-2 flex justify-center">
+      <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500/10 to-brand-500/0 text-brand-600 dark:text-brand-400 ring-1 ring-brand-500/20">
+        <Icon name={icon} class="h-4 w-4" />
+      </span>
+    </div>
+  )}
   <div class="text-3xl sm:text-4xl font-bold tracking-tight bg-gradient-to-br from-ink-900 to-ink-600 dark:from-white dark:to-ink-300 bg-clip-text text-transparent">
     {value}
   </div>

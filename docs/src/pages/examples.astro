@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CodeBlock from '../components/CodeBlock.astro';
+import SectionEyebrow from '../components/SectionEyebrow.astro';
+import { Icon } from 'astro-icon/components';
 
 const basicEmoji = `name: Profanity filter
 
@@ -126,7 +128,7 @@ const examples = [
 >
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-16 sm:py-20">
     <div class="max-w-2xl">
-      <span class="inline-block text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Examples</span>
+      <SectionEyebrow icon="lucide:list-checks" label="Examples" />
       <h1 class="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-ink-900 dark:text-white">
         Real-world recipes.
       </h1>
@@ -147,7 +149,10 @@ const examples = [
     </div>
 
     <div class="mt-16 rounded-2xl border border-ink-200/80 dark:border-white/5 bg-ink-50 dark:bg-white/[0.02] p-6 sm:p-8">
-      <h3 class="text-lg font-semibold text-ink-900 dark:text-white">Need something else?</h3>
+      <h3 class="flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+        <Icon name="lucide:lightbulb" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+        Need something else?
+      </h3>
       <p class="mt-2 text-ink-600 dark:text-ink-300">
         If your use-case isn't covered here, open an issue or discussion on GitHub &mdash; we'll
         gladly add a recipe.
@@ -159,14 +164,16 @@ const examples = [
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-md bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition-colors"
         >
+          <Icon name="lucide:bug" class="h-4 w-4" />
           Open an issue
         </a>
         <a
           href="https://github.com/IEvangelist/profanity-filter/discussions"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center justify-center h-10 px-4 rounded-md border border-ink-200 dark:border-white/10 bg-white dark:bg-white/[0.03] hover:bg-ink-50 dark:hover:bg-white/[0.06] text-ink-900 dark:text-ink-100 text-sm font-semibold transition-colors"
+          class="inline-flex items-center justify-center gap-2 h-10 px-4 rounded-md border border-ink-200 dark:border-white/10 bg-white dark:bg-white/[0.03] hover:bg-ink-50 dark:hover:bg-white/[0.06] text-ink-900 dark:text-ink-100 text-sm font-semibold transition-colors"
         >
+          <Icon name="lucide:messages-square" class="h-4 w-4" />
           Start a discussion
         </a>
       </div>
