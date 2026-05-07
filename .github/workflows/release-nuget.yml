@@ -11,7 +11,7 @@ name: Release NuGet packages
 #        Repository Owner: IEvangelist
 #        Repository:       profanity-filter
 #        Workflow File:    release-nuget.yml
-#        Environment:      (leave blank, or 'release' if you add one below)
+#        Environment:      production
 #   3. Save the policy. (Private repos start as 7-day "pending" — the first
 #      successful publish within that window converts it to permanent.)
 # https://learn.microsoft.com/nuget/nuget-org/trusted-publishing
@@ -24,6 +24,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: production    # required by the nuget.org trusted-publishing policy
     permissions:
       contents: read
       id-token: write    # required for the OIDC token exchange with nuget.org
