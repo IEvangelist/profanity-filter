@@ -1,0 +1,22 @@
+---
+interface Props {
+  name: string;
+  example: string;
+  description: string;
+  isHtml?: boolean;
+}
+
+const { name, example, description, isHtml = false } = Astro.props;
+---
+
+<div class="rounded-xl border border-ink-200/80 dark:border-white/5 bg-white/60 dark:bg-white/[0.02] p-4 transition-colors hover:border-brand-300/60 dark:hover:border-brand-500/30">
+  <div class="flex items-baseline justify-between gap-3 flex-wrap">
+    <code class="font-mono text-sm font-semibold text-brand-700 dark:text-brand-300">{name}</code>
+    {isHtml ? (
+      <span class="font-mono text-sm text-ink-700 dark:text-ink-200" set:html={example}></span>
+    ) : (
+      <span class="font-mono text-sm text-ink-700 dark:text-ink-200">{example}</span>
+    )}
+  </div>
+  <p class="mt-2 text-xs leading-relaxed text-ink-500 dark:text-ink-400">{description}</p>
+</div>

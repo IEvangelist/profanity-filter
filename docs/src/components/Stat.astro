@@ -1,0 +1,17 @@
+---
+interface Props {
+  value: string;
+  label: string;
+  hint?: string;
+}
+
+const { value, label, hint } = Astro.props;
+---
+
+<div class="text-center">
+  <div class="text-3xl sm:text-4xl font-bold tracking-tight bg-gradient-to-br from-ink-900 to-ink-600 dark:from-white dark:to-ink-300 bg-clip-text text-transparent">
+    {value}
+  </div>
+  <div class="mt-1 text-xs sm:text-sm font-medium text-ink-700 dark:text-ink-300">{label}</div>
+  {hint && <div class="text-xs text-ink-500 dark:text-ink-500">{hint}</div>}
+</div>

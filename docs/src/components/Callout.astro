@@ -1,0 +1,55 @@
+---
+type Variant = 'note' | 'tip' | 'important' | 'warning';
+
+interface Props {
+  variant?: Variant;
+  title?: string;
+}
+
+const { variant = 'note', title } = Astro.props;
+
+const styles: Record<Variant, { wrap: string; icon: string; iconWrap: string; titleColor: string; defaultTitle: string }> = {
+  note: {
+    wrap: 'border-sky-300/60 dark:border-sky-500/30 bg-sky-50/70 dark:bg-sky-500/5',
+    iconWrap: 'bg-sky-500/10 text-sky-600 dark:text-sky-400',
+    icon: 'M12 16v-4M12 8h.01M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z',
+    titleColor: 'text-sky-700 dark:text-sky-300',
+    defaultTitle: 'Note',
+  },
+  tip: {
+    wrap: 'border-emerald-300/60 dark:border-emerald-500/30 bg-emerald-50/70 dark:bg-emerald-500/5',
+    iconWrap: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+    icon: 'M9 12l2 2 4-4M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z',
+    titleColor: 'text-emerald-700 dark:text-emerald-300',
+    defaultTitle: 'Tip',
+  },
+  important: {
+    wrap: 'border-brand-300/60 dark:border-brand-500/30 bg-brand-50/70 dark:bg-brand-500/5',
+    iconWrap: 'bg-brand-500/10 text-brand-600 dark:text-brand-400',
+    icon: 'M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z',
+    titleColor: 'text-brand-700 dark:text-brand-300',
+    defaultTitle: 'Important',
+  },
+  warning: {
+    wrap: 'border-amber-300/60 dark:border-amber-500/30 bg-amber-50/70 dark:bg-amber-500/5',
+    iconWrap: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+    icon: 'M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z',
+    titleColor: 'text-amber-700 dark:text-amber-300',
+    defaultTitle: 'Warning',
+  },
+};
+
+const s = styles[variant];
+---
+
+<aside class:list={['my-6 flex gap-3 rounded-xl border p-4', s.wrap]}>
+  <div class:list={['flex h-7 w-7 shrink-0 items-center justify-center rounded-full', s.iconWrap]}>
+    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={`<path d="${s.icon}"/>`}></svg>
+  </div>
+  <div class="flex-1 min-w-0 text-sm">
+    <p class:list={['font-semibold', s.titleColor]}>{title ?? s.defaultTitle}</p>
+    <div class="mt-1 text-ink-700 dark:text-ink-300 leading-relaxed [&>p]:my-0 [&_a]:text-brand-600 dark:[&_a]:text-brand-400 [&_a]:underline [&_a]:underline-offset-2">
+      <slot />
+    </div>
+  </div>
+</aside>

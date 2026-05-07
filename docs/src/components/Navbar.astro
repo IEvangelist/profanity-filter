@@ -1,0 +1,87 @@
+---
+const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
+
+const links = [
+  { href: `${base}`, label: 'Overview', match: (p: string) => p === base || p === `${base}/` || p === '/' },
+  { href: `${base}/getting-started`, label: 'Get started', match: (p: string) => p.includes('getting-started') },
+  { href: `${base}/api`, label: 'Reference', match: (p: string) => p.includes('api') },
+  { href: `${base}/examples`, label: 'Examples', match: (p: string) => p.includes('examples') },
+];
+---
+
+<header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-ink-950/70 border-b border-ink-200/60 dark:border-white/5">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+      <a href={base} class="flex items-center gap-2.5 group">
+        <span class="text-2xl group-hover:rotate-12 transition-transform">🤬</span>
+        <span class="font-semibold tracking-tight text-ink-900 dark:text-ink-50">
+          Potty Mouth
+        </span>
+        <span class="hidden sm:inline-flex items-center rounded-full border border-ink-200 dark:border-white/10 bg-ink-100 dark:bg-white/5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-ink-600 dark:text-ink-400">
+          GitHub Action
+        </span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-1">
+        {links.map(link => (
+          <a
+            href={link.href}
+            class:list={[
+              'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+              link.match(currentPath)
+                ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40'
+                : 'text-ink-600 dark:text-ink-300 hover:text-ink-900 dark:hover:text-white hover:bg-ink-100 dark:hover:bg-white/5',
+            ]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button
+          id="theme-toggle"
+          type="button"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-ink-200 dark:border-white/10 bg-white dark:bg-white/5 text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+          aria-label="Toggle theme"
+        >
+          <svg class="sun-icon hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+          <svg class="moon-icon hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <a
+          href="https://github.com/IEvangelist/profanity-filter"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-ink-900 hover:bg-ink-800 dark:bg-white dark:hover:bg-ink-100 text-white dark:text-ink-900 text-sm font-medium transition-colors"
+        >
+          <svg viewBox="0 0 16 16" class="h-4 w-4" fill="currentColor" aria-hidden="true">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+          </svg>
+          <span class="hidden sm:inline">GitHub</span>
+        </a>
+      </div>
+    </div>
+
+    <nav class="md:hidden flex items-center gap-1 pb-3 -mx-1 overflow-x-auto">
+      {links.map(link => (
+        <a
+          href={link.href}
+          class:list={[
+            'whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            link.match(currentPath)
+              ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40'
+              : 'text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-white/5',
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>

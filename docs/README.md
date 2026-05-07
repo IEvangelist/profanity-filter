@@ -1,131 +1,146 @@
 # Profanity Filter Documentation
 
-This directory contains the documentation website for the Profanity Filter GitHub Action, built with [Astro](https://astro.build).
+The marketing + documentation site for the **🤬 Potty Mouth** GitHub Action, built with
+[Astro](https://astro.build) and [Tailwind CSS v4](https://tailwindcss.com).
 
-## 🚀 Local Development
+🌐 Live: <https://ievangelist.github.io/profanity-filter>
+
+## 🚀 Local development
 
 ### Prerequisites
-- Node.js 20.x or higher
-- npm 10.x or higher
 
-### Installation
+- **Node.js** 22.12 or higher (Astro 6 requirement)
+- **npm** 10.x or higher
+
+### Install
 
 ```bash
 cd docs
 npm install
 ```
 
-### Development Server
-
-Start the development server:
+### Develop
 
 ```bash
 npm run dev
 ```
 
-The site will be available at `http://localhost:4321/profanity-filter/`
+Open <http://localhost:4321/profanity-filter/>.
 
-### Building for Production
-
-Build the static site:
+### Build
 
 ```bash
 npm run build
 ```
 
-The built site will be in the `dist/` directory.
+Static output lands in `dist/`.
 
-### Preview Production Build
-
-Preview the production build locally:
+### Preview the production build
 
 ```bash
 npm run preview
 ```
 
-## 📁 Project Structure
+## 📁 Project layout
 
 ```
 docs/
-├── public/                 # Static assets (favicon, etc.)
+├── public/                       # Static assets (favicon, etc.)
 ├── src/
-│   ├── layouts/           # Page layouts
-│   │   └── BaseLayout.astro
-│   └── pages/             # Page routes
-│       ├── index.astro           # Homepage
-│       ├── getting-started.astro # Getting Started guide
-│       ├── api.astro            # API documentation
-│       └── examples.astro       # Usage examples
-├── astro.config.mjs       # Astro configuration
-├── package.json           # Dependencies
-└── tsconfig.json         # TypeScript configuration
+│   ├── components/               # Reusable Astro components
+│   │   ├── Navbar.astro
+│   │   ├── Footer.astro
+│   │   ├── CodeBlock.astro       # <Code> wrapper with copy button
+│   │   ├── Callout.astro         # note/tip/important/warning
+│   │   ├── FeatureCard.astro
+│   │   ├── StrategyCard.astro
+│   │   └── Stat.astro
+│   ├── layouts/
+│   │   └── BaseLayout.astro      # Shared shell, theme toggle, fonts
+│   ├── pages/
+│   │   ├── index.astro           # Marketing landing page
+│   │   ├── getting-started.astro # 3-step quick start
+│   │   ├── api.astro             # Full API reference
+│   │   └── examples.astro        # Copy-paste recipes
+│   └── styles/
+│       └── global.css            # Tailwind v4 entry + design tokens
+├── astro.config.mjs              # Astro + Tailwind Vite plugin
+├── package.json
+└── tsconfig.json
 ```
 
 ## 🌐 Deployment
 
-The documentation is automatically deployed to GitHub Pages via the `.github/workflows/deploy-docs.yml` workflow when changes are pushed to the `main` branch.
+`.github/workflows/deploy-docs.yml` builds and publishes the site to GitHub Pages on every push
+to `main`.
 
-**Live Site:** https://ievangelist.github.io/profanity-filter
+## 🎨 Design system
 
-## 📝 Adding Content
+Tailwind v4 is configured entirely from CSS — there is **no `tailwind.config.js`**. All design
+tokens live in `src/styles/global.css` under `@theme`:
 
-### Creating a New Page
+- **Brand palette** — `brand-50` … `brand-950` (red accent)
+- **Ink palette** — `ink-50` … `ink-950` (neutral / surface)
+- **Fonts** — Inter (sans) and JetBrains Mono (mono), loaded from Google Fonts
+- **Dark mode** — driven by `data-theme="dark"` on `<html>`, toggled via the navbar button and
+  persisted in `localStorage`
 
-1. Create a new `.astro` file in `src/pages/`
-2. Use the `BaseLayout` component for consistent styling
-3. Add a link to the navigation in `BaseLayout.astro`
+Custom utilities defined in `global.css`:
 
-Example:
+- `bg-grid` — subtle grid backdrop
+- `glow` — radial brand-color glow for hero backgrounds
+- `text-shimmer` — animated gradient text
+- `animate-float` — gentle floating animation for the hero emoji
 
-```astro
----
-import BaseLayout from '../layouts/BaseLayout.astro';
----
+## ✏️ Adding a page
 
-<BaseLayout title="My New Page - Potty Mouth">
-  <div class="docs-container">
-    <article class="docs-content">
-      <h1>My New Page</h1>
-      <p>Content goes here...</p>
-    </article>
-  </div>
-</BaseLayout>
-```
+1. Create a new `.astro` file in `src/pages/`.
+2. Import the layout and the components you need:
 
-### Styling
+   ```astro
+   ---
+   import BaseLayout from '../layouts/BaseLayout.astro';
+   import CodeBlock from '../components/CodeBlock.astro';
+   import Callout from '../components/Callout.astro';
+   ---
 
-The site uses CSS custom properties for theming and supports both light and dark modes automatically. Global styles are defined in `BaseLayout.astro`.
+   <BaseLayout title="My new page — Potty Mouth" description="Short description for SEO.">
+     <section class="max-w-4xl mx-auto px-6 lg:px-8 py-16">
+       <h1 class="text-4xl font-bold tracking-tight">My new page</h1>
+       <p class="mt-4 text-ink-600 dark:text-ink-300">Content goes here…</p>
 
-## 🎨 Design System
+       <Callout variant="tip" title="Pro tip">
+         Use the supplied components for visual consistency.
+       </Callout>
 
-- **Colors**: Defined via CSS custom properties in `BaseLayout.astro`
-- **Typography**: System font stack for optimal performance
-- **Layout**: Responsive design with mobile-first approach
-- **Components**: Reusable Astro components for consistency
+       <CodeBlock lang="yaml" code={`name: hello\nrun: echo hi`} />
+     </section>
+   </BaseLayout>
+   ```
 
-## 📚 Tech Stack
+3. Add a link to it in `src/components/Navbar.astro` if it should appear in the nav.
 
-- **Framework**: [Astro](https://astro.build) - Static site generator
-- **Language**: TypeScript
-- **Styling**: CSS with custom properties
-- **Deployment**: GitHub Actions + GitHub Pages
-- **Package Manager**: npm
+## 📚 Tech stack
+
+- **Framework:** [Astro 6](https://astro.build)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com) via `@tailwindcss/vite`
+- **Code highlighting:** [Shiki](https://shiki.style) (built into Astro's `<Code>` component)
+- **Hosting:** GitHub Pages
+- **Language:** TypeScript
 
 ## 🛠️ Maintenance
 
-### Updating Dependencies
-
 ```bash
-cd docs
-npm update
-```
+# Refresh dependencies to the versions in package.json
+npm install
 
-### Checking for Outdated Packages
-
-```bash
+# See what's outdated
 npm outdated
+
+# Update everything inside the allowed semver range
+npm update
 ```
 
 ## 📄 License
 
-This documentation is part of the Profanity Filter project and is licensed under the MIT License.
+MIT, same as the parent repository.

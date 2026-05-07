@@ -1,0 +1,18 @@
+---
+interface Props {
+  icon: string;
+  title: string;
+}
+
+const { icon, title } = Astro.props;
+---
+
+<div class="group relative rounded-2xl border border-ink-200/80 dark:border-white/5 bg-white/60 dark:bg-white/[0.02] p-6 transition-all hover:border-brand-300/60 dark:hover:border-brand-500/30 hover:shadow-lg hover:shadow-brand-500/5 hover:-translate-y-0.5">
+  <div class="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500/10 to-brand-500/0 text-2xl ring-1 ring-brand-500/20">
+    {icon}
+  </div>
+  <h3 class="mt-4 font-semibold text-ink-900 dark:text-ink-50">{title}</h3>
+  <div class="mt-2 text-sm leading-relaxed text-ink-600 dark:text-ink-400">
+    <slot />
+  </div>
+</div>
