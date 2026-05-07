@@ -1,6 +1,6 @@
 # Profanity Filter: Hosting
 
-This is a .NET library intended to be used as a hosting library as part of the .NET Aspire app host project. It exposes the `ProfanityFilterResource` which is a container resource, that resolves to `ghcr.io/ievangelist/profanity-filter-api:latest` container image.
+This is a .NET library intended to be used as a hosting library as part of the Aspire app host project. It exposes the `ProfanityFilterResource` which is a container resource, that resolves to `ghcr.io/ievangelist/profanity-filter-api:latest` container image.
 
 ## Get started
 
