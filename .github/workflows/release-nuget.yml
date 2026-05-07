@@ -1,5 +1,21 @@
 name: Release NuGet packages
 
+# Publishes ProfanityFilter.Hosting + ProfanityFilter.Client to nuget.org
+# using NuGet Trusted Publishing (OIDC). No long-lived API keys are stored
+# in GitHub secrets — the workflow exchanges a short-lived GitHub OIDC
+# token for a temporary API key that is valid for 1 hour.
+#
+# To wire this up on nuget.org:
+#   1. Sign in at https://nuget.org and open Account → Trusted Publishing.
+#   2. Add a new policy with these values:
+#        Repository Owner: IEvangelist
+#        Repository:       profanity-filter
+#        Workflow File:    release-nuget.yml
+#        Environment:      (leave blank, or 'release' if you add one below)
+#   3. Save the policy. (Private repos start as 7-day "pending" — the first
+#      successful publish within that window converts it to permanent.)
+# https://learn.microsoft.com/nuget/nuget-org/trusted-publishing
+
 on:
   push:
     tags:
@@ -8,6 +24,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write    # required for the OIDC token exchange with nuget.org
+
     steps:
       - name: 📥 Checkout repository (full history)
         uses: actions/checkout@main
@@ -70,11 +90,17 @@ jobs:
           name: client-nuget
           path: artifacts/package/release/ProfanityFilter.Client.*.nupkg
 
+      - name: 🔑 NuGet login (OIDC → temporary API key)
+        id: nuget-login
+        uses: NuGet/login@v1
+        with:
+          user: IEvangelist
+
       - name: 🚀 Publish NuGet packages
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
           for pkg in artifacts/package/release/*.nupkg; do
             echo "Publishing $pkg"
-            dotnet nuget push --skip-duplicate "$pkg" --source "https://api.nuget.org/v3/index.json" --api-key "$NUGET_API_KEY"
+            dotnet nuget push --skip-duplicate "$pkg" \
+              --source "https://api.nuget.org/v3/index.json" \
+              --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}"
           done

@@ -5,7 +5,8 @@ const currentPath = Astro.url.pathname;
 const links = [
   { href: `${base}`, label: 'Overview', match: (p: string) => p === base || p === `${base}/` || p === '/' },
   { href: `${base}/getting-started`, label: 'Get started', match: (p: string) => p.includes('getting-started') },
-  { href: `${base}/api`, label: 'Reference', match: (p: string) => p.includes('api') },
+  { href: `${base}/api`, label: 'Reference', match: (p: string) => p.endsWith('/api') || p.endsWith('/api/') },
+  { href: `${base}/aspire`, label: 'Aspire', match: (p: string) => p.includes('aspire') },
   { href: `${base}/examples`, label: 'Examples', match: (p: string) => p.includes('examples') },
 ];
 ---
@@ -19,7 +20,7 @@ const links = [
           Potty Mouth
         </span>
         <span class="hidden sm:inline-flex items-center rounded-full border border-ink-200 dark:border-white/10 bg-ink-100 dark:bg-white/5 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-ink-600 dark:text-ink-400">
-          GitHub Action
+          Action &middot; Aspire
         </span>
       </a>
 

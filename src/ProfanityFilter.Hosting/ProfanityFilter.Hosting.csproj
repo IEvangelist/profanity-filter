@@ -3,10 +3,13 @@
   <PropertyGroup>
     <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>        
+    <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>$(AssemblyName)</PackageId>
+
+    <!-- Suppress the experimental Aspire Type System diagnostic; this integration uses [AspireExport] for multi-language authoring. -->
+    <NoWarn>$(NoWarn);ASPIREATS001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" />
-  <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="MinVer">
       <PrivateAssets>all</PrivateAssets>

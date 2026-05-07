@@ -1,0 +1,240 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CodeBlock from '../components/CodeBlock.astro';
+import Callout from '../components/Callout.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+
+const base = import.meta.env.BASE_URL;
+
+const installCmd = `dotnet add package ProfanityFilter.Hosting`;
+
+const csharpAppHost = `// apphost.cs
+#:sdk Aspire.AppHost.Sdk@13.3.0
+#:package Aspire.Hosting
+#:package ProfanityFilter.Hosting
+#:project ../src/MyApi/MyApi.csproj
+
+var builder = DistributedApplication.CreateBuilder(args);
+
+var profanityFilter = builder.AddProfanityFilter("profanity-filter")
+    .WithCustomDataBindMount("./CustomData");
+
+builder.AddProject<Projects.MyApi>("api")
+    .WithReference(profanityFilter)
+    .WaitFor(profanityFilter);
+
+builder.Build().Run();`;
+
+const typescriptAppHost = `// apphost.ts
+import { createBuilder } from "./.modules/aspire.js";
+import { addProfanityFilter } from "./.modules/profanityfilter.hosting.js";
+
+const builder = await createBuilder();
+
+const filter = await addProfanityFilter(builder, "profanity-filter")
+    .withCustomDataBindMount("./CustomData");
+
+const api = await builder.addProject("api", { project: "../src/MyApi/MyApi.csproj" })
+    .withReference(filter)
+    .waitFor(filter);
+
+const app = await builder.build();
+await app.run();`;
+
+const consumerCsharp = `// In your API project (MyApi.csproj)
+builder.Services.AddHttpClient("profanity-filter", client =>
+{
+    // Aspire injects the connection string for the resource name you used
+    // in your AppHost — here, "profanity-filter".
+    var endpoint = builder.Configuration.GetConnectionString("profanity-filter");
+    client.BaseAddress = new Uri(endpoint!);
+});`;
+
+const customDataExample = `// Optional: ship a folder of newline-delimited *.txt files with
+// project-specific words and phrases that should also be filtered.
+// They are merged with the built-in 4,900+ word dictionary at runtime.
+
+var profanityFilter = builder.AddProfanityFilter("profanity-filter")
+    .WithCustomDataBindMount("./CustomData");`;
+---
+
+<BaseLayout
+  title="Aspire integration — Potty Mouth"
+  description="Run the Potty Mouth profanity filter as a first-class .NET Aspire resource. Containerized, multi-language, ready for both C# and TypeScript AppHosts."
+>
+  <section class="relative overflow-hidden">
+    <div class="bg-grid absolute inset-0 opacity-60"></div>
+    <div class="glow pointer-events-none absolute inset-x-0 top-0 h-[480px]"></div>
+
+    <div class="relative max-w-5xl mx-auto px-6 lg:px-8 pt-16 pb-12 sm:pt-20">
+      <span class="inline-block text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">.NET Aspire integration</span>
+      <h1 class="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-ink-900 dark:text-white">
+        A profanity filter, on tap, in your AppHost.
+      </h1>
+      <p class="mt-5 text-lg sm:text-xl leading-relaxed text-ink-600 dark:text-ink-300 max-w-3xl">
+        The
+        <a href="https://www.nuget.org/packages/ProfanityFilter.Hosting" target="_blank" rel="noopener noreferrer" class="font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+          📦 ProfanityFilter.Hosting
+        </a>
+        package wraps the Potty Mouth API as a first-class
+        <code class="font-mono text-base px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">ContainerResource</code>.
+        Add it to your distributed application, reference it from any project, and you have a fast,
+        local-first profanity-filter HTTP service alongside the rest of your services &mdash; no infra to spin up.
+      </p>
+
+      <div class="mt-7 flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30 px-2.5 py-1 text-xs font-medium">
+          Aspire 13.3
+        </span>
+        <span class="inline-flex items-center rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/30 px-2.5 py-1 text-xs font-medium">
+          C# AppHost
+        </span>
+        <span class="inline-flex items-center rounded-full bg-violet-500/10 text-violet-700 dark:text-violet-300 ring-1 ring-violet-500/30 px-2.5 py-1 text-xs font-medium">
+          TypeScript AppHost
+        </span>
+        <span class="inline-flex items-center rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500/30 px-2.5 py-1 text-xs font-medium">
+          ghcr.io/ievangelist/profanity-filter-api
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-10">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <FeatureCard icon="🐳" title="Containerized">
+        <p>Backed by the official <code class="font-mono text-xs">ghcr.io/ievangelist/profanity-filter-api</code> image. Same engine as the GitHub Action, served over HTTPS with a sensible default port.</p>
+      </FeatureCard>
+      <FeatureCard icon="🌐" title="Multi-language">
+        <p>Annotated with the new <code class="font-mono text-xs">[AspireExport]</code> attribute, so the same NuGet package powers both C# and TypeScript AppHosts.</p>
+      </FeatureCard>
+      <FeatureCard icon="🔌" title="Just works">
+        <p>Implements <code class="font-mono text-xs">IResourceWithConnectionString</code>. Reference the resource from any project and the HTTPS endpoint flows in automatically.</p>
+      </FeatureCard>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">Install</h2>
+    <p class="mt-3 text-ink-600 dark:text-ink-300">
+      Add the package to your AppHost project.
+    </p>
+    <CodeBlock code={installCmd} lang="bash" filename="terminal" />
+
+    <Callout variant="note" title="Aspire 13.3 or later">
+      <p>
+        This integration is built and tested against Aspire 13.3. If you're using an earlier version, pin
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">ProfanityFilter.Hosting@9.x</code>
+        instead.
+      </p>
+    </Callout>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">C# AppHost</h2>
+    <p class="mt-3 text-ink-600 dark:text-ink-300">
+      Call <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">AddProfanityFilter</code>
+      on your <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">IDistributedApplicationBuilder</code>,
+      then wire any project that needs to call the filter with
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">.WithReference(...)</code> and
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">.WaitFor(...)</code>.
+    </p>
+    <CodeBlock code={csharpAppHost} lang="csharp" filename="apphost.cs" />
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">TypeScript AppHost</h2>
+    <p class="mt-3 text-ink-600 dark:text-ink-300">
+      Thanks to <a href="https://aspire.dev/extensibility/multi-language-integration-authoring/" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-400 hover:underline">Aspire&rsquo;s multi-language authoring</a>,
+      the same package generates a typed TypeScript SDK at AppHost build time. The C# implementation runs as-is &mdash;
+      the SDK is a thin client that calls into it over JSON-RPC.
+    </p>
+    <CodeBlock code={typescriptAppHost} lang="ts" filename="apphost.ts" />
+
+    <Callout variant="tip" title="No rewrite required">
+      <p>
+        Run
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">aspire add ProfanityFilter.Hosting</code>
+        in a TypeScript AppHost and the typed methods (<code class="font-mono text-xs">addProfanityFilter</code>,
+        <code class="font-mono text-xs">withCustomDataBindMount</code>, ...) appear under
+        <code class="font-mono text-xs">./.modules</code> automatically.
+      </p>
+    </Callout>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">Reference it from your code</h2>
+    <p class="mt-3 text-ink-600 dark:text-ink-300">
+      The resource implements
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">IResourceWithConnectionString</code>,
+      so the HTTPS endpoint is injected as a normal connection string under the resource name.
+    </p>
+    <CodeBlock code={consumerCsharp} lang="csharp" filename="Program.cs" />
+    <p class="mt-3 text-ink-600 dark:text-ink-400 text-sm">
+      Pair this with
+      <a href="https://www.nuget.org/packages/ProfanityFilter.Client" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-400 hover:underline">
+        📦 ProfanityFilter.Client
+      </a>
+      to skip the boilerplate &mdash; it ships a strongly-typed client over the same HTTP API.
+    </p>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">Custom word lists</h2>
+    <p class="mt-3 text-ink-600 dark:text-ink-300">
+      Ship project-specific terms with
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">WithCustomDataBindMount</code>.
+      Drop one or more newline-delimited
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">*.txt</code>
+      files into the folder you point at &mdash; they&rsquo;re merged with the built-in 4,900+ word dictionary at startup.
+    </p>
+    <CodeBlock code={customDataExample} lang="csharp" />
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <h2 class="text-3xl font-bold tracking-tight text-ink-900 dark:text-white">API surface</h2>
+    <div class="mt-6 overflow-hidden rounded-2xl border border-ink-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.02]">
+      <table class="w-full text-sm">
+        <thead class="bg-ink-50 dark:bg-white/[0.03] text-left text-xs uppercase tracking-wider text-ink-500 dark:text-ink-400">
+          <tr>
+            <th class="px-5 py-3 font-semibold">Member</th>
+            <th class="px-5 py-3 font-semibold">Description</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-ink-200/60 dark:divide-white/5">
+          <tr>
+            <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">AddProfanityFilter(name)</td>
+            <td class="px-5 py-4 text-ink-700 dark:text-ink-300">Adds the profanity filter container to the distributed application. Returns an <code class="font-mono text-xs">IResourceBuilder&lt;ProfanityFilterResource&gt;</code>.</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">WithCustomDataBindMount(source)</td>
+            <td class="px-5 py-4 text-ink-700 dark:text-ink-300">Bind-mounts a host folder of <code class="font-mono text-xs">*.txt</code> word lists into <code class="font-mono text-xs">/app/CustomData</code> inside the container.</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">ProfanityFilterResource.HttpsEndpoint</td>
+            <td class="px-5 py-4 text-ink-700 dark:text-ink-300">The HTTPS endpoint reference. Implements <code class="font-mono text-xs">IResourceWithConnectionString</code>, so referencing the resource flows the URL through automatically.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 pb-20 pt-6">
+    <div class="flex flex-col sm:flex-row items-center gap-3">
+      <a
+        href="https://www.nuget.org/packages/ProfanityFilter.Hosting"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold transition-colors"
+      >
+        ProfanityFilter.Hosting on NuGet
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <a
+        href={`${base}/api`}
+        class="inline-flex items-center justify-center h-11 px-5 rounded-lg border border-ink-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.06] text-ink-900 dark:text-ink-100 font-semibold transition-colors"
+      >
+        Action reference
+      </a>
+    </div>
+  </section>
+</BaseLayout>

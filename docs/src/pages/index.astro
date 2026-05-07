@@ -226,6 +226,57 @@ const strategies = [
     </div>
   </section>
 
+  <section class="max-w-7xl mx-auto px-6 lg:px-8 py-16 sm:py-20">
+    <div class="relative overflow-hidden rounded-3xl border border-ink-200/80 dark:border-white/10 bg-gradient-to-br from-sky-500/[0.07] via-violet-500/[0.05] to-brand-500/[0.07] dark:from-sky-500/[0.10] dark:via-violet-500/[0.08] dark:to-brand-500/[0.10] px-8 py-12 sm:px-12 sm:py-14">
+      <div class="bg-grid absolute inset-0 opacity-40"></div>
+      <div class="relative grid gap-10 lg:grid-cols-2 lg:items-center">
+        <div>
+          <span class="inline-block text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Also for .NET Aspire</span>
+          <h2 class="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-ink-900 dark:text-white">
+            More than a GitHub Action.
+          </h2>
+          <p class="mt-4 text-lg leading-relaxed text-ink-700 dark:text-ink-300">
+            The same engine ships as a containerized Aspire resource. Drop
+            <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-white/60 dark:bg-white/10">AddProfanityFilter</code>
+            into your AppHost &mdash; in C# <em>or</em> TypeScript &mdash; and you have a fast, local-first
+            HTTP filter alongside the rest of your services.
+          </p>
+          <div class="mt-6 flex flex-col sm:flex-row gap-3">
+            <a
+              href={`${base}/aspire`}
+              class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-ink-900 hover:bg-ink-800 dark:bg-white dark:hover:bg-ink-100 text-white dark:text-ink-900 font-semibold transition-colors"
+            >
+              Read the Aspire guide
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <a
+              href="https://www.nuget.org/packages/ProfanityFilter.Hosting"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center h-11 px-5 rounded-lg border border-ink-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.06] text-ink-900 dark:text-ink-100 font-semibold transition-colors"
+            >
+              📦 NuGet
+            </a>
+          </div>
+        </div>
+
+        <div class="relative">
+          <pre class="not-prose font-mono text-[13px] leading-relaxed rounded-xl border border-ink-200 dark:border-white/10 bg-[#0d1117] p-5 text-ink-200 overflow-x-auto"><code><span class="text-ink-500">// apphost.cs</span>
+<span class="text-pink-400">var</span> builder = DistributedApplication.CreateBuilder(args);
+
+<span class="text-pink-400">var</span> filter = builder.<span class="text-sky-300">AddProfanityFilter</span>(<span class="text-amber-300">"profanity-filter"</span>)
+    .<span class="text-sky-300">WithCustomDataBindMount</span>(<span class="text-amber-300">"./CustomData"</span>);
+
+builder.<span class="text-sky-300">AddProject</span>&lt;Projects.MyApi&gt;(<span class="text-amber-300">"api"</span>)
+    .<span class="text-sky-300">WithReference</span>(filter)
+    .<span class="text-sky-300">WaitFor</span>(filter);
+
+builder.Build().Run();</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="max-w-7xl mx-auto px-6 lg:px-8 pb-12">
     <div class="relative overflow-hidden rounded-3xl border border-ink-200/80 dark:border-white/10 bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 px-8 py-16 sm:px-16 sm:py-20 text-center shadow-2xl shadow-brand-500/20">
       <div class="bg-grid absolute inset-0 opacity-20"></div>

@@ -9,6 +9,7 @@ namespace Aspire.Hosting.ApplicationModel;
 /// Represents a resource for the profanity filter with a specified name.
 /// </summary>
 /// <param name="name">The name of the resource.</param>
+[AspireExport(ExposeProperties = true)]
 public sealed class ProfanityFilterResource([ResourceName] string name) :
     ContainerResource(name),
     IResourceWithConnectionString
@@ -29,6 +30,7 @@ public sealed class ProfanityFilterResource([ResourceName] string name) :
     /// <returns>
     /// A <see cref="ReferenceExpression"/> representing the connection string.
     /// </returns>
+    [AspireExportIgnore]
     ReferenceExpression IResourceWithConnectionString.ConnectionStringExpression =>
         ReferenceExpression.Create(
             $"https://{HttpsEndpoint.Property(EndpointProperty.Host)}:{HttpsEndpoint.Property(EndpointProperty.Port)}"
