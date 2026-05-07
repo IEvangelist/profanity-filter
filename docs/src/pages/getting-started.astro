@@ -8,8 +8,7 @@ const base = import.meta.env.BASE_URL;
 const standaloneWorkflow = `# .github/workflows/profanity-filter.yml
 name: Profanity filter
 
-# Trigger on issue or pull requests, that are
-# opened, edited, or reopened
+# Trigger on issue or pull request events
 on:
   issue_comment:
     types: [created, edited]
@@ -27,16 +26,17 @@ jobs:
   apply-filter:
     runs-on: ubuntu-latest
     steps:
-      - name: Scan issue or pull request for profanity
-        if: \${{ github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]' }}
+      - name: Scan for profanity
+        # Skip bot-authored events
+        if: github.actor != 'dependabot[bot]'
         uses: IEvangelist/profanity-filter@main
         id: profanity-filter
         with:
           token: \${{ secrets.GITHUB_TOKEN }}
           replacement-strategy: emoji`;
 
-const existingWorkflow = `- name: Scan issue or pull request for profanity
-  if: \${{ github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]' }}
+const existingWorkflow = `- name: Scan for profanity
+  if: github.actor != 'dependabot[bot]'
   uses: IEvangelist/profanity-filter@main
   id: profanity-filter
   with:
@@ -48,7 +48,7 @@ const existingWorkflow = `- name: Scan issue or pull request for profanity
   title="Get started — Potty Mouth"
   description="Two-minute setup. Add Potty Mouth to your repo with a single workflow file."
 >
-  <section class="max-w-4xl mx-auto px-6 lg:px-8 py-16 sm:py-20">
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-16 sm:py-20">
     <div class="max-w-2xl">
       <span class="inline-block text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Get started</span>
       <h1 class="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-ink-900 dark:text-white">

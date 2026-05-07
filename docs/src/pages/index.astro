@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Scan for profanity
-        if: \${{ github.actor != 'dependabot[bot]' }}
+        if: github.actor != 'dependabot[bot]'
         uses: IEvangelist/profanity-filter@main
         with:
           token: \${{ secrets.GITHUB_TOKEN }}
@@ -90,7 +90,7 @@ const strategies = [
 >
   <section class="relative overflow-hidden">
     <div class="bg-grid absolute inset-0 opacity-60"></div>
-    <div class="glow absolute -top-40 left-1/2 -translate-x-1/2"></div>
+    <div class="glow pointer-events-none absolute inset-x-0 top-0 h-[640px]"></div>
 
     <div class="relative max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-20 sm:pt-24 sm:pb-28">
       <div class="text-center max-w-3xl mx-auto">
@@ -146,7 +146,7 @@ const strategies = [
         </p>
       </div>
 
-      <div class="mt-16 max-w-3xl mx-auto">
+      <div class="mt-16 max-w-4xl mx-auto">
         <CodeBlock code={heroSnippet} lang="yaml" filename=".github/workflows/profanity-filter.yml" />
       </div>
     </div>

@@ -61,32 +61,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
       (() => {
         const html = document.documentElement;
         const toggle = document.getElementById('theme-toggle');
-        if (!toggle) return;
 
-        const sun = toggle.querySelector('.sun-icon');
-        const moon = toggle.querySelector('.moon-icon');
-
-        function paint(theme) {
-          if (theme === 'dark') {
-            sun?.classList.remove('hidden');
-            moon?.classList.add('hidden');
-          } else {
-            sun?.classList.add('hidden');
-            moon?.classList.remove('hidden');
-          }
-        }
-
-        paint(html.getAttribute('data-theme'));
-
-        toggle.addEventListener('click', () => {
-          const current = html.getAttribute('data-theme');
-          const next = current === 'dark' ? 'light' : 'dark';
+        toggle?.addEventListener('click', () => {
+          const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
           html.setAttribute('data-theme', next);
           localStorage.setItem('theme', next);
-          paint(next);
         });
 
-        // Copy buttons on code blocks
         document.querySelectorAll('.copy-btn').forEach((btn) => {
           btn.addEventListener('click', async () => {
             const code = btn.getAttribute('data-copy') ?? '';

@@ -62,19 +62,22 @@ body {
 
 .astro-code,
 pre.astro-code {
-  border-radius: 0.75rem;
+  margin: 0;
   padding: 1.25rem 1.5rem;
-  border: 1px solid var(--color-ink-200);
   font-size: 0.875rem;
   line-height: 1.6;
   overflow-x: auto;
+  tab-size: 2;
 }
 
-[data-theme="dark"] .astro-code,
-[data-theme="dark"] pre.astro-code {
-  border-color: rgba(255, 255, 255, 0.06);
-  background-color: rgba(2, 6, 23, 0.6) !important;
-  backdrop-filter: blur(8px);
+.astro-code::-webkit-scrollbar { height: 8px; }
+.astro-code::-webkit-scrollbar-track { background: transparent; }
+.astro-code::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+.astro-code::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 :not(pre) > code {
@@ -107,16 +110,25 @@ pre.astro-code {
 }
 
 .glow {
-  position: absolute;
-  inset: 0;
   background: radial-gradient(
     ellipse at center,
     rgba(220, 38, 38, 0.35),
     transparent 60%
   );
   filter: blur(60px);
-  pointer-events: none;
-  z-index: -1;
+}
+
+.theme-icon-sun,
+.theme-icon-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-icon-sun {
+  display: block;
+}
+
+:root[data-theme="light"] .theme-icon-moon {
+  display: block;
 }
 
 @keyframes float {

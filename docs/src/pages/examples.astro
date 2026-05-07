@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Scan for profanity
-        if: \${{ github.actor != 'dependabot[bot]' }}
+        if: github.actor != 'dependabot[bot]'
         uses: IEvangelist/profanity-filter@main
         with:
           token: \${{ secrets.GITHUB_TOKEN }}
@@ -73,7 +73,7 @@ jobs:
 const composedWorkflow = `# Drop into an existing workflow that already
 # triggers on issues/pull requests
 - name: Scan for profanity
-  if: \${{ github.actor != 'dependabot[bot]' }}
+  if: github.actor != 'dependabot[bot]'
   uses: IEvangelist/profanity-filter@main
   id: profanity-filter
   with:
@@ -124,7 +124,7 @@ const examples = [
   title="Examples — Potty Mouth"
   description="Copy-paste ready examples for common Potty Mouth setups: emoji replacement, custom words, reusable workflows, and more."
 >
-  <section class="max-w-4xl mx-auto px-6 lg:px-8 py-16 sm:py-20">
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-16 sm:py-20">
     <div class="max-w-2xl">
       <span class="inline-block text-xs font-semibold uppercase tracking-wider text-brand-600 dark:text-brand-400">Examples</span>
       <h1 class="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-ink-900 dark:text-white">

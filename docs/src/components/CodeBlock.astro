@@ -10,22 +10,22 @@ interface Props {
 const { code, lang = 'yaml', filename } = Astro.props;
 ---
 
-<figure class="not-prose group relative my-6">
+<figure class="not-prose group relative my-6 overflow-hidden rounded-xl border border-ink-200 dark:border-white/10 bg-[#0d1117] shadow-lg shadow-ink-900/10 dark:shadow-black/40">
   {filename && (
-    <figcaption class="flex items-center justify-between rounded-t-xl border border-b-0 border-ink-200 dark:border-white/10 bg-ink-100/80 dark:bg-white/5 px-4 py-2 text-xs font-mono text-ink-600 dark:text-ink-400">
-      <span class="flex items-center gap-2">
-        <span class="inline-flex h-2 w-2 rounded-full bg-brand-500"></span>
-        {filename}
+    <figcaption class="flex items-center justify-between gap-3 border-b border-white/[0.06] bg-[#161b22] px-4 py-2.5 text-xs font-mono text-ink-400">
+      <span class="flex items-center gap-2 min-w-0">
+        <span class="inline-flex h-2 w-2 rounded-full bg-brand-500 shrink-0"></span>
+        <span class="truncate">{filename}</span>
       </span>
-      <span class="uppercase tracking-wider text-[10px] text-ink-500 dark:text-ink-500">{lang}</span>
+      <span class="uppercase tracking-wider text-[10px] font-semibold text-ink-500 shrink-0">{lang}</span>
     </figcaption>
   )}
-  <div class:list={['relative', filename ? '[&_pre]:rounded-t-none' : '']}>
+  <div class="relative">
     <Code code={code} lang={lang as any} theme="github-dark-default" />
     <button
       type="button"
       data-copy={code}
-      class="copy-btn absolute top-3 right-3 inline-flex h-8 items-center gap-1.5 rounded-md border border-white/10 bg-ink-900/80 hover:bg-ink-900 px-2.5 text-xs text-ink-200 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur"
+      class="copy-btn absolute top-3 right-3 inline-flex h-8 items-center gap-1.5 rounded-md border border-white/10 bg-ink-900/80 hover:bg-ink-900 px-2.5 text-xs text-ink-200 opacity-70 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity backdrop-blur"
       aria-label="Copy code"
     >
       <svg class="copy-idle h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
