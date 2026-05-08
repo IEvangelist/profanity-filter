@@ -10,7 +10,7 @@ name: Release NuGet packages
 #   2. Add a new policy with these values:
 #        Repository Owner: IEvangelist
 #        Repository:       profanity-filter
-#        Workflow File:    release-nuget.yml
+#        Workflow File:    publish-nuget.yml
 #        Environment:      production
 #   3. Save the policy. (Private repos start as 7-day "pending" — the first
 #      successful publish within that window converts it to permanent.)

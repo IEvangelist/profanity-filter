@@ -10,14 +10,14 @@ const inputs = [
     name: 'token',
     required: true,
     type: 'string',
-    typeIcon: 'lucide:type',
+    typeIcon: 'ph:text-aa-duotone',
     description: 'GitHub token used to update issues and pull requests. Use the built-in `${{ secrets.GITHUB_TOKEN }}` for the simplest setup.',
   },
   {
     name: 'replacement-strategy',
     required: false,
     type: 'enum',
-    typeIcon: 'lucide:list',
+    typeIcon: 'ph:list-duotone',
     default: 'asterisk',
     description: 'How profane content should be replaced. See the strategy reference below for all 14 options. Case-insensitive; hyphens are also accepted (e.g. `anger-emoji`).',
   },
@@ -25,7 +25,7 @@ const inputs = [
     name: 'include-updated-note',
     required: false,
     type: 'boolean',
-    typeIcon: 'lucide:toggle-right',
+    typeIcon: 'ph:toggle-right-duotone',
     default: 'true',
     description: 'When `true`, appends a note to the body explaining that the content was updated by the profanity filter.',
   },
@@ -33,7 +33,7 @@ const inputs = [
     name: 'include-confused-reaction',
     required: false,
     type: 'boolean',
-    typeIcon: 'lucide:toggle-right',
+    typeIcon: 'ph:toggle-right-duotone',
     default: 'false',
     description: 'When `true`, the action reacts to the issue or pull request with the 😕 confused reaction.',
   },
@@ -41,14 +41,14 @@ const inputs = [
     name: 'manual-profane-words',
     required: false,
     type: 'string',
-    typeIcon: 'lucide:type',
+    typeIcon: 'ph:text-aa-duotone',
     description: 'A comma-separated list of additional words to include in the filter. Layered on top of the built-in dictionary.',
   },
   {
     name: 'custom-profane-words-url',
     required: false,
     type: 'url',
-    typeIcon: 'lucide:link',
+    typeIcon: 'ph:link-duotone',
     description: 'A URL returning a newline-separated list of words to include in the filter.',
   },
 ];
@@ -89,7 +89,7 @@ const languages = [
 >
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-16 sm:py-20">
     <div class="max-w-2xl">
-      <SectionEyebrow icon="lucide:book-marked" label="Reference" />
+      <SectionEyebrow icon="ph:book-bookmark-duotone" label="Reference" />
       <h1 class="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-ink-900 dark:text-white">API reference</h1>
       <p class="mt-5 text-lg leading-relaxed text-ink-600 dark:text-ink-300">
         Every input, every strategy, every language. Only <code class="font-mono">token</code> is required &mdash;
@@ -99,7 +99,7 @@ const languages = [
 
     <!-- Inputs -->
     <h2 class="mt-16 flex items-center gap-2 text-2xl font-bold tracking-tight text-ink-900 dark:text-white">
-      <Icon name="lucide:sliders-horizontal" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      <Icon name="ph:sliders-horizontal-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
       Inputs
     </h2>
     <div class="mt-6 space-y-3">
@@ -109,7 +109,7 @@ const languages = [
             <code class="font-mono text-base font-semibold text-ink-900 dark:text-white">{input.name}</code>
             {input.required ? (
               <span class="inline-flex items-center gap-1 rounded-full bg-brand-100 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider">
-                <Icon name="lucide:asterisk" class="h-3 w-3" />
+                <Icon name="ph:asterisk-duotone" class="h-3 w-3" />
                 Required
               </span>
             ) : (
@@ -134,7 +134,7 @@ const languages = [
 
     <!-- Strategies -->
     <h2 class="mt-16 flex items-center gap-2 text-2xl font-bold tracking-tight text-ink-900 dark:text-white">
-      <Icon name="lucide:paintbrush" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      <Icon name="ph:paint-brush-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
       Replacement strategies
     </h2>
     <p class="mt-3 text-ink-600 dark:text-ink-300 max-w-2xl">
@@ -157,7 +157,7 @@ const languages = [
 
     <!-- Languages -->
     <h2 class="mt-16 flex items-center gap-2 text-2xl font-bold tracking-tight text-ink-900 dark:text-white">
-      <Icon name="lucide:globe" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      <Icon name="ph:globe-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
       Supported languages
     </h2>
     <p class="mt-3 text-ink-600 dark:text-ink-300 max-w-2xl">
@@ -176,30 +176,30 @@ const languages = [
       Browse the dictionaries
       <a class="inline-flex items-center gap-1 text-brand-600 dark:text-brand-400 underline underline-offset-2" href="https://github.com/IEvangelist/profanity-filter/tree/main/src/ProfanityFilter.Services/Data" target="_blank" rel="noopener noreferrer">
         in the Data directory on GitHub
-        <Icon name="lucide:arrow-up-right" class="h-3.5 w-3.5" />
+        <Icon name="ph:arrow-up-right-duotone" class="h-3.5 w-3.5" />
       </a>
     </p>
 
     <!-- Behavior -->
     <h2 class="mt-16 flex items-center gap-2 text-2xl font-bold tracking-tight text-ink-900 dark:text-white">
-      <Icon name="lucide:workflow" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      <Icon name="ph:flow-arrow-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
       What the action does
     </h2>
     <ul class="mt-4 space-y-2.5 text-ink-700 dark:text-ink-300">
       <li class="flex gap-3">
-        <Icon name="lucide:check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
+        <Icon name="ph:check-circle-duotone" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
         <span>Replaces any detected profane content using your configured strategy.</span>
       </li>
       <li class="flex gap-3">
-        <Icon name="lucide:check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
+        <Icon name="ph:check-circle-duotone" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
         <span>Optionally reacts to the issue or pull request with the 😕 confused reaction.</span>
       </li>
       <li class="flex gap-3">
-        <Icon name="lucide:check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
+        <Icon name="ph:check-circle-duotone" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
         <span>Applies the <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">profane content 🤬</code> label, if it exists in the repo.</span>
       </li>
       <li class="flex gap-3">
-        <Icon name="lucide:check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
+        <Icon name="ph:check-circle-duotone" class="mt-0.5 h-5 w-5 shrink-0 text-brand-600 dark:text-brand-400" />
         <span>Posts a detailed job summary table for traceability.</span>
       </li>
     </ul>
