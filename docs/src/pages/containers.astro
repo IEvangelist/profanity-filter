@@ -8,15 +8,6 @@ import { Icon } from 'astro-icon/components';
 
 const base = import.meta.env.BASE_URL;
 
-// Image metadata badges (third-party — gracefully degrade if unavailable).
-const ghcrBadge = (image: string, kind: 'tag' | 'size' | 'updated', label: string) => {
-  const path =
-    kind === 'tag' ? 'latest_tag'
-    : kind === 'size' ? 'size'
-    : 'last-pushed';
-  return `https://ghcr-badge.egpl.dev/${image}/${path}?label=${encodeURIComponent(label)}&color=%2310b981&trim=major`;
-};
-
 const actionImage = 'ievangelist/profanity-filter';
 const apiImage = 'ievangelist/profanity-filter-api';
 
@@ -150,13 +141,6 @@ const apiRoutes = [
       line work end-to-end.
     </p>
 
-    <div class="mt-5 flex flex-wrap items-center gap-2">
-      <img src={ghcrBadge(actionImage, 'tag', 'latest tag')} alt="latest image tag" class="h-5" loading="lazy" />
-      <img src={ghcrBadge(actionImage, 'size', 'image size')} alt="image size" class="h-5" loading="lazy" />
-      <img src={ghcrBadge(actionImage, 'updated', 'last updated')} alt="last updated" class="h-5" loading="lazy" />
-      <img src="https://img.shields.io/github/v/release/IEvangelist/profanity-filter?label=release&color=10b981" alt="latest release" class="h-5" loading="lazy" />
-    </div>
-
     <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
       <Icon name="ph:download-simple-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
       Pull
@@ -218,14 +202,6 @@ const apiRoutes = [
       <a href={`${base}/aspire`} class="text-brand-600 dark:text-brand-400 hover:underline">Aspire integration</a>
       pulls.
     </p>
-
-    <div class="mt-5 flex flex-wrap items-center gap-2">
-      <img src={ghcrBadge(apiImage, 'tag', 'latest tag')} alt="latest image tag" class="h-5" loading="lazy" />
-      <img src={ghcrBadge(apiImage, 'size', 'image size')} alt="image size" class="h-5" loading="lazy" />
-      <img src={ghcrBadge(apiImage, 'updated', 'last updated')} alt="last updated" class="h-5" loading="lazy" />
-      <img src="https://img.shields.io/nuget/dt/ProfanityFilter.Client?label=client+downloads&logo=nuget&color=10b981" alt="NuGet client downloads" class="h-5" loading="lazy" />
-      <img src="https://img.shields.io/nuget/dt/ProfanityFilter.Hosting?label=hosting+downloads&logo=nuget&color=10b981" alt="NuGet hosting downloads" class="h-5" loading="lazy" />
-    </div>
 
     <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
       <Icon name="ph:download-simple-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />

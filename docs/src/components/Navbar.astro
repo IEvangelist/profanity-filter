@@ -5,19 +5,19 @@ const base = import.meta.env.BASE_URL;
 const currentPath = Astro.url.pathname;
 
 const links = [
-  { href: `${base}`, label: 'Overview', match: (p: string) => p === base || p === `${base}/` || p === '/' },
-  { href: `${base}/getting-started`, label: 'Get started', match: (p: string) => p.includes('getting-started') },
-  { href: `${base}/api`, label: 'Reference', match: (p: string) => p.endsWith('/api') || p.endsWith('/api/') },
-  { href: `${base}/aspire`, label: 'Aspire', match: (p: string) => p.includes('aspire') },
-  { href: `${base}/containers`, label: 'Containers', match: (p: string) => p.includes('containers') },
-  { href: `${base}/examples`, label: 'Examples', match: (p: string) => p.includes('examples') },
+  { href: `${base}`, label: 'Overview', icon: 'ph:house-duotone', match: (p: string) => p === base || p === `${base}/` || p === '/' },
+  { href: `${base}/getting-started`, label: 'Get started', icon: 'ph:rocket-launch-duotone', match: (p: string) => p.includes('getting-started') },
+  { href: `${base}/api`, label: 'Reference', icon: 'ph:book-bookmark-duotone', match: (p: string) => p.endsWith('/api') || p.endsWith('/api/') },
+  { href: `${base}/aspire`, label: 'Aspire', icon: 'ph:cube-duotone', match: (p: string) => p.includes('aspire') },
+  { href: `${base}/containers`, label: 'Containers', icon: 'ph:shipping-container-duotone', match: (p: string) => p.includes('containers') },
+  { href: `${base}/examples`, label: 'Examples', icon: 'ph:list-checks-duotone', match: (p: string) => p.includes('examples') },
 ];
 ---
 
 <header class="sticky top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-ink-950/70 border-b border-ink-200/60 dark:border-white/5">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
-    <div class="flex h-16 items-center justify-between">
-      <a href={base} class="flex items-center gap-2.5 group">
+    <div class="flex h-16 items-center justify-between gap-3">
+      <a href={base} class="flex items-center gap-2.5 group min-w-0">
         <span class="text-2xl group-hover:rotate-12 transition-transform">🤬</span>
         <span class="font-semibold tracking-tight text-ink-900 dark:text-ink-50">
           Potty Mouth
@@ -27,7 +27,7 @@ const links = [
         </span>
       </a>
 
-      <nav class="hidden md:flex items-center gap-1">
+      <nav class="hidden lg:flex items-center gap-1">
         {links.map(link => (
           <a
             href={link.href}
@@ -62,28 +62,100 @@ const links = [
           href="https://github.com/IEvangelist/profanity-filter"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 h-9 px-3 rounded-md bg-ink-900 hover:bg-ink-800 dark:bg-white dark:hover:bg-ink-100 text-white dark:text-ink-900 text-sm font-medium transition-colors"
+          class="hidden sm:inline-flex items-center gap-2 h-9 px-3 rounded-md bg-ink-900 hover:bg-ink-800 dark:bg-white dark:hover:bg-ink-100 text-white dark:text-ink-900 text-sm font-medium transition-colors"
         >
           <Icon name="simple-icons:github" class="h-4 w-4" />
           <span class="hidden sm:inline">GitHub</span>
         </a>
+
+        <button
+          id="mobile-menu-toggle"
+          type="button"
+          class="lg:hidden inline-flex h-9 w-9 items-center justify-center rounded-md border border-ink-200 dark:border-white/10 bg-white dark:bg-white/5 text-ink-700 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-white/10 transition-colors cursor-pointer"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          <svg class="menu-icon-open h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg class="menu-icon-close hidden h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
     </div>
+  </div>
 
-    <nav class="md:hidden flex items-center gap-1 pb-3 -mx-1 overflow-x-auto">
+  <div
+    id="mobile-menu"
+    class="lg:hidden hidden border-t border-ink-200/60 dark:border-white/5 bg-white/95 dark:bg-ink-950/95 backdrop-blur-md"
+  >
+    <nav class="max-w-7xl mx-auto px-6 py-3 flex flex-col gap-1">
       {links.map(link => (
         <a
           href={link.href}
           class:list={[
-            'whitespace-nowrap px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            'flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm font-medium transition-colors',
             link.match(currentPath)
               ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/40'
-              : 'text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-white/5',
+              : 'text-ink-700 dark:text-ink-300 hover:text-ink-900 dark:hover:text-white hover:bg-ink-100 dark:hover:bg-white/5',
           ]}
         >
+          <Icon name={link.icon} class="h-4 w-4 shrink-0" />
           {link.label}
         </a>
       ))}
+
+      <a
+        href="https://github.com/IEvangelist/profanity-filter"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="sm:hidden mt-2 flex items-center justify-center gap-2 h-10 px-3 rounded-md bg-ink-900 hover:bg-ink-800 dark:bg-white dark:hover:bg-ink-100 text-white dark:text-ink-900 text-sm font-medium transition-colors"
+      >
+        <Icon name="simple-icons:github" class="h-4 w-4" />
+        View on GitHub
+      </a>
     </nav>
   </div>
 </header>
+
+<script is:inline>
+  (() => {
+    const toggle = document.getElementById('mobile-menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (!toggle || !menu) return;
+
+    const open = toggle.querySelector('.menu-icon-open');
+    const close = toggle.querySelector('.menu-icon-close');
+
+    const setOpen = (next) => {
+      menu.classList.toggle('hidden', !next);
+      open?.classList.toggle('hidden', next);
+      close?.classList.toggle('hidden', !next);
+      toggle.setAttribute('aria-expanded', String(next));
+      toggle.setAttribute('aria-label', next ? 'Close menu' : 'Open menu');
+    };
+
+    toggle.addEventListener('click', () => {
+      const isOpen = !menu.classList.contains('hidden');
+      setOpen(!isOpen);
+    });
+
+    // Close on resize past breakpoint to avoid orphan-open state.
+    const mql = window.matchMedia('(min-width: 1024px)');
+    const onChange = (e) => { if (e.matches) setOpen(false); };
+    mql.addEventListener?.('change', onChange);
+
+    // Close when navigating to anchor on the same page.
+    menu.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target instanceof HTMLAnchorElement) {
+        setOpen(false);
+      }
+    });
+  })();
+</script>
