@@ -1,0 +1,337 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CodeBlock from '../components/CodeBlock.astro';
+import Callout from '../components/Callout.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import SectionEyebrow from '../components/SectionEyebrow.astro';
+import { Icon } from 'astro-icon/components';
+
+const base = import.meta.env.BASE_URL;
+
+// Image metadata badges (third-party — gracefully degrade if unavailable).
+const ghcrBadge = (image: string, kind: 'tag' | 'size' | 'updated', label: string) => {
+  const path =
+    kind === 'tag' ? 'latest_tag'
+    : kind === 'size' ? 'size'
+    : 'last-pushed';
+  return `https://ghcr-badge.egpl.dev/${image}/${path}?label=${encodeURIComponent(label)}&color=%2310b981&trim=major`;
+};
+
+const actionImage = 'ievangelist/profanity-filter';
+const apiImage = 'ievangelist/profanity-filter-api';
+
+const dockerPullAction = `docker pull ghcr.io/ievangelist/profanity-filter:13.3.0`;
+const dockerPullApi = `docker pull ghcr.io/ievangelist/profanity-filter-api:13.3.0`;
+
+const dockerRunApi = `# Run the API on http://localhost:8080
+docker run --rm \\
+  --name profanity-filter-api \\
+  -p 8080:8080 \\
+  ghcr.io/ievangelist/profanity-filter-api:13.3.0
+
+# Optional — mount your own *.txt word lists, merged with the
+# built-in 4,900+ word dictionary at startup:
+docker run --rm \\
+  --name profanity-filter-api \\
+  -p 8080:8080 \\
+  -v "$(pwd)/CustomData":/app/CustomData:ro \\
+  ghcr.io/ievangelist/profanity-filter-api:13.3.0`;
+
+const composeApi = `# compose.yaml
+services:
+  profanity-filter:
+    image: ghcr.io/ievangelist/profanity-filter-api:13.3.0
+    container_name: profanity-filter-api
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./CustomData:/app/CustomData:ro
+    restart: unless-stopped`;
+
+const curlFilter = `curl -X POST http://localhost:8080/profanity/filter \\
+  -H "content-type: application/json" \\
+  -d '{
+    "text": "What the heck, dude?",
+    "strategy": "Emoji"
+  }'`;
+
+const apiRoutes = [
+  { method: 'POST', path: '/profanity/filter',         desc: 'Apply the filter to a body of text. Returns the filtered output, the matched words, and the per-step trace.' },
+  { method: 'GET',  path: '/profanity/strategies',     desc: 'List the 14 replacement strategies (Emoji, RedactedRectangle, AngerEmoji, …).' },
+  { method: 'GET',  path: '/profanity/targets',        desc: 'List the supported filter targets.' },
+  { method: 'GET',  path: '/profanity/data',           desc: 'List the available word-list data set names (one per language plus any custom mounts).' },
+  { method: 'GET',  path: '/profanity/data/{name}',    desc: 'Return the words in a single data set.' },
+  { method: 'WS',   path: '/profanity/hub',            desc: 'SignalR hub — bi-directional streaming for live UIs (WebSockets / SSE / long-polling).' },
+];
+---
+
+<BaseLayout
+  title="Container images — Potty Mouth"
+  description="Two distroless Linux container images on GHCR — the GitHub Action runner and the standalone profanity-filter API. Pull, run, and integrate."
+>
+  <section class="relative overflow-hidden">
+    <div class="bg-grid absolute inset-0 opacity-60"></div>
+    <div class="glow pointer-events-none absolute inset-x-0 top-0 h-[480px]"></div>
+
+    <div class="relative max-w-5xl mx-auto px-6 lg:px-8 pt-16 pb-12 sm:pt-20">
+      <SectionEyebrow icon="ph:shipping-container-duotone" label="Container images" />
+      <h1 class="mt-3 text-4xl sm:text-5xl font-bold tracking-tight text-ink-900 dark:text-white">
+        Two images. One filter. Wherever you ship.
+      </h1>
+      <p class="mt-5 text-lg sm:text-xl leading-relaxed text-ink-600 dark:text-ink-300 max-w-3xl">
+        Every release publishes <strong class="text-ink-900 dark:text-white">two distroless Linux images</strong>
+        to <a href="https://github.com/IEvangelist?tab=packages&repo_name=profanity-filter" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-400 hover:underline">GitHub Container Registry</a>
+        &mdash; one packaged as a GitHub Action, one as a standalone HTTP API. Both are built from the
+        same Native AOT engine and tagged in lockstep.
+      </p>
+
+      <div class="mt-7 flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="ph:lightning-duotone" class="h-3.5 w-3.5" />
+          Native AOT
+        </span>
+        <span class="inline-flex items-center gap-1 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="ph:shield-check-duotone" class="h-3.5 w-3.5" />
+          Distroless base
+        </span>
+        <span class="inline-flex items-center gap-1 rounded-full bg-violet-500/10 text-violet-700 dark:text-violet-300 ring-1 ring-violet-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="ph:cpu-duotone" class="h-3.5 w-3.5" />
+          linux/amd64 &middot; linux/arm64
+        </span>
+        <span class="inline-flex items-center gap-1 rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="ph:tag-duotone" class="h-3.5 w-3.5" />
+          v13.3.0
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-10">
+    <div class="grid gap-5 sm:grid-cols-2">
+      <FeatureCard icon="🐙" title="Action container">
+        <p>
+          <code class="font-mono text-xs">ghcr.io/ievangelist/profanity-filter</code> &mdash;
+          the runner image used by the GitHub Action step. You usually don&rsquo;t pull this directly;
+          GitHub does it for you when a workflow says <code class="font-mono text-xs">uses: IEvangelist/profanity-filter@main</code>.
+        </p>
+      </FeatureCard>
+      <FeatureCard icon="🛰️" title="API container">
+        <p>
+          <code class="font-mono text-xs">ghcr.io/ievangelist/profanity-filter-api</code> &mdash;
+          the standalone HTTP API. Powers the Aspire integration, the
+          <code class="font-mono text-xs">ProfanityFilter.Client</code> NuGet, and any standalone deployment.
+        </p>
+      </FeatureCard>
+    </div>
+  </section>
+
+  <!-- Action container -->
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-2">
+      <h2 class="flex items-center gap-2.5 text-3xl font-bold tracking-tight text-ink-900 dark:text-white">
+        <Icon name="simple-icons:githubactions" class="h-7 w-7 text-brand-600 dark:text-brand-400" />
+        Action container
+      </h2>
+      <a
+        href={`https://github.com/IEvangelist/profanity-filter/pkgs/container/${actionImage.split('/')[1]}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:underline"
+      >
+        View on GHCR
+        <Icon name="ph:arrow-up-right-duotone" class="h-3.5 w-3.5" />
+      </a>
+    </div>
+    <p class="mt-2 text-ink-600 dark:text-ink-300 max-w-3xl">
+      The Action container packages the runner the workflow step uses. Powered by
+      <strong>.NET 10 Native AOT</strong>, it cold-starts in milliseconds, has no .NET runtime to install,
+      and is what makes a single
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">uses:</code>
+      line work end-to-end.
+    </p>
+
+    <div class="mt-5 flex flex-wrap items-center gap-2">
+      <img src={ghcrBadge(actionImage, 'tag', 'latest tag')} alt="latest image tag" class="h-5" loading="lazy" />
+      <img src={ghcrBadge(actionImage, 'size', 'image size')} alt="image size" class="h-5" loading="lazy" />
+      <img src={ghcrBadge(actionImage, 'updated', 'last updated')} alt="last updated" class="h-5" loading="lazy" />
+      <img src="https://img.shields.io/github/v/release/IEvangelist/profanity-filter?label=release&color=10b981" alt="latest release" class="h-5" loading="lazy" />
+    </div>
+
+    <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+      <Icon name="ph:download-simple-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      Pull
+    </h3>
+    <CodeBlock code={dockerPullAction} lang="bash" filename="terminal" />
+
+    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+      <a
+        href="https://github.com/marketplace/actions/potty-mouth"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold transition-colors"
+      >
+        <Icon name="ph:storefront-duotone" class="h-4 w-4" />
+        GitHub Marketplace
+        <Icon name="ph:arrow-up-right-duotone" class="h-4 w-4" />
+      </a>
+      <a
+        href={`${base}/getting-started`}
+        class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg border border-ink-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.06] text-ink-900 dark:text-ink-100 font-semibold transition-colors"
+      >
+        <Icon name="ph:rocket-launch-duotone" class="h-4 w-4" />
+        Wire it into a workflow
+      </a>
+    </div>
+
+    <Callout variant="note" title="No standalone usage by design">
+      <p>
+        The Action container is built around the GitHub Actions runner contract &mdash;
+        environment variables, the
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">GITHUB_TOKEN</code>,
+        and event payloads. If you want the filter as a service, reach for the
+        <a href="#api-container" class="font-semibold text-brand-700 dark:text-brand-300 hover:underline">API container</a>
+        below instead.
+      </p>
+    </Callout>
+  </section>
+
+  <!-- API container -->
+  <section id="api-container" class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <div class="flex items-center justify-between flex-wrap gap-3 mb-2">
+      <h2 class="flex items-center gap-2.5 text-3xl font-bold tracking-tight text-ink-900 dark:text-white">
+        <Icon name="ph:cloud-duotone" class="h-7 w-7 text-brand-600 dark:text-brand-400" />
+        API container
+      </h2>
+      <a
+        href={`https://github.com/IEvangelist/profanity-filter/pkgs/container/${apiImage.split('/')[1]}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 text-sm text-brand-600 dark:text-brand-400 hover:underline"
+      >
+        View on GHCR
+        <Icon name="ph:arrow-up-right-duotone" class="h-3.5 w-3.5" />
+      </a>
+    </div>
+    <p class="mt-2 text-ink-600 dark:text-ink-300 max-w-3xl">
+      A standalone ASP.NET Core minimal-API surface over the same filter engine, plus a
+      SignalR hub for live streaming. Same image the
+      <a href={`${base}/aspire`} class="text-brand-600 dark:text-brand-400 hover:underline">Aspire integration</a>
+      pulls.
+    </p>
+
+    <div class="mt-5 flex flex-wrap items-center gap-2">
+      <img src={ghcrBadge(apiImage, 'tag', 'latest tag')} alt="latest image tag" class="h-5" loading="lazy" />
+      <img src={ghcrBadge(apiImage, 'size', 'image size')} alt="image size" class="h-5" loading="lazy" />
+      <img src={ghcrBadge(apiImage, 'updated', 'last updated')} alt="last updated" class="h-5" loading="lazy" />
+      <img src="https://img.shields.io/nuget/dt/ProfanityFilter.Client?label=client+downloads&logo=nuget&color=10b981" alt="NuGet client downloads" class="h-5" loading="lazy" />
+      <img src="https://img.shields.io/nuget/dt/ProfanityFilter.Hosting?label=hosting+downloads&logo=nuget&color=10b981" alt="NuGet hosting downloads" class="h-5" loading="lazy" />
+    </div>
+
+    <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+      <Icon name="ph:download-simple-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      Pull
+    </h3>
+    <CodeBlock code={dockerPullApi} lang="bash" filename="terminal" />
+
+    <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+      <Icon name="ph:terminal-window-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      Run it standalone
+    </h3>
+    <p class="mt-2 text-ink-600 dark:text-ink-300">
+      The API listens on <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">:8080</code>
+      inside the container. Map the port and you&rsquo;re live.
+    </p>
+    <CodeBlock code={dockerRunApi} lang="bash" filename="terminal" />
+
+    <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+      <Icon name="ph:stack-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      Or with Compose
+    </h3>
+    <CodeBlock code={composeApi} lang="yaml" filename="compose.yaml" />
+
+    <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+      <Icon name="ph:plugs-connected-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      HTTP surface
+    </h3>
+    <p class="mt-2 text-ink-600 dark:text-ink-300">
+      All routes return JSON. The container also serves an interactive
+      <a href="https://github.com/scalar/scalar" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-400 hover:underline">Scalar</a>
+      reference at <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">/scalar</code>
+      and an OpenAPI document at <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">/openapi/v1.json</code>.
+    </p>
+    <div class="mt-4 overflow-hidden rounded-2xl border border-ink-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.02]">
+      <table class="w-full text-sm">
+        <thead class="bg-ink-50 dark:bg-white/[0.03] text-left text-xs uppercase tracking-wider text-ink-500 dark:text-ink-400">
+          <tr>
+            <th class="px-5 py-3 font-semibold w-24">Method</th>
+            <th class="px-5 py-3 font-semibold">Path</th>
+            <th class="px-5 py-3 font-semibold">Description</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-ink-200/60 dark:divide-white/5">
+          {apiRoutes.map(route => (
+            <tr>
+              <td class="px-5 py-3 align-top">
+                <span class:list={[
+                  'inline-flex items-center justify-center min-w-[3.25rem] px-2 py-0.5 rounded font-mono text-[11px] font-semibold',
+                  route.method === 'GET'  && 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30',
+                  route.method === 'POST' && 'bg-sky-500/10 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/30',
+                  route.method === 'WS'   && 'bg-violet-500/10 text-violet-700 dark:text-violet-300 ring-1 ring-violet-500/30',
+                ]}>
+                  {route.method}
+                </span>
+              </td>
+              <td class="px-5 py-3 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">{route.path}</td>
+              <td class="px-5 py-3 align-top text-ink-700 dark:text-ink-300">{route.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+      <Icon name="ph:lightning-duotone" class="h-5 w-5 text-brand-600 dark:text-brand-400" />
+      Try it
+    </h3>
+    <CodeBlock code={curlFilter} lang="bash" filename="terminal" />
+
+    <Callout variant="tip" title="Already in .NET? Skip the boilerplate">
+      <p>
+        The
+        <a href="https://www.nuget.org/packages/ProfanityFilter.Client" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-brand-700 dark:text-brand-300 hover:underline">
+          <Icon name="simple-icons:nuget" class="h-3.5 w-3.5" />
+          ProfanityFilter.Client
+        </a>
+        NuGet wraps every endpoint above in a typed
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">ProfanityFilterClient</code>.
+        Just call
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">builder.AddProfanityFilterClient("profanity-filter")</code>
+        and inject &mdash; no manual
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">HttpClient</code>
+        wiring required.
+      </p>
+    </Callout>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 pb-20 pt-6">
+    <div class="flex flex-col sm:flex-row items-center gap-3">
+      <a
+        href={`${base}/aspire`}
+        class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold transition-colors"
+      >
+        <Icon name="ph:cube-duotone" class="h-4 w-4" />
+        Use it from Aspire
+      </a>
+      <a
+        href="https://github.com/IEvangelist/profanity-filter/pkgs/container/profanity-filter-api"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg border border-ink-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] hover:bg-white dark:hover:bg-white/[0.06] text-ink-900 dark:text-ink-100 font-semibold transition-colors"
+      >
+        <Icon name="simple-icons:github" class="h-4 w-4" />
+        API image on GHCR
+        <Icon name="ph:arrow-up-right-duotone" class="h-4 w-4" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -8,7 +8,7 @@ import { Icon } from 'astro-icon/components';
 
 const base = import.meta.env.BASE_URL;
 
-const installCmd = `dotnet add package ProfanityFilter.Hosting`;
+const installCmd = `aspire add ProfanityFilter.Hosting`;
 
 const csharpAppHost = `// apphost.cs
 #:sdk Aspire.AppHost.Sdk@13.3.0
@@ -43,13 +43,22 @@ const api = await builder.addProject("api", { project: "../src/MyApi/MyApi.cspro
 const app = await builder.build();
 await app.run();`;
 
-const consumerCsharp = `// In your API project (MyApi.csproj)
-builder.Services.AddHttpClient("profanity-filter", client =>
+const consumerCsharp = `// In your API project (MyApi.csproj) — install ProfanityFilter.Client, then:
+builder.AddProfanityFilterClient("profanity-filter");
+
+// Now inject ProfanityFilterClient anywhere — it's a typed
+// HTTP client wired to the resource's connection string, with
+// .Rest for REST calls and .Realtime for the SignalR hub.
+app.MapPost("/scrub", async (
+    string text,
+    ProfanityFilterClient profanity) =>
 {
-    // Aspire injects the connection string for the resource name you used
-    // in your AppHost — here, "profanity-filter".
-    var endpoint = builder.Configuration.GetConnectionString("profanity-filter");
-    client.BaseAddress = new Uri(endpoint!);
+    var response = await profanity.Rest.ApplyFilterAsync(
+        new ProfanityFilterRequest(text, ReplacementStrategy.Emoji));
+
+    return response.Match(
+        onValue: r => Results.Ok(r.FilteredText),
+        onAbsent: () => Results.NotFound());
 });`;
 
 const customDataExample = `// Optional: ship a folder of newline-delimited *.txt files with
@@ -126,15 +135,23 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
       Install
     </h2>
     <p class="mt-3 text-ink-600 dark:text-ink-300">
-      Add the package to your AppHost project.
+      From your AppHost directory, run the
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">aspire add</code>
+      command. The CLI installs the NuGet package for C# AppHosts and additionally generates the typed
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">.modules</code>
+      SDK for TypeScript AppHosts &mdash; same command, both languages.
     </p>
     <CodeBlock code={installCmd} lang="bash" filename="terminal" />
 
-    <Callout variant="note" title="Aspire 13.3 or later">
+    <Callout variant="tip" title="13.3.0 — first stable release">
       <p>
-        This integration is built and tested against Aspire 13.3. If you're using an earlier version, pin
-        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">ProfanityFilter.Hosting@9.x</code>
-        instead.
+        Built and tested against Aspire 13.3. Earlier preview builds were tagged
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">9.0.7-alpha.*</code>
+        and <em>are</em> available on NuGet, but
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">13.3.0</code>
+        is the first stable release &mdash; the multi-language
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">[AspireExport]</code>
+        attribute below requires it.
       </p>
     </Callout>
   </section>
@@ -185,16 +202,25 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
     <p class="mt-3 text-ink-600 dark:text-ink-300">
       The resource implements
       <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">IResourceWithConnectionString</code>,
-      so the HTTPS endpoint is injected as a normal connection string under the resource name.
-    </p>
-    <CodeBlock code={consumerCsharp} lang="csharp" filename="Program.cs" />
-    <p class="mt-3 text-ink-600 dark:text-ink-400 text-sm">
-      Pair this with
-      <a href="https://www.nuget.org/packages/ProfanityFilter.Client" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-brand-600 dark:text-brand-400 hover:underline">
+      so referencing it from a project flows the HTTPS endpoint through as a connection string under the resource name.
+      Pair that with
+      <a href="https://www.nuget.org/packages/ProfanityFilter.Client" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 font-semibold text-brand-600 dark:text-brand-400 hover:underline">
         <Icon name="simple-icons:nuget" class="h-3.5 w-3.5" />
         ProfanityFilter.Client
       </a>
-      to skip the boilerplate &mdash; it ships a strongly-typed client over the same HTTP API.
+      and a single
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">AddProfanityFilterClient(...)</code>
+      call &mdash; it reads the connection string, registers a typed
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">HttpClient</code>,
+      and exposes a strongly-typed
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">ProfanityFilterClient</code>
+      with REST and SignalR-backed real-time clients ready to inject.
+    </p>
+    <CodeBlock code={consumerCsharp} lang="csharp" filename="Program.cs" />
+    <p class="mt-3 text-ink-600 dark:text-ink-400 text-sm">
+      Need keyed services?
+      <code class="font-mono text-xs px-1 py-0.5 rounded bg-ink-100 dark:bg-white/10">AddKeyedProfanityFilterClient("name")</code>
+      registers the same dependencies under a service key &mdash; useful when you reference more than one filter.
     </p>
   </section>
 
