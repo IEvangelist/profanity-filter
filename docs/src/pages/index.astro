@@ -165,6 +165,44 @@ const strategies = [
     </div>
   </section>
 
+  <section class="max-w-6xl mx-auto px-6 lg:px-8 py-20 sm:py-24">
+    <div class="text-center max-w-2xl mx-auto">
+      <SectionEyebrow icon="ph:play-circle-duotone" label="See it in action" />
+      <h2 class="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-ink-900 dark:text-white">
+        Live filtering, every keystroke.
+      </h2>
+      <p class="mt-4 text-ink-600 dark:text-ink-400">
+        The Aspire-hosted playground streams text through the same engine over SignalR &mdash; type
+        a phrase, swap the replacement strategy, and watch the output rewrite itself in real time.
+      </p>
+    </div>
+
+    <figure class="mt-10 relative overflow-hidden rounded-2xl border border-ink-200/80 dark:border-white/10 shadow-2xl shadow-ink-900/10 dark:shadow-black/40 bg-[#0a0a0a]">
+      <video
+        class="block w-full h-auto"
+        src={`${base}/demo.webm`}
+        poster={`${base}/demo-poster.png`}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        controls
+        aria-label="Demo of the Profanity Filter live web playground: typing a sentence with profane words and cycling through replacement strategies in dark mode."
+      >
+        Your browser does not support embedded video. <a href={`${base}/demo.webm`} class="underline">Download the demo</a>.
+      </video>
+      <figcaption class="sr-only">
+        Demo of the Profanity Filter live web playground: typing a sentence with profane words and cycling through replacement strategies in dark mode.
+      </figcaption>
+    </figure>
+
+    <p class="mt-4 text-center text-xs text-ink-500 dark:text-ink-500">
+      Recorded locally from the Aspire AppHost in <code class="font-mono">playground/apphost.cs</code> &mdash;
+      WebApi + Vite playground, streaming over SignalR.
+    </p>
+  </section>
+
   <section class="max-w-3xl mx-auto px-6 lg:px-8 py-20 sm:py-24 text-center">
     <SectionEyebrow icon="ph:heart-duotone" label="Why bother?" />
     <h2 class="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-ink-900 dark:text-white">
