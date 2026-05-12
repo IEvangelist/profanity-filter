@@ -218,19 +218,127 @@ const strategies = [
     </p>
   </section>
 
-  <section class="max-w-3xl mx-auto px-6 lg:px-8 py-20 sm:py-24 text-center">
-    <SectionEyebrow icon="ph:heart-duotone" label="Why bother?" />
-    <h2 class="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-ink-900 dark:text-white">
-      Not every contributor is sunshine and rainbows.
-    </h2>
-    <p class="mt-6 text-lg leading-relaxed text-ink-600 dark:text-ink-300">
-      Open source is a public-facing space, and the tone of a project sets the tone of its community.
-      Potty Mouth quietly catches the rough edges &mdash; rewriting profane content, flagging the issue,
-      and leaving a clean audit trail behind &mdash; so you can keep building without playing comment-thread cop.
-    </p>
-    <p class="mt-4 text-lg leading-relaxed text-ink-600 dark:text-ink-300">
-      With this action in your workflow, your repo can be 🌈 and 🐎.
-    </p>
+  <section class="max-w-7xl mx-auto px-6 lg:px-8 py-20 sm:py-24">
+    <div class="relative overflow-hidden rounded-3xl border border-ink-200/80 dark:border-white/10 bg-gradient-to-br from-rose-500/[0.06] via-amber-500/[0.04] to-brand-500/[0.06] dark:from-rose-500/[0.09] dark:via-amber-500/[0.06] dark:to-brand-500/[0.09] px-6 sm:px-10 lg:px-14 py-14 sm:py-16">
+      <div class="bg-grid absolute inset-0 opacity-30 pointer-events-none" aria-hidden="true"></div>
+
+      <div class="relative grid gap-10 lg:gap-14 lg:grid-cols-12 lg:items-center">
+        <div class="lg:col-span-7">
+          <SectionEyebrow icon="ph:heart-duotone" label="Why bother?" tone="text-rose-600 dark:text-rose-400" />
+          <h2 class="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-ink-900 dark:text-white">
+            Not every contributor is
+            <span class="relative inline-block">
+              <span class="relative z-10">sunshine and rainbows</span>
+              <span class="absolute inset-x-0 bottom-1 h-2 bg-rose-400/40 dark:bg-rose-500/40 -z-0" aria-hidden="true"></span>
+            </span>.
+          </h2>
+          <p class="mt-6 text-lg leading-relaxed text-ink-700 dark:text-ink-200">
+            Open source is a public-facing space, and the tone of a project sets the tone of its
+            community. Potty Mouth quietly catches the rough edges &mdash; rewriting profane content,
+            flagging the issue, and leaving a clean audit trail behind &mdash; so you can keep building
+            without playing comment-thread cop.
+          </p>
+          <p class="mt-5 text-lg leading-relaxed text-ink-700 dark:text-ink-200">
+            With this action in your workflow, your repo can be
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/70 dark:bg-white/[0.06] border border-ink-200/70 dark:border-white/10 font-semibold text-ink-900 dark:text-white">🌈 inviting</span>
+            and
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/70 dark:bg-white/[0.06] border border-ink-200/70 dark:border-white/10 font-semibold text-ink-900 dark:text-white">🐎 swift</span>.
+          </p>
+
+          <ul class="mt-7 grid gap-3 sm:grid-cols-3 text-sm">
+            <li class="flex items-center gap-2 text-ink-700 dark:text-ink-200">
+              <span class="inline-flex h-6 w-6 items-center justify-center rounded-md bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">
+                <Icon name="ph:check-bold" class="h-3.5 w-3.5" />
+              </span>
+              <span><span class="font-semibold">Live rewrite</span> &mdash; comments stay readable</span>
+            </li>
+            <li class="flex items-center gap-2 text-ink-700 dark:text-ink-200">
+              <span class="inline-flex h-6 w-6 items-center justify-center rounded-md bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">
+                <Icon name="ph:check-bold" class="h-3.5 w-3.5" />
+              </span>
+              <span><span class="font-semibold">Auto-label</span> issues for triage</span>
+            </li>
+            <li class="flex items-center gap-2 text-ink-700 dark:text-ink-200">
+              <span class="inline-flex h-6 w-6 items-center justify-center rounded-md bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">
+                <Icon name="ph:check-bold" class="h-3.5 w-3.5" />
+              </span>
+              <span><span class="font-semibold">Audit-friendly</span> job summaries</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="relative grid gap-3">
+            <article class="group relative rounded-2xl border border-rose-300/40 dark:border-rose-500/25 bg-white/85 dark:bg-white/[0.04] backdrop-blur shadow-sm shadow-rose-500/[0.04] dark:shadow-rose-500/10 p-5 transition-transform hover:-translate-y-0.5">
+              <header class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-rose-200 to-rose-300 dark:from-rose-500/30 dark:to-rose-600/30 text-rose-700 dark:text-rose-200 font-semibold text-xs">
+                    DV
+                  </span>
+                  <span class="font-mono text-xs text-ink-700 dark:text-ink-200 truncate">
+                    <span class="font-semibold">@grumpy-dev</span>
+                    <span class="text-ink-500 dark:text-ink-400"> · 2m</span>
+                  </span>
+                </div>
+                <span class="inline-flex items-center gap-1 rounded-full bg-rose-100 dark:bg-rose-500/15 text-rose-700 dark:text-rose-300 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5">
+                  <Icon name="ph:warning-duotone" class="h-3 w-3" /> raw
+                </span>
+              </header>
+              <p class="mt-3 text-[15px] leading-relaxed text-ink-800 dark:text-ink-100">
+                this
+                <mark class="bg-rose-200/70 dark:bg-rose-500/25 text-rose-800 dark:text-rose-200 px-1 rounded font-mono">shit</mark>
+                broke prod again — what the
+                <mark class="bg-rose-200/70 dark:bg-rose-500/25 text-rose-800 dark:text-rose-200 px-1 rounded font-mono">hell</mark>
+                is going on with this
+                <mark class="bg-rose-200/70 dark:bg-rose-500/25 text-rose-800 dark:text-rose-200 px-1 rounded font-mono">damn</mark>
+                CI 🙄
+              </p>
+            </article>
+
+            <div class="flex items-center justify-center" aria-hidden="true">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 dark:bg-white/[0.06] border border-ink-200/70 dark:border-white/10 text-[11px] font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300 shadow-sm">
+                <Icon name="ph:lightning-duotone" class="h-3 w-3" /> Potty Mouth
+                <Icon name="ph:arrow-down-bold" class="h-3 w-3" />
+              </span>
+            </div>
+
+            <article class="group relative rounded-2xl border border-emerald-300/40 dark:border-emerald-500/25 bg-white/90 dark:bg-white/[0.04] backdrop-blur shadow-sm shadow-emerald-500/[0.04] dark:shadow-emerald-500/10 p-5 transition-transform hover:-translate-y-0.5">
+              <header class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-200 to-emerald-300 dark:from-emerald-500/30 dark:to-emerald-600/30 text-emerald-700 dark:text-emerald-200 font-semibold text-xs">
+                    DV
+                  </span>
+                  <span class="font-mono text-xs text-ink-700 dark:text-ink-200 truncate">
+                    <span class="font-semibold">@grumpy-dev</span>
+                    <span class="text-ink-500 dark:text-ink-400"> · 2m · edited by bot</span>
+                  </span>
+                </div>
+                <span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5">
+                  <Icon name="ph:sparkle-duotone" class="h-3 w-3" /> filtered
+                </span>
+              </header>
+              <p class="mt-3 text-[15px] leading-relaxed text-ink-800 dark:text-ink-100">
+                this
+                <span class="font-mono text-emerald-700 dark:text-emerald-300">💩</span>
+                broke prod again — what the
+                <span class="font-mono text-emerald-700 dark:text-emerald-300">🤬</span>
+                is going on with this
+                <span class="font-mono text-emerald-700 dark:text-emerald-300">😡</span>
+                CI 🙄
+              </p>
+              <div class="mt-3 flex flex-wrap gap-1.5">
+                <span class="inline-flex items-center gap-1 rounded-full bg-rose-50 dark:bg-rose-500/15 border border-rose-200/60 dark:border-rose-500/20 text-rose-700 dark:text-rose-300 text-[10px] font-mono px-1.5 py-0.5">
+                  profane
+                </span>
+                <span class="inline-flex items-center gap-1 rounded-full bg-amber-50 dark:bg-amber-500/15 border border-amber-200/60 dark:border-amber-500/20 text-amber-700 dark:text-amber-300 text-[10px] font-mono px-1.5 py-0.5">
+                  needs-review
+                </span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section class="max-w-7xl mx-auto px-6 lg:px-8 py-12 sm:py-16">
