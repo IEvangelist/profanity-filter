@@ -1,0 +1,362 @@
+---
+// LiveDemo.astro — a fully client-side recreation of the playground.
+//
+// A typewriter "types" a sentence into a faux input. As each character
+// lands, every replacement strategy renders the filtered output live in
+// its own labeled card. No network, no backend — just JS that mirrors
+// the logic from src/ProfanityFilter.Services/Internals/MatchEvaluators.cs
+// so visitors can play with every strategy at once.
+
+const strategies = [
+  { id: 'asterisk',                  label: 'Asterisk',                  hint: 'Classic asterisks',                    icon: 'ph:asterisk-bold' },
+  { id: 'random-asterisk',           label: 'Random asterisk',           hint: 'Random count, 1–N',                    icon: 'ph:shuffle-bold' },
+  { id: 'middle-asterisk',           label: 'Middle asterisk',           hint: 'Keep first + last',                    icon: 'ph:dots-three-bold' },
+  { id: 'first-letter-then-asterisk', label: 'First letter + asterisk',  hint: 'Keep first only',                      icon: 'ph:text-aa-bold' },
+  { id: 'vowel-asterisk',            label: 'Vowel asterisk',            hint: 'Asterisk the vowels',                  icon: 'ph:text-italic-bold' },
+  { id: 'emoji',                     label: 'Emoji',                     hint: 'Random expressive emoji',              icon: 'ph:smiley-bold' },
+  { id: 'anger-emoji',               label: 'Anger emoji',               hint: 'Random anger emoji',                   icon: 'ph:smiley-angry-bold' },
+  { id: 'middle-swear-emoji',        label: 'Middle swear emoji',        hint: 'First + 🤬 + last',                    icon: 'ph:flame-bold' },
+  { id: 'bleep',                     label: 'Bleep',                     hint: 'Literal "bleep"',                      icon: 'ph:speaker-x-bold' },
+  { id: 'redacted-rectangle',        label: 'Redacted rectangle',        hint: 'Solid █ blocks',                       icon: 'ph:eye-slash-bold' },
+  { id: 'strike-through',            label: 'Strike through',            hint: 'Wraps in <del>',                       icon: 'ph:text-strikethrough-bold' },
+  { id: 'underscores',               label: 'Underscores',               hint: 'Underscores match length',             icon: 'ph:minus-bold' },
+  { id: 'grawlix',                   label: 'Grawlix',                   hint: 'Comic-book symbols',                   icon: 'ph:hash-bold' },
+  { id: 'bold-grawlix',              label: 'Bold grawlix',              hint: 'Grawlix, but louder',                  icon: 'ph:text-b-bold' },
+];
+---
+
+<figure
+  class="not-prose mt-10 relative overflow-hidden rounded-2xl border border-ink-200/80 dark:border-white/10 shadow-2xl shadow-ink-900/10 dark:shadow-black/40 bg-gradient-to-br from-white via-white to-ink-50 dark:from-[#0b1020] dark:via-[#0a0a0a] dark:to-[#0a0e1a]"
+  role="group"
+  aria-labelledby="live-demo-heading"
+  aria-describedby="live-demo-transcript"
+>
+  <div class="absolute inset-0 bg-grid opacity-25 dark:opacity-30 pointer-events-none" aria-hidden="true"></div>
+
+  <div class="relative px-6 sm:px-8 pt-7 pb-6 border-b border-ink-200/70 dark:border-white/10">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="h-3 w-3 rounded-full bg-rose-400/80 ring-1 ring-rose-500/40" aria-hidden="true"></span>
+        <span class="h-3 w-3 rounded-full bg-amber-400/80 ring-1 ring-amber-500/40" aria-hidden="true"></span>
+        <span class="h-3 w-3 rounded-full bg-emerald-400/80 ring-1 ring-emerald-500/40" aria-hidden="true"></span>
+        <span id="live-demo-heading" class="ml-2 font-mono text-xs sm:text-sm font-semibold tracking-wide text-ink-600 dark:text-ink-300 truncate">
+          potty-mouth · live filter
+        </span>
+      </div>
+      <button
+        type="button"
+        data-demo-toggle
+        class="inline-flex items-center gap-1.5 rounded-md border border-ink-300/70 dark:border-white/10 bg-white/80 dark:bg-white/[0.04] hover:bg-white dark:hover:bg-white/[0.08] px-2.5 py-1.5 text-xs font-medium text-ink-700 dark:text-ink-200 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        aria-pressed="false"
+      >
+        <span data-demo-toggle-icon aria-hidden="true">⏸</span>
+        <span data-demo-toggle-label>Pause</span>
+      </button>
+    </div>
+
+    <label for="live-demo-input" class="sr-only">Typed input — a sample phrase with profane content</label>
+    <div
+      class="mt-5 rounded-xl border border-ink-200/80 dark:border-white/10 bg-white/90 dark:bg-black/40 backdrop-blur px-4 sm:px-5 py-4 sm:py-5"
+    >
+      <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300">
+        <span aria-hidden="true">›</span>
+        Input
+      </div>
+      <p
+        id="live-demo-input"
+        data-demo-input
+        class="mt-2 font-mono text-base sm:text-lg md:text-xl leading-snug text-ink-900 dark:text-ink-100 break-words min-h-[3.25rem]"
+        aria-live="polite"
+        aria-atomic="true"
+      ></p>
+    </div>
+  </div>
+
+  <div class="relative p-6 sm:p-8">
+    <div class="flex flex-wrap items-baseline justify-between gap-2 mb-4">
+      <h3 class="text-sm sm:text-base font-semibold text-ink-900 dark:text-white">
+        All 14 strategies — updating live, every keystroke
+      </h3>
+      <p class="text-xs text-ink-600 dark:text-ink-400">
+        Identical logic to <code class="font-mono">MatchEvaluators</code> in the WebApi.
+      </p>
+    </div>
+
+    <ul
+      role="list"
+      data-demo-grid
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4"
+    >
+      {strategies.map((s) => (
+        <li
+          class="group relative rounded-xl border border-ink-200/80 dark:border-white/10 bg-white/85 dark:bg-white/[0.03] backdrop-blur p-4 transition-colors hover:border-brand-300/60 dark:hover:border-brand-500/30"
+        >
+          <div class="flex items-center gap-2">
+            <span
+              class="inline-flex h-6 w-6 items-center justify-center rounded-md bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300"
+              aria-hidden="true"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="currentColor"><circle cx="12" cy="12" r="3" /></svg>
+            </span>
+            <code class="font-mono text-xs sm:text-[13px] font-semibold text-brand-700 dark:text-brand-300 truncate">
+              {s.id}
+            </code>
+          </div>
+          <p
+            data-strategy={s.id}
+            class="mt-3 font-mono text-sm sm:text-[15px] leading-snug text-ink-900 dark:text-ink-100 break-words min-h-[2.5rem]"
+            aria-live="polite"
+            aria-atomic="true"
+            aria-label={`${s.label} output`}
+          ></p>
+          <p class="mt-2 text-[11px] sm:text-xs leading-relaxed text-ink-600 dark:text-ink-400">
+            <span class="font-semibold text-ink-700 dark:text-ink-300">{s.label}</span>
+            <span class="mx-1 text-ink-400 dark:text-ink-500" aria-hidden="true">·</span>
+            <span>{s.hint}</span>
+          </p>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <figcaption class="sr-only" id="live-demo-figcaption">
+    Live, in-browser demonstration of every replacement strategy. A sample sentence containing
+    profane words is typed character-by-character into the input field, and each of the fourteen
+    strategy panels below updates in real time to show how that strategy filters the matched words.
+  </figcaption>
+</figure>
+
+<details
+  id="live-demo-transcript"
+  class="mt-6 max-w-4xl mx-auto rounded-xl border border-ink-200 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur"
+>
+  <summary class="cursor-pointer px-5 py-3 text-sm font-semibold text-ink-900 dark:text-ink-100 select-none">
+    Text alternative — what the live demo shows
+  </summary>
+  <ol class="px-6 pb-5 pt-1 list-decimal space-y-2 text-sm leading-relaxed text-ink-700 dark:text-ink-300 marker:text-brand-600 dark:marker:text-brand-400">
+    <li>A typewriter animation enters a sample sentence (e.g. <q class="font-mono">This shit is broken, what the hell are we doing here?</q>) into the input panel at the top, one character at a time.</li>
+    <li>Beneath the input is a grid of <strong>14 cards</strong>, one per replacement strategy. Each card shows the strategy's slug, a friendly label, and a one-line description.</li>
+    <li>On every keystroke, every card re-renders the input with that card's strategy applied. Profane words are matched as whole words (case-insensitive).</li>
+    <li>For example: <code class="font-mono">asterisk</code> turns <code class="font-mono">shit</code> into <code class="font-mono">****</code>, <code class="font-mono">middle-asterisk</code> turns it into <code class="font-mono">s**t</code>, <code class="font-mono">bleep</code> replaces it with the literal word <code class="font-mono">bleep</code>, and <code class="font-mono">middle-swear-emoji</code> turns it into <code class="font-mono">s🤬t</code>.</li>
+    <li>When the sentence finishes typing, the demo pauses briefly, clears, and starts typing a new sentence. The toggle button in the top-right lets you pause or resume the animation.</li>
+    <li>The filtering logic is a faithful port of <a href="https://github.com/IEvangelist/profanity-filter/blob/main/src/ProfanityFilter.Services/Internals/MatchEvaluators.cs" target="_blank" rel="noopener noreferrer" class="font-medium text-brand-700 dark:text-brand-400 underline decoration-brand-500/40 underline-offset-2 hover:decoration-brand-500"><code class="font-mono">MatchEvaluators.cs</code></a> in the .NET library — the same code that powers the GitHub Action and the WebApi container.</li>
+  </ol>
+</details>
+
+<script is:inline>
+  (() => {
+    const ANGER_EMOJI = ['🤬', '😡', '👿', '😤'];
+    const HAND_PICKED = [
+      '☠️','✨','🌈','🐎','🐒','🐓','🐔','🐕','🐖','🐗','🐘','🐙','🐛','🐝','🐱',
+      '👎🏽','👹','👺','👻','👽','👿','💀','💔','💣','💥','💩',
+      '🤐','🤡','🤢','🤨','🤪','🤬','🤮','🥴','🥸','🦄','🦋',
+      '😑','😔','😕','😖','😠','😡','😤','😨','😩','😭','😱','😳','😵','😾',
+      '🙃','🙄','🙈','🙉','🙊','🆘'
+    ];
+    const GRAWLIX = ['#', '$', '@', '!', '%', '&', '*', '+', '?', '^'];
+    const VOWELS = /[aeiouAEIOU]/;
+
+    // Whole-word, case-insensitive match. Kept tame and PG-13.
+    const PROFANE = /\b(shit|hell|damn|ass|crap)\b/gi;
+
+    const phrases = [
+      'This shit is broken, what the hell are we doing here?',
+      'Holy hell, this damn build is so much faster now.',
+      'What a crap PR — opened on a Friday again, damn it.'
+    ];
+
+    // Tiny deterministic PRNG so random strategies don't flicker
+    // mid-typing on the same word.
+    const hash = (s) => {
+      let h = 2166136261 >>> 0;
+      for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 16777619) >>> 0;
+      }
+      return h >>> 0;
+    };
+    const pick = (arr, seed) => arr[seed % arr.length];
+
+    // Strategies — each takes the matched word and the seed for that word
+    // and returns the replacement HTML (already escaped/safe).
+    const escapeHtml = (s) =>
+      s.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+    const strategies = {
+      'asterisk':                  (w) => '*'.repeat(w.length),
+      'random-asterisk':           (w, seed) => '*'.repeat(1 + (seed % Math.max(1, w.length - 1))),
+      'middle-asterisk':           (w) => w.length <= 2 ? w : w[0] + '*'.repeat(w.length - 2) + w[w.length - 1],
+      'first-letter-then-asterisk': (w) => w[0] + '*'.repeat(Math.max(0, w.length - 1)),
+      'vowel-asterisk':            (w) => w.split('').map((c) => VOWELS.test(c) ? '*' : c).join(''),
+      'emoji':                     (w, seed) => pick(HAND_PICKED, seed),
+      'anger-emoji':               (w, seed) => pick(ANGER_EMOJI, seed),
+      'middle-swear-emoji':        (w) => w.length <= 1 ? w : w[0] + '🤬' + w[w.length - 1],
+      'bleep':                     ()  => 'bleep',
+      'redacted-rectangle':        (w) => '█'.repeat(w.length),
+      'strike-through':            (w) => `<del>${escapeHtml(w)}</del>`,
+      'underscores':               (w) => '_'.repeat(w.length),
+      'grawlix':                   (w, seed) => Array.from({ length: w.length }, (_, i) => pick(GRAWLIX, seed + i)).join(''),
+      'bold-grawlix':              (w, seed) => `<strong>${Array.from({ length: w.length }, (_, i) => pick(GRAWLIX, seed + i)).join('')}</strong>`,
+    };
+
+    // Split text into [non-match, match, non-match, ...] tokens and apply
+    // fn() to each match. Non-match segments are HTML-escaped so the result
+    // is safe to assign via innerHTML.
+    const applyStrategy = (text, fn) => {
+      const re = /\b(shit|hell|damn|ass|crap)\b/gi;
+      let out = '';
+      let last = 0;
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        out += escapeHtml(text.slice(last, m.index));
+        out += fn(m[0], hash(m[0].toLowerCase()));
+        last = m.index + m[0].length;
+      }
+      out += escapeHtml(text.slice(last));
+      return out;
+    };
+
+    const init = () => {
+      const input = document.querySelector('[data-demo-input]');
+      const grid = document.querySelector('[data-demo-grid]');
+      const toggleBtn = document.querySelector('[data-demo-toggle]');
+      const toggleIcon = toggleBtn?.querySelector('[data-demo-toggle-icon]');
+      const toggleLabel = toggleBtn?.querySelector('[data-demo-toggle-label]');
+      if (!input || !grid) return;
+
+      const panels = {};
+      grid.querySelectorAll('[data-strategy]').forEach((el) => {
+        panels[el.dataset.strategy] = el;
+      });
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const cursorHTML = '<span class="inline-block w-[0.55ch] -mb-[0.1em] h-[1em] align-middle bg-brand-600 dark:bg-brand-400 ml-0.5 animate-pulse" aria-hidden="true"></span>';
+
+      const render = (text, withCursor) => {
+        // Update the input row (escape + cursor)
+        input.innerHTML = escapeHtml(text) + (withCursor ? cursorHTML : '');
+        // Update every panel
+        for (const [id, fn] of Object.entries(strategies)) {
+          const panel = panels[id];
+          if (!panel) continue;
+          panel.innerHTML = applyStrategy(text, fn);
+        }
+      };
+
+      // If the user prefers reduced motion, render the full first phrase
+      // statically and don't animate.
+      if (reducedMotion) {
+        render(phrases[0], false);
+        if (toggleBtn) toggleBtn.hidden = true;
+        return;
+      }
+
+      let phraseIdx = 0;
+      let charIdx = 0;
+      let timer = 0;
+      let userPaused = false;
+      let onScreen = true;
+      const isRunning = () => !userPaused && onScreen;
+
+      const TYPE_MS = 55;
+      const HOLD_MS = 1800;
+      const ERASE_MS = 22;
+      const BETWEEN_MS = 600;
+
+      const schedule = (fn, ms) => {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(fn, ms);
+      };
+
+      const typeStep = () => {
+        if (!isRunning()) return;
+        const phrase = phrases[phraseIdx];
+        charIdx++;
+        render(phrase.slice(0, charIdx), true);
+        if (charIdx < phrase.length) {
+          schedule(typeStep, TYPE_MS);
+        } else {
+          schedule(eraseStep, HOLD_MS);
+        }
+      };
+
+      const eraseStep = () => {
+        if (!isRunning()) return;
+        const phrase = phrases[phraseIdx];
+        charIdx--;
+        render(phrase.slice(0, Math.max(0, charIdx)), true);
+        if (charIdx > 0) {
+          schedule(eraseStep, ERASE_MS);
+        } else {
+          phraseIdx = (phraseIdx + 1) % phrases.length;
+          schedule(typeStep, BETWEEN_MS);
+        }
+      };
+
+      const setToggle = (paused) => {
+        if (!toggleBtn) return;
+        toggleBtn.setAttribute('aria-pressed', String(paused));
+        if (toggleIcon) toggleIcon.textContent = paused ? '▶' : '⏸';
+        if (toggleLabel) toggleLabel.textContent = paused ? 'Resume' : 'Pause';
+      };
+
+      const resumeLoop = () => {
+        if (!isRunning()) return;
+        schedule(typeStep, TYPE_MS);
+      };
+
+      toggleBtn?.addEventListener('click', () => {
+        userPaused = !userPaused;
+        setToggle(userPaused);
+        if (userPaused) {
+          window.clearTimeout(timer);
+        } else {
+          resumeLoop();
+        }
+      });
+
+      // Pause automatically when the figure is off-screen (saves CPU,
+      // less distracting when not in view).
+      const figure = document.getElementById('live-demo-heading')?.closest('figure');
+      if (figure && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+          for (const entry of entries) {
+            onScreen = entry.isIntersecting;
+            if (onScreen) {
+              resumeLoop();
+            } else {
+              window.clearTimeout(timer);
+            }
+          }
+        }, { threshold: 0.15 });
+        io.observe(figure);
+      }
+
+      setToggle(false);
+      // Prime the panels so they aren't empty before the first tick.
+      render('', true);
+      resumeLoop();
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init, { once: true });
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<style>
+  /* Ensure <del> renders with a visible line in both themes, with WCAG-AA contrast. */
+  [data-strategy] del {
+    text-decoration-line: line-through;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 2px;
+  }
+  [data-strategy] strong {
+    font-weight: 700;
+  }
+</style>
