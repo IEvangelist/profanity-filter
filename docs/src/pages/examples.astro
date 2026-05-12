@@ -2,7 +2,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CodeBlock from '../components/CodeBlock.astro';
 import SectionEyebrow from '../components/SectionEyebrow.astro';
+import PageNav from '../components/PageNav.astro';
 import { Icon } from 'astro-icon/components';
+
+const base = import.meta.env.BASE_URL;
 
 const basicEmoji = `name: Profanity filter
 
@@ -179,4 +182,20 @@ const examples = [
       </div>
     </div>
   </section>
+
+  <PageNav
+    prev={{
+      href: `${base}/containers`,
+      label: 'Containers',
+      icon: 'ph:shipping-container-duotone',
+      description: 'Two distroless Linux images on GHCR.',
+    }}
+    next={{
+      href: `${base}`,
+      label: 'Overview',
+      icon: 'ph:house-duotone',
+      eyebrow: 'Start over',
+      description: 'Back to the project landing page.',
+    }}
+  />
 </BaseLayout>

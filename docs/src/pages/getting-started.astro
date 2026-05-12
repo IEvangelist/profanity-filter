@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CodeBlock from '../components/CodeBlock.astro';
 import Callout from '../components/Callout.astro';
 import SectionEyebrow from '../components/SectionEyebrow.astro';
+import PageNav from '../components/PageNav.astro';
 import { Icon } from 'astro-icon/components';
 
 const base = import.meta.env.BASE_URL;
@@ -161,4 +162,19 @@ const existingWorkflow = `- name: Scan for profanity
       </a>
     </div>
   </section>
+
+  <PageNav
+    prev={{
+      href: `${base}`,
+      label: 'Overview',
+      icon: 'ph:house-duotone',
+      description: 'Back to the project landing page.',
+    }}
+    next={{
+      href: `${base}/api`,
+      label: 'Reference',
+      icon: 'ph:book-bookmark-duotone',
+      description: 'Every input, every strategy, every language.',
+    }}
+  />
 </BaseLayout>

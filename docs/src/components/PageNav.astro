@@ -1,0 +1,65 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface NavLink {
+  href: string;
+  label: string;
+  description?: string;
+  icon?: string;
+  eyebrow?: string;
+}
+
+interface Props {
+  prev?: NavLink;
+  next?: NavLink;
+}
+
+const { prev, next } = Astro.props;
+---
+
+<nav aria-label="Page navigation" class="relative mt-20 sm:mt-24">
+  <div class="bg-grid bg-grid-strong bg-grid-fade-y absolute inset-0 opacity-70 pointer-events-none"></div>
+  <div class="relative max-w-5xl mx-auto px-6 lg:px-8 py-12">
+    <div class={`grid gap-4 ${prev && next ? 'sm:grid-cols-2' : 'sm:grid-cols-1'}`}>
+      {prev && (
+        <a
+          href={prev.href}
+          rel="prev"
+          class="group relative overflow-hidden rounded-2xl border border-ink-200/80 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur p-5 transition-all hover:border-brand-300/60 dark:hover:border-brand-500/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-ink-900/5 dark:hover:shadow-black/40"
+        >
+          <div class="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-500 dark:text-ink-400">
+            <Icon name="ph:arrow-left-duotone" class="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+            {prev.eyebrow ?? 'Previous'}
+          </div>
+          <div class="mt-2 flex items-center gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+            {prev.icon && <Icon name={prev.icon} class="h-5 w-5 text-brand-600 dark:text-brand-400" />}
+            {prev.label}
+          </div>
+          {prev.description && (
+            <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-400">{prev.description}</p>
+          )}
+        </a>
+      )}
+
+      {next && (
+        <a
+          href={next.href}
+          rel="next"
+          class="group relative overflow-hidden rounded-2xl border border-ink-200/80 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur p-5 sm:text-right transition-all hover:border-brand-300/60 dark:hover:border-brand-500/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-ink-900/5 dark:hover:shadow-black/40"
+        >
+          <div class="flex items-center sm:justify-end gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-ink-500 dark:text-ink-400">
+            {next.eyebrow ?? 'Next'}
+            <Icon name="ph:arrow-right-duotone" class="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+          </div>
+          <div class="mt-2 flex items-center sm:justify-end gap-2 text-lg font-semibold text-ink-900 dark:text-white">
+            {next.icon && <Icon name={next.icon} class="h-5 w-5 text-brand-600 dark:text-brand-400" />}
+            {next.label}
+          </div>
+          {next.description && (
+            <p class="mt-1.5 text-sm leading-relaxed text-ink-600 dark:text-ink-400">{next.description}</p>
+          )}
+        </a>
+      )}
+    </div>
+  </div>
+</nav>

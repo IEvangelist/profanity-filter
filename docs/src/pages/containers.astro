@@ -4,6 +4,7 @@ import CodeBlock from '../components/CodeBlock.astro';
 import Callout from '../components/Callout.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import SectionEyebrow from '../components/SectionEyebrow.astro';
+import PageNav from '../components/PageNav.astro';
 import { Icon } from 'astro-icon/components';
 
 const base = import.meta.env.BASE_URL;
@@ -61,7 +62,7 @@ const apiRoutes = [
   description="Two distroless Linux container images on GHCR — the GitHub Action runner and the standalone profanity-filter API. Pull, run, and integrate."
 >
   <section class="relative overflow-hidden">
-    <div class="bg-grid absolute inset-0 opacity-60"></div>
+    <div class="bg-grid bg-grid-strong absolute inset-0 opacity-70 pointer-events-none"></div>
     <div class="glow pointer-events-none absolute inset-x-0 top-0 h-[480px]"></div>
 
     <div class="relative max-w-5xl mx-auto px-6 lg:px-8 pt-16 pb-12 sm:pt-20">
@@ -310,4 +311,19 @@ const apiRoutes = [
       </a>
     </div>
   </section>
+
+  <PageNav
+    prev={{
+      href: `${base}/aspire`,
+      label: 'Aspire',
+      icon: 'ph:cube-duotone',
+      description: 'A first-class Aspire resource, in C# or TypeScript.',
+    }}
+    next={{
+      href: `${base}/examples`,
+      label: 'Examples',
+      icon: 'ph:list-checks-duotone',
+      description: 'Copy-paste recipes for common Potty Mouth setups.',
+    }}
+  />
 </BaseLayout>

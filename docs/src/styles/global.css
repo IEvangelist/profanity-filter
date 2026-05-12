@@ -47,16 +47,23 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: var(--color-ink-50);
+  background-color: var(--color-ink-50);
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
   color: var(--color-ink-900);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 [data-theme="dark"] body {
-  background:
+  background-color: var(--color-ink-950);
+  background-image:
     radial-gradient(ellipse 80% 50% at 50% -20%, rgba(220, 38, 38, 0.15), transparent),
-    var(--color-ink-950);
+    linear-gradient(to right, rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 100% 100%, 32px 32px, 32px 32px;
   color: var(--color-ink-100);
 }
 
@@ -123,16 +130,39 @@ pre.astro-code {
 }
 
 .bg-grid {
+  --grid-color: rgba(148, 163, 184, 0.10);
+  --grid-size: 32px;
   background-image:
-    linear-gradient(to right, rgba(148, 163, 184, 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
-  background-size: 32px 32px;
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
 }
 
 [data-theme="dark"] .bg-grid {
-  background-image:
-    linear-gradient(to right, rgba(148, 163, 184, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+  --grid-color: rgba(148, 163, 184, 0.08);
+}
+
+/* Stronger slate grid for panels that lean on the grid as a hero motif. */
+.bg-grid-strong { --grid-color: rgba(148, 163, 184, 0.16); }
+[data-theme="dark"] .bg-grid-strong { --grid-color: rgba(148, 163, 184, 0.12); }
+
+/* White-tinted grid for dark/inverted panels (brand CTA, dark code rails, …). */
+.bg-grid-invert { --grid-color: rgba(255, 255, 255, 0.10); }
+[data-theme="dark"] .bg-grid-invert { --grid-color: rgba(255, 255, 255, 0.08); }
+
+/* Brand-tinted grid for sections washed in the brand palette. */
+.bg-grid-brand { --grid-color: rgba(220, 38, 38, 0.16); }
+[data-theme="dark"] .bg-grid-brand { --grid-color: rgba(248, 113, 113, 0.14); }
+
+/* Edge-fade masks — pair with .bg-grid so adjacent sections meet softly. */
+.bg-grid-fade-y {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 14%, black 86%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 14%, black 86%, transparent);
+}
+
+.bg-grid-fade-radial {
+  -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 35%, transparent 100%);
 }
 
 .glow {
