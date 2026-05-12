@@ -5,8 +5,9 @@ const base = import.meta.env.BASE_URL;
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-32 border-t border-ink-200/60 dark:border-white/5 bg-ink-50 dark:bg-transparent">
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+<footer class="mt-32 border-t border-ink-200/60 dark:border-white/5 bg-ink-50 dark:bg-transparent relative overflow-hidden">
+  <div class="bg-grid absolute inset-0 opacity-30 pointer-events-none"></div>
+  <div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-12">
     <div class="grid gap-10 md:grid-cols-3 md:gap-8">
       <div>
         <div class="flex items-center gap-2.5">
