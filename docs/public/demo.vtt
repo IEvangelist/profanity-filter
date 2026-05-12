@@ -1,0 +1,39 @@
+WEBVTT
+
+NOTE Captions describe each visible step of the silent profanity-filter demo.
+
+1
+00:00:00.000 --> 00:00:01.400
+The Profanity Filter playground loads in dark mode with a live SignalR connection.
+
+2
+00:00:01.500 --> 00:00:05.500
+A user types a sentence containing profanity. The right-hand panel rewrites it live as they type.
+
+3
+00:00:05.600 --> 00:00:07.200
+Default Asterisk strategy: each profane word becomes asterisks.
+
+4
+00:00:07.300 --> 00:00:09.700
+Strategy switched to Emoji: a random emoji replaces each profane word.
+
+5
+00:00:09.800 --> 00:00:12.200
+Strategy switched to Redacted Rectangle: a black bar covers each word.
+
+6
+00:00:12.300 --> 00:00:14.700
+Strategy switched to Middle Swear Emoji: the first and last letters stay, the middle becomes a swearing-face emoji.
+
+7
+00:00:14.800 --> 00:00:17.100
+Strategy switched to Bleep: each word is replaced by the literal text bleep.
+
+8
+00:00:17.200 --> 00:00:19.700
+Strategy switched to First Letter Then Asterisk: the first letter remains, the rest become asterisks.
+
+9
+00:00:19.800 --> 00:00:21.500
+Strategy badge and match chips at the bottom update live with every change.

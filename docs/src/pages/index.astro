@@ -165,13 +165,13 @@ const strategies = [
     </div>
   </section>
 
-  <section class="max-w-6xl mx-auto px-6 lg:px-8 py-20 sm:py-24">
+  <section class="max-w-screen-2xl mx-auto px-6 lg:px-8 py-20 sm:py-24">
     <div class="text-center max-w-2xl mx-auto">
       <SectionEyebrow icon="ph:play-circle-duotone" label="See it in action" />
       <h2 class="mt-3 text-3xl sm:text-4xl font-bold tracking-tight text-ink-900 dark:text-white">
         Live filtering, every keystroke.
       </h2>
-      <p class="mt-4 text-ink-600 dark:text-ink-400">
+      <p class="mt-4 text-ink-700 dark:text-ink-300">
         The Aspire-hosted playground streams text through the same engine over SignalR &mdash; type
         a phrase, swap the replacement strategy, and watch the output rewrite itself in real time.
       </p>
@@ -182,24 +182,72 @@ const strategies = [
         class="block w-full h-auto"
         src={`${base}/demo.webm`}
         poster={`${base}/demo-poster.png`}
+        width="1920"
+        height="1080"
         autoplay
         muted
         loop
         playsinline
         preload="metadata"
         controls
-        aria-label="Demo of the Profanity Filter live web playground: typing a sentence with profane words and cycling through replacement strategies in dark mode."
+        aria-describedby="demo-transcript"
+        aria-label="Silent demo of the Profanity Filter live playground: typing a sentence with profane words and cycling through replacement strategies in dark mode."
       >
-        Your browser does not support embedded video. <a href={`${base}/demo.webm`} class="underline">Download the demo</a>.
+        <track
+          kind="captions"
+          srclang="en"
+          label="English"
+          src={`${base}/demo.vtt`}
+          default
+        />
+        Your browser does not support embedded video.
+        <a href={`${base}/demo.webm`} class="underline">Download the demo</a>.
       </video>
       <figcaption class="sr-only">
-        Demo of the Profanity Filter live web playground: typing a sentence with profane words and cycling through replacement strategies in dark mode.
+        Silent demo of the Profanity Filter live playground: typing a sentence with profane words
+        and cycling through replacement strategies in dark mode.
       </figcaption>
     </figure>
 
-    <p class="mt-4 text-center text-xs text-ink-500 dark:text-ink-500">
-      Recorded locally from the Aspire AppHost in <code class="font-mono">playground/apphost.cs</code> &mdash;
-      WebApi + Vite playground, streaming over SignalR.
+    <details id="demo-transcript" class="mt-6 max-w-4xl mx-auto rounded-xl border border-ink-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.03] backdrop-blur">
+      <summary class="cursor-pointer px-5 py-3 text-sm font-semibold text-ink-900 dark:text-ink-100 select-none">
+        Text alternative &mdash; what happens in the demo
+      </summary>
+      <ol class="px-6 pb-5 pt-1 list-decimal space-y-2 text-sm leading-relaxed text-ink-700 dark:text-ink-300 marker:text-brand-600 dark:marker:text-brand-400">
+        <li>The Vite playground loads in dark mode and connects to the Aspire-hosted WebApi over a SignalR hub.</li>
+        <li>A user types the sentence <q class="font-mono">This shit is broken, what the hell are we doing here?</q> into the input on the left.</li>
+        <li>The output panel on the right rewrites the text live as each character is typed. The default Asterisk strategy turns <code class="font-mono">shit</code> into <code class="font-mono">****</code> and <code class="font-mono">hell</code> into <code class="font-mono">****</code>.</li>
+        <li>The strategy dropdown is opened and switched to <strong>Emoji</strong>: each profane word becomes a random emoji.</li>
+        <li>Strategy switches to <strong>Redacted Rectangle</strong>: each word is covered by a solid black bar.</li>
+        <li>Strategy switches to <strong>Middle Swear Emoji</strong>: the first and last letters remain and the middle becomes a 🤬 emoji.</li>
+        <li>Strategy switches to <strong>Bleep</strong>: each word is replaced by the literal text <code class="font-mono">bleep</code>.</li>
+        <li>Strategy switches to <strong>First Letter Then Asterisk</strong>: only the first letter remains and the rest become asterisks.</li>
+        <li>The strategy badge and the list of matched-word chips at the bottom of the playground update after every change.</li>
+      </ol>
+    </details>
+
+    <p class="mt-6 max-w-4xl mx-auto text-center text-sm leading-relaxed text-ink-700 dark:text-ink-300">
+      Recorded locally from the Aspire AppHost defined in
+      {' '}<a
+        href="https://github.com/IEvangelist/profanity-filter/blob/main/playground/apphost.cs"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-medium text-brand-700 dark:text-brand-400 underline decoration-brand-500/40 underline-offset-2 hover:decoration-brand-500"
+      ><code class="font-mono">playground/apphost.cs</code></a>{' '}
+      &mdash; the WebApi and the Vite playground stream text live over a SignalR
+      {' '}<a
+        href="https://github.com/IEvangelist/profanity-filter/blob/main/src/ProfanityFilter.WebApi/Hubs/ProfanityHub.cs"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-medium text-brand-700 dark:text-brand-400 underline decoration-brand-500/40 underline-offset-2 hover:decoration-brand-500"
+      >hub</a>{' '}
+      and{' '}
+      <a
+        href="https://github.com/IEvangelist/profanity-filter/blob/main/src/ProfanityFilter.Web/src/api.ts"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-medium text-brand-700 dark:text-brand-400 underline decoration-brand-500/40 underline-offset-2 hover:decoration-brand-500"
+      >client</a>.
     </p>
   </section>
 
