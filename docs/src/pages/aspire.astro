@@ -6,13 +6,15 @@ import FeatureCard from '../components/FeatureCard.astro';
 import SectionEyebrow from '../components/SectionEyebrow.astro';
 import PageNav from '../components/PageNav.astro';
 import { Icon } from 'astro-icon/components';
+import { aspireAppHost, imageReference, images, versions } from '../data/versions';
 
 const base = import.meta.env.BASE_URL;
+const apiImageReference = imageReference(images.api);
 
 const installCmd = `aspire add ProfanityFilter.Hosting`;
 
-const csharpAppHost = `// apphost.cs
-#:sdk Aspire.AppHost.Sdk@13.3.0
+const csharpAppHost = `// ${aspireAppHost.csharpFile}
+#:sdk Aspire.AppHost.Sdk@${versions.aspire}
 #:package Aspire.Hosting
 #:package ProfanityFilter.Hosting
 #:project ../src/MyApi/MyApi.csproj
@@ -28,13 +30,13 @@ builder.AddProject<Projects.MyApi>("api")
 
 builder.Build().Run();`;
 
-const typescriptAppHost = `// apphost.ts
-import { createBuilder } from "./.modules/aspire.js";
-import { addProfanityFilter } from "./.modules/profanityfilter.hosting.js";
+const typescriptAppHost = `// ${aspireAppHost.typescriptFile}
+import { createBuilder } from "${aspireAppHost.builderModule}";
 
 const builder = await createBuilder();
 
-const filter = await addProfanityFilter(builder, "profanity-filter")
+const filter = await builder
+    .addProfanityFilter("profanity-filter")
     .withCustomDataBindMount("./CustomData");
 
 const api = await builder.addProject("api", { project: "../src/MyApi/MyApi.csproj" })
@@ -98,7 +100,7 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
       <div class="mt-7 flex flex-wrap items-center gap-2">
         <span class="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 ring-1 ring-emerald-500/30 px-2.5 py-1 text-xs font-medium">
           <Icon name="ph:lightning-duotone" class="h-3.5 w-3.5" />
-          Aspire 13.3
+          Aspire {versions.aspire}
         </span>
         <span class="inline-flex items-center gap-1 rounded-full bg-sky-500/10 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/30 px-2.5 py-1 text-xs font-medium">
           <Icon name="ph:hash-duotone" class="h-3.5 w-3.5" />
@@ -110,7 +112,7 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
         </span>
         <span class="inline-flex items-center gap-1 rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500/30 px-2.5 py-1 text-xs font-medium">
           <Icon name="ph:shipping-container-duotone" class="h-3.5 w-3.5" />
-          ghcr.io/ievangelist/profanity-filter-api
+          {apiImageReference}
         </span>
       </div>
     </div>
@@ -119,7 +121,7 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-10">
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       <FeatureCard icon="🐳" title="Containerized">
-        <p>Backed by the official <code class="font-mono text-xs">ghcr.io/ievangelist/profanity-filter-api</code> image. Same engine as the GitHub Action, served over HTTPS with a sensible default port.</p>
+        <p>Backed by the official <code class="font-mono text-xs">{apiImageReference}</code> image. Same engine as the GitHub Action, served over HTTPS with a sensible default port.</p>
       </FeatureCard>
       <FeatureCard icon="🌐" title="Multi-language">
         <p>Annotated with the new <code class="font-mono text-xs">[AspireExport]</code> attribute, so the same NuGet package powers both C# and TypeScript AppHosts.</p>
@@ -139,20 +141,20 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
       From your AppHost directory, run the
       <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">aspire add</code>
       command. The CLI installs the NuGet package for C# AppHosts and additionally generates the typed
-      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">.modules</code>
+      <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">{aspireAppHost.generatedModulePath}</code>
       SDK for TypeScript AppHosts &mdash; same command, both languages.
     </p>
     <CodeBlock code={installCmd} lang="bash" filename="terminal" />
 
-    <Callout variant="tip" title="13.3.0 — first stable release">
+    <Callout variant="tip" title={`${versions.release} — Aspire ${versions.aspire}`}>
       <p>
-        Built and tested against Aspire 13.3. Earlier preview builds were tagged
-        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">9.0.7-alpha.*</code>
-        and <em>are</em> available on NuGet, but
-        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">13.3.0</code>
-        is the first stable release &mdash; the multi-language
+        Built and tested against Aspire
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">{versions.aspire}</code>.
+        Earlier preview builds were tagged
+        <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">{versions.legacyPreviewPattern}</code>,
+        but the current release uses analyzer-validated
         <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">[AspireExport]</code>
-        attribute below requires it.
+        metadata for generated AppHost SDKs.
       </p>
     </Callout>
   </section>
@@ -169,7 +171,7 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
       <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">.WithReference(...)</code> and
       <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">.WaitFor(...)</code>.
     </p>
-    <CodeBlock code={csharpAppHost} lang="csharp" filename="apphost.cs" />
+    <CodeBlock code={csharpAppHost} lang="csharp" filename={aspireAppHost.csharpFile} />
   </section>
 
   <section class="max-w-5xl mx-auto px-6 lg:px-8 py-12">
@@ -182,7 +184,7 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
       the same package generates a typed TypeScript SDK at AppHost build time. The C# implementation runs as-is &mdash;
       the SDK is a thin client that calls into it over JSON-RPC.
     </p>
-    <CodeBlock code={typescriptAppHost} lang="ts" filename="apphost.ts" />
+    <CodeBlock code={typescriptAppHost} lang="ts" filename={aspireAppHost.typescriptFile} />
 
     <Callout variant="tip" title="No rewrite required">
       <p>
@@ -190,7 +192,7 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
         <code class="font-mono text-xs px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">aspire add ProfanityFilter.Hosting</code>
         in a TypeScript AppHost and the typed methods (<code class="font-mono text-xs">addProfanityFilter</code>,
         <code class="font-mono text-xs">withCustomDataBindMount</code>, ...) appear under
-        <code class="font-mono text-xs">./.modules</code> automatically.
+        <code class="font-mono text-xs">{aspireAppHost.generatedModulePath}</code> automatically.
       </p>
     </Callout>
   </section>
@@ -249,21 +251,25 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
       <table class="w-full text-sm">
         <thead class="bg-ink-50 dark:bg-white/[0.03] text-left text-xs uppercase tracking-wider text-ink-500 dark:text-ink-400">
           <tr>
-            <th class="px-5 py-3 font-semibold">Member</th>
+            <th class="px-5 py-3 font-semibold">C# API</th>
+            <th class="px-5 py-3 font-semibold">TypeScript API</th>
             <th class="px-5 py-3 font-semibold">Description</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-ink-200/60 dark:divide-white/5">
           <tr>
             <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">AddProfanityFilter(name)</td>
+            <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">builder.addProfanityFilter(name)</td>
             <td class="px-5 py-4 text-ink-700 dark:text-ink-300">Adds the profanity filter container to the distributed application. Returns an <code class="font-mono text-xs">IResourceBuilder&lt;ProfanityFilterResource&gt;</code>.</td>
           </tr>
           <tr>
             <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">WithCustomDataBindMount(source)</td>
+            <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">.withCustomDataBindMount(source)</td>
             <td class="px-5 py-4 text-ink-700 dark:text-ink-300">Bind-mounts a host folder of <code class="font-mono text-xs">*.txt</code> word lists into <code class="font-mono text-xs">/app/CustomData</code> inside the container.</td>
           </tr>
           <tr>
             <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">ProfanityFilterResource.HttpsEndpoint</td>
+            <td class="px-5 py-4 align-top font-mono text-xs text-brand-700 dark:text-brand-300 whitespace-nowrap">httpsEndpoint()</td>
             <td class="px-5 py-4 text-ink-700 dark:text-ink-300">The HTTPS endpoint reference. Implements <code class="font-mono text-xs">IResourceWithConnectionString</code>, so referencing the resource flows the URL through automatically.</td>
           </tr>
         </tbody>

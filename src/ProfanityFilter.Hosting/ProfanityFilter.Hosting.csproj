@@ -8,7 +8,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>$(AssemblyName)</PackageId>
 
-    <!-- Suppress the experimental Aspire Type System diagnostic; this integration uses [AspireExport] for multi-language authoring. -->
+    <EnableAspireIntegrationAnalyzers>true</EnableAspireIntegrationAnalyzers>
     <NoWarn>$(NoWarn);ASPIREATS001</NoWarn>
   </PropertyGroup>
 

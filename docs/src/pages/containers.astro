@@ -6,20 +6,23 @@ import FeatureCard from '../components/FeatureCard.astro';
 import SectionEyebrow from '../components/SectionEyebrow.astro';
 import PageNav from '../components/PageNav.astro';
 import { Icon } from 'astro-icon/components';
+import { imageReference, images, versions } from '../data/versions';
 
 const base = import.meta.env.BASE_URL;
 
-const actionImage = 'ievangelist/profanity-filter';
-const apiImage = 'ievangelist/profanity-filter-api';
+const actionImage = images.action;
+const apiImage = images.api;
+const actionImageReference = imageReference(actionImage);
+const apiImageReference = imageReference(apiImage);
 
-const dockerPullAction = `docker pull ghcr.io/ievangelist/profanity-filter:13.3.0`;
-const dockerPullApi = `docker pull ghcr.io/ievangelist/profanity-filter-api:13.3.0`;
+const dockerPullAction = `docker pull ${actionImageReference}`;
+const dockerPullApi = `docker pull ${apiImageReference}`;
 
 const dockerRunApi = `# Run the API on http://localhost:8080
 docker run --rm \\
   --name profanity-filter-api \\
   -p 8080:8080 \\
-  ghcr.io/ievangelist/profanity-filter-api:13.3.0
+  ${apiImageReference}
 
 # Optional — mount your own *.txt word lists, merged with the
 # built-in 4,900+ word dictionary at startup:
@@ -27,12 +30,12 @@ docker run --rm \\
   --name profanity-filter-api \\
   -p 8080:8080 \\
   -v "$(pwd)/CustomData":/app/CustomData:ro \\
-  ghcr.io/ievangelist/profanity-filter-api:13.3.0`;
+  ${apiImageReference}`;
 
 const composeApi = `# compose.yaml
 services:
   profanity-filter:
-    image: ghcr.io/ievangelist/profanity-filter-api:13.3.0
+    image: ${apiImageReference}
     container_name: profanity-filter-api
     ports:
       - "8080:8080"
@@ -92,7 +95,7 @@ const apiRoutes = [
         </span>
         <span class="inline-flex items-center gap-1 rounded-full bg-brand-500/10 text-brand-700 dark:text-brand-300 ring-1 ring-brand-500/30 px-2.5 py-1 text-xs font-medium">
           <Icon name="ph:tag-duotone" class="h-3.5 w-3.5" />
-          v13.3.0
+          v{versions.release}
         </span>
       </div>
     </div>

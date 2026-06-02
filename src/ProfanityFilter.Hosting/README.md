@@ -1,16 +1,18 @@
 # Profanity Filter: Hosting
 
-This is a .NET library intended to be used as a hosting library as part of the Aspire app host project. It exposes the `ProfanityFilterResource` which is a container resource, that resolves to `ghcr.io/ievangelist/profanity-filter-api:latest` container image.
+This .NET library adds the Potty Mouth profanity-filter API to an Aspire AppHost as a first-class `ContainerResource`. The default container image is `ghcr.io/ievangelist/profanity-filter-api:13.4.0`.
+
+The integration is built for Aspire 13.4 and uses analyzer-validated `[AspireExport]` metadata, so the same package works from C# AppHosts and generated TypeScript AppHost SDKs.
 
 ## Get started
 
-To install the [📦 ProfanityFilter.Hosting](https://www.nuget.org/packages/ProfanityFilter.Hosting) NuGet package:
+To install the [ProfanityFilter.Hosting](https://www.nuget.org/packages/ProfanityFilter.Hosting) NuGet package:
 
 ```bash
-dotnet add package ProfanityFilter.Hosting
+aspire add ProfanityFilter.Hosting
 ```
 
-To register the profanity filter resource in your application, call `AddProfanityFilter` on an `IDistributedApplication` instance:
+## C# AppHost
 
 ```csharp
 var builder = DistributedApplication.CreateBuilder(args);
@@ -18,11 +20,42 @@ var builder = DistributedApplication.CreateBuilder(args);
 var filter = builder.AddProfanityFilter("profanity-filter")
     .WithCustomDataBindMount("./CustomData");
 
-builder.AddProject<Projects.ProfanityFilter_Api>("api")
+builder.AddProject<Projects.MyApi>("api")
     .WithReference(filter)
     .WaitFor(filter);
 
 builder.Build().Run();
 ```
 
-This library pairs nicely with the [📦 ProfanityFilter.Client](https://www.nuget.org/packages/ProfanityFilter.Client) library, which provides a client for the Profanity Filter API.
+## TypeScript AppHost
+
+Use `apphost.mts` with the Aspire 13.4 generated SDK under `.aspire/modules`:
+
+```ts
+import { createBuilder } from "./.aspire/modules/aspire.mjs";
+
+const builder = await createBuilder();
+
+const filter = await builder
+    .addProfanityFilter("profanity-filter")
+    .withCustomDataBindMount("./CustomData");
+
+await builder.addProject("api", { project: "../src/MyApi/MyApi.csproj" })
+    .withReference(filter)
+    .waitFor(filter);
+
+const app = await builder.build();
+await app.run();
+```
+
+Do not edit files under `.aspire/modules`; Aspire regenerates them when packages are added or restored.
+
+## Exported API
+
+| C# API | TypeScript API | Description |
+| --- | --- | --- |
+| `AddProfanityFilter(name)` | `builder.addProfanityFilter(name)` | Adds the profanity-filter API container to the application model. |
+| `WithCustomDataBindMount(source)` | `.withCustomDataBindMount(source)` | Bind-mounts newline-delimited `*.txt` word lists into `/app/CustomData`. |
+| `ProfanityFilterResource.HttpsEndpoint` | `httpsEndpoint()` | Exposes the HTTPS endpoint used by the generated connection string. |
+
+This library pairs with [ProfanityFilter.Client](https://www.nuget.org/packages/ProfanityFilter.Client), which registers typed REST and SignalR clients that consume the resource connection string.

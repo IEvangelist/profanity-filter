@@ -13,6 +13,7 @@ public static class ProfanityFilterResourceBuilderExtensions
     /// <summary>
     /// Adds a profanity filter resource to the distributed application builder.
     /// </summary>
+    /// <ats-summary>Adds a Profanity Filter container resource to the distributed application.</ats-summary>
     /// <remarks>
     /// This version of the package defaults to the
     /// <inheritdoc cref="ProfanityFilterContainerImageDetails.Registry"/>/<inheritdoc cref="ProfanityFilterContainerImageDetails.Image"/>:<inheritdoc cref="ProfanityFilterContainerImageDetails.Tag"/> container image.
@@ -35,9 +36,7 @@ public static class ProfanityFilterResourceBuilderExtensions
     /// builder.Build().Run();
     /// </code>
     /// </example>
-    [AspireExport(
-        "addProfanityFilter",
-        Description = "Adds a Profanity Filter container resource to the distributed application")]
+    [AspireExport]
     public static IResourceBuilder<ProfanityFilterResource> AddProfanityFilter(
         this IDistributedApplicationBuilder builder,
         [ResourceName] string name,
@@ -63,6 +62,7 @@ public static class ProfanityFilterResourceBuilderExtensions
     /// Adds a bind mount for the <c>/app/CustomData</c> folder in the <see cref="ProfanityFilterResource"/>.
     /// Added data files should be newline delimited and have a <i>*.txt</i> file extension.
     /// </summary>
+    /// <ats-summary>Bind-mounts a folder of custom newline-delimited *.txt word lists into the Profanity Filter container.</ats-summary>
     /// <param name="builder">The resource builder.</param>
     /// <param name="source">The source directory on the host to mount into the container.</param>
     /// <returns>The <see cref="IResourceBuilder{T}"/>.</returns>
@@ -81,9 +81,7 @@ public static class ProfanityFilterResourceBuilderExtensions
     /// builder.Build().Run();
     /// </code>
     /// </example>
-    [AspireExport(
-        "withCustomDataBindMount",
-        Description = "Bind-mounts a folder of custom newline-delimited *.txt word lists into the Profanity Filter container at /app/CustomData")]
+    [AspireExport]
     public static IResourceBuilder<ProfanityFilterResource> WithCustomDataBindMount(
         this IResourceBuilder<ProfanityFilterResource> builder,
         string source)

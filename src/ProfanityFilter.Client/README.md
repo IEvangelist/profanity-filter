@@ -4,7 +4,7 @@ This is a .NET library intended to be used as a client for the Profanity Filter 
 
 The Profanity Filter API is a service that filters profane language from text. This client maps to the:
 
-- `ghcr.io/ievangelist/profanity-filter-api:latest` container image.
+- `ghcr.io/ievangelist/profanity-filter-api:13.4.0` container image.
 
 ## Get started
 
