@@ -1,7 +1,7 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-#:sdk Aspire.AppHost.Sdk@13.3.0
+#:sdk Aspire.AppHost.Sdk@13.4.0
 #:package Aspire.Hosting.Docker
 #:package Aspire.Hosting.JavaScript
 #:package ProfanityFilter.Hosting
