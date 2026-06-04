@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Aspire.Hosting" Version="13.4.0" />
+    <PackageVersion Include="Aspire.Hosting" Version="13.4.2" />
     <PackageVersion Include="Aspire.Hosting.Docker" Version="13.4.0" />
     <PackageVersion Include="Aspire.AppHost.Sdk" Version="13.4.0" />
     <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.4.0" />
