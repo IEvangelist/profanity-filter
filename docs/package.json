@@ -14,7 +14,7 @@
     "@astrojs/sitemap": "^3.7.2",
     "@iconify-json/ph": "^1.2.2",
     "@iconify-json/simple-icons": "^1.2.81",
-    "astro": "^6.3.1",
+    "astro": "^6.4.8",
     "astro-icon": "^1.1.5"
   },
   "devDependencies": {
