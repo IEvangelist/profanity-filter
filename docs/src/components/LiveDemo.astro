@@ -58,9 +58,22 @@ const strategies = [
     <div
       class="mt-5 rounded-xl border border-ink-200/80 dark:border-white/10 bg-white/90 dark:bg-black/40 backdrop-blur px-4 sm:px-5 py-4 sm:py-5"
     >
-      <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300">
-        <span aria-hidden="true">›</span>
-        Input
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-700 dark:text-brand-300">
+          <span aria-hidden="true">›</span>
+          Input
+        </div>
+        <!-- Emulates the "profane content 🤬" label the GitHub Action applies -->
+        <!-- once profanity is detected. Revealed the moment a match completes. -->
+        <span
+          data-demo-label
+          data-visible="false"
+          role="status"
+          aria-live="polite"
+          class="gh-label inline-flex select-none items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold leading-5 text-white shadow-sm ring-1 ring-inset ring-white/25"
+          style="background-color:#512bd4;"
+          title="Label applied by the GitHub Action when profane content is detected"
+        ></span>
       </div>
       <p
         id="live-demo-input"
@@ -137,6 +150,7 @@ const strategies = [
     <li>A typewriter animation enters a sample sentence (e.g. <q class="font-mono">This shit is broken, what the hell are we doing here?</q>) into the input panel at the top, one character at a time.</li>
     <li>Beneath the input is a grid of <strong>14 cards</strong>, one per replacement strategy. Each card shows the strategy's slug, a friendly label, and a one-line description.</li>
     <li>On every keystroke, every card re-renders the input with that card's strategy applied. Profane words are matched as whole words (case-insensitive).</li>
+    <li>The moment the input contains a completed profane word, a GitHub-style <code class="font-mono">profane content 🤬</code> label appears above the input &mdash; emulating the label the GitHub Action applies to flagged issues and pull requests. It disappears again if the input clears to something clean.</li>
     <li>For example: <code class="font-mono">asterisk</code> turns <code class="font-mono">shit</code> into <code class="font-mono">****</code>, <code class="font-mono">middle-asterisk</code> turns it into <code class="font-mono">s**t</code>, <code class="font-mono">bleep</code> replaces it with the literal word <code class="font-mono">bleep</code>, and <code class="font-mono">middle-swear-emoji</code> turns it into <code class="font-mono">s🤬t</code>.</li>
     <li>When the sentence finishes typing, the demo pauses briefly, clears, and starts typing a new sentence. The toggle button in the top-right lets you pause or resume the animation.</li>
     <li>The filtering logic is a faithful port of <a href="https://github.com/IEvangelist/profanity-filter/blob/main/src/ProfanityFilter.Services/Internals/MatchEvaluators.cs" target="_blank" rel="noopener noreferrer" class="font-medium text-brand-700 dark:text-brand-400 underline decoration-brand-500/40 underline-offset-2 hover:decoration-brand-500"><code class="font-mono">MatchEvaluators.cs</code></a> in the .NET library — the same code that powers the GitHub Action and the WebApi container.</li>
@@ -158,6 +172,9 @@ const strategies = [
 
     // Whole-word, case-insensitive match. Kept tame and PG-13.
     const PROFANE = /\b(shit|hell|damn|ass|crap)\b/gi;
+    // Non-global twin used only to test whether the current input already
+    // contains a completed profane word (drives the GitHub-style label).
+    const HAS_PROFANE = /\b(shit|hell|damn|ass|crap)\b/i;
 
     const phrases = [
       'This shit is broken, what the hell are we doing here?',
@@ -221,6 +238,7 @@ const strategies = [
     const init = () => {
       const input = document.querySelector('[data-demo-input]');
       const grid = document.querySelector('[data-demo-grid]');
+      const labelEl = document.querySelector('[data-demo-label]');
       const toggleBtn = document.querySelector('[data-demo-toggle]');
       const toggleIcon = toggleBtn?.querySelector('[data-demo-toggle-icon]');
       const toggleLabel = toggleBtn?.querySelector('[data-demo-toggle-label]');
@@ -235,6 +253,17 @@ const strategies = [
 
       const cursorHTML = '<span class="inline-block w-[0.55ch] -mb-[0.1em] h-[1em] align-middle bg-brand-600 dark:bg-brand-400 ml-0.5 animate-pulse" aria-hidden="true"></span>';
 
+      // Reveal (or hide) the GitHub-style "profane content 🤬" label. Only
+      // mutates on a state change so the aria-live region announces exactly
+      // once — the moment profanity is first encountered.
+      let labelShown = false;
+      const setLabel = (flagged) => {
+        if (!labelEl || flagged === labelShown) return;
+        labelShown = flagged;
+        labelEl.dataset.visible = flagged ? 'true' : 'false';
+        labelEl.textContent = flagged ? 'profane content 🤬' : '';
+      };
+
       const render = (text, withCursor) => {
         // Update the input row (escape + cursor)
         input.innerHTML = escapeHtml(text) + (withCursor ? cursorHTML : '');
@@ -244,6 +273,8 @@ const strategies = [
           if (!panel) continue;
           panel.innerHTML = applyStrategy(text, fn);
         }
+        // Flag the input the instant it contains a completed profane word.
+        setLabel(HAS_PROFANE.test(text));
       };
 
       // If the user prefers reduced motion, render the full first phrase
@@ -358,5 +389,25 @@ const strategies = [
   }
   [data-strategy] strong {
     font-weight: 700;
+  }
+
+  /* GitHub-style label that emulates the Action flagging profane content.
+     Hidden until a profane word completes, then springs in from the right. */
+  [data-demo-label] {
+    opacity: 0;
+    transform: translateY(-2px) scale(0.94);
+    transform-origin: right center;
+    transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: opacity, transform;
+  }
+  [data-demo-label][data-visible='true'] {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-demo-label] {
+      transition: opacity 0.2s ease;
+      transform: none;
+    }
   }
 </style>
