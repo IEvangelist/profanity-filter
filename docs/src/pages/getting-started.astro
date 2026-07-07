@@ -136,13 +136,15 @@ const existingWorkflow = `- name: Scan for profanity
       </p>
     </Callout>
 
-    <Callout variant="note" title="Optional label">
-      <p>
-        Create a label named exactly <code class="font-mono text-sm px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">profane content 🤬</code>
-        in your repo. When found, Potty Mouth will automatically apply it to flagged issues and pull requests
-        for easy filtering.
-      </p>
-    </Callout>
+    <div id="label" class="scroll-mt-24">
+      <Callout variant="note" title="Optional label">
+        <p>
+          Create a label named exactly <code class="font-mono text-sm px-1 py-0.5 rounded bg-white/40 dark:bg-white/10">profane content 🤬</code>
+          in your repo. When found, Potty Mouth will automatically apply it to flagged issues and pull requests
+          for easy filtering.
+        </p>
+      </Callout>
+    </div>
 
     <div class="mt-16 flex flex-col sm:flex-row items-center gap-3">
       <a

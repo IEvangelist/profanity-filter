@@ -23,6 +23,10 @@ const strategies = [
   { id: 'grawlix',                   label: 'Grawlix',                   hint: 'Comic-book symbols',                   icon: 'ph:hash-bold' },
   { id: 'bold-grawlix',              label: 'Bold grawlix',              hint: 'Grawlix, but louder',                  icon: 'ph:text-b-bold' },
 ];
+
+const base = import.meta.env.BASE_URL;
+// Where the "profane content 🤬" label pill links to — the label docs.
+const labelHref = `${base}/getting-started#label`;
 ---
 
 <figure
@@ -64,16 +68,19 @@ const strategies = [
           Input
         </div>
         <!-- Emulates the "profane content 🤬" label the GitHub Action applies -->
-        <!-- once profanity is detected. Revealed the moment a match completes. -->
-        <span
+        <!-- once profanity is detected. Revealed the moment a match completes; -->
+        <!-- links to the label docs. -->
+        <a
           data-demo-label
           data-visible="false"
-          role="status"
+          href={labelHref}
+          aria-hidden="true"
+          tabindex="-1"
           aria-live="polite"
-          class="gh-label inline-flex select-none items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold leading-5 text-white shadow-sm ring-1 ring-inset ring-white/25"
+          class="gh-label inline-flex select-none items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold leading-5 text-white no-underline shadow-sm ring-1 ring-inset ring-white/25 transition hover:brightness-110 hover:ring-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
           style="background-color:#512bd4;"
-          title="Label applied by the GitHub Action when profane content is detected"
-        ></span>
+          title="View label docs — the “profane content 🤬” label the Action applies"
+        ></a>
       </div>
       <p
         id="live-demo-input"
@@ -150,7 +157,7 @@ const strategies = [
     <li>A typewriter animation enters a sample sentence (e.g. <q class="font-mono">This shit is broken, what the hell are we doing here?</q>) into the input panel at the top, one character at a time.</li>
     <li>Beneath the input is a grid of <strong>14 cards</strong>, one per replacement strategy. Each card shows the strategy's slug, a friendly label, and a one-line description.</li>
     <li>On every keystroke, every card re-renders the input with that card's strategy applied. Profane words are matched as whole words (case-insensitive).</li>
-    <li>The moment the input contains a completed profane word, a GitHub-style <code class="font-mono">profane content 🤬</code> label appears above the input &mdash; emulating the label the GitHub Action applies to flagged issues and pull requests. It disappears again if the input clears to something clean.</li>
+    <li>The moment the input contains a completed profane word, a GitHub-style <code class="font-mono">profane content 🤬</code> label appears above the input &mdash; emulating the label the GitHub Action applies to flagged issues and pull requests. It links to the <a href={labelHref} class="font-medium text-brand-700 dark:text-brand-400 underline decoration-brand-500/40 underline-offset-2 hover:decoration-brand-500">label documentation</a>, and disappears again if the input clears to something clean.</li>
     <li>For example: <code class="font-mono">asterisk</code> turns <code class="font-mono">shit</code> into <code class="font-mono">****</code>, <code class="font-mono">middle-asterisk</code> turns it into <code class="font-mono">s**t</code>, <code class="font-mono">bleep</code> replaces it with the literal word <code class="font-mono">bleep</code>, and <code class="font-mono">middle-swear-emoji</code> turns it into <code class="font-mono">s🤬t</code>.</li>
     <li>When the sentence finishes typing, the demo pauses briefly, clears, and starts typing a new sentence. The toggle button in the top-right lets you pause or resume the animation.</li>
     <li>The filtering logic is a faithful port of <a href="https://github.com/IEvangelist/profanity-filter/blob/main/src/ProfanityFilter.Services/Internals/MatchEvaluators.cs" target="_blank" rel="noopener noreferrer" class="font-medium text-brand-700 dark:text-brand-400 underline decoration-brand-500/40 underline-offset-2 hover:decoration-brand-500"><code class="font-mono">MatchEvaluators.cs</code></a> in the .NET library — the same code that powers the GitHub Action and the WebApi container.</li>
@@ -255,11 +262,15 @@ const strategies = [
 
       // Reveal (or hide) the GitHub-style "profane content 🤬" label. Only
       // mutates on a state change so the aria-live region announces exactly
-      // once — the moment profanity is first encountered.
+      // once — the moment profanity is first encountered. When hidden the
+      // link is removed from the tab order and can't be clicked.
       let labelShown = false;
       const setLabel = (flagged) => {
         if (!labelEl || flagged === labelShown) return;
         labelShown = flagged;
+        labelEl.setAttribute('aria-hidden', flagged ? 'false' : 'true');
+        if (flagged) labelEl.removeAttribute('tabindex');
+        else labelEl.setAttribute('tabindex', '-1');
         labelEl.dataset.visible = flagged ? 'true' : 'false';
         labelEl.textContent = flagged ? 'profane content 🤬' : '';
       };
@@ -399,10 +410,13 @@ const strategies = [
     transform-origin: right center;
     transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     will-change: opacity, transform;
+    pointer-events: none;
+    cursor: pointer;
   }
   [data-demo-label][data-visible='true'] {
     opacity: 1;
     transform: none;
+    pointer-events: auto;
   }
   @media (prefers-reduced-motion: reduce) {
     [data-demo-label] {
