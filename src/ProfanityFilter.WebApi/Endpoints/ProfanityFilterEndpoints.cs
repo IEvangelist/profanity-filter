@@ -50,6 +50,15 @@ internal static partial class ProfanityFilterEndpoints
                         """)
             .WithHttpLogging(HttpLoggingFields.All);
 
+        profanity.MapGet("info", OnGetDataInfoAsync)
+            .Produces<ProfanityDataInfoResponse>(200)
+            .WithRequestTimeout(TimeSpan.FromSeconds(10))
+            .CacheOutput()
+            .WithSummary("""
+                Returns aggregate statistics about the profane content dictionaries, including the total number of sources (languages) and words, plus a per-source word-count breakdown.
+                """)
+            .WithHttpLogging(HttpLoggingFields.All);
+
         var data = profanity.MapGroup("data")
             .DisableAntiforgery();
 
@@ -122,6 +131,34 @@ internal static partial class ProfanityFilterEndpoints
             ],
             JsonSerializationContext.Default.FilterTargetResponseArray
         );
+
+    private static async Task<IResult> OnGetDataInfoAsync(
+        [FromServices] IMemoryCache cache,
+        [FromServices] IProfaneContentFilterService filterService)
+    {
+        var map = await filterService.ReadAllProfaneWordsAsync();
+
+        var fileNames = await GetProfaneContentNamesAsync(cache, map.Keys);
+
+        var sources = map
+            .Select(kvp => new ProfanityDataSourceInfo(
+                Name: fileNames.TryGetValue(kvp.Key, out var name) && name is { Length: > 0 }
+                    ? name
+                    : Path.GetFileNameWithoutExtension(kvp.Key),
+                WordCount: kvp.Value.ProfaneWords.Count))
+            .OrderByDescending(static source => source.WordCount)
+            .ThenBy(static source => source.Name, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        var response = new ProfanityDataInfoResponse(
+            TotalSources: sources.Length,
+            TotalWords: sources.Sum(static source => source.WordCount),
+            Sources: sources);
+
+        return TypedResults.Json(
+            response,
+            JsonSerializationContext.Default.ProfanityDataInfoResponse);
+    }
 
     private static async Task<IResult> OnGetDataNamesAsync(
         [FromServices] IMemoryCache cache,

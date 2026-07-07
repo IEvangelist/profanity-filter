@@ -12,6 +12,8 @@ namespace ProfanityFilter.Common;
 /// <item><see cref="Common.FilterStep"/></item>
 /// <item><see cref="Common.FilterTarget"/></item>
 /// <item><see cref="Common.ProfaneSourceFilter"/></item>
+/// <item><see cref="Api.ProfanityDataInfoResponse"/></item>
+/// <item><see cref="Api.ProfanityDataSourceInfo"/></item>
 /// <item><see cref="Api.ProfanityFilterRequest"/></item>
 /// <item><see cref="Api.ProfanityFilterResponse"/></item>
 /// <item><see cref="Common.ReplacementStrategy"/></item>
@@ -33,6 +35,9 @@ namespace ProfanityFilter.Common;
 [JsonSerializable(typeof(FilterTarget))]
 [JsonSerializable(typeof(FilterTargetResponse[]))]
 [JsonSerializable(typeof(ProfaneSourceFilter))]
+[JsonSerializable(typeof(ProfanityDataInfoResponse))]
+[JsonSerializable(typeof(ProfanityDataSourceInfo))]
+[JsonSerializable(typeof(ProfanityDataSourceInfo[]))]
 [JsonSerializable(typeof(ProfanityFilterRequest))]
 [JsonSerializable(typeof(ProfanityFilterResponse))]
 [JsonSerializable(typeof(ProfanityFilterStep[]))]

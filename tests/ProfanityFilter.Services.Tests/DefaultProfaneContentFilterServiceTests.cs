@@ -222,7 +222,7 @@ public class DefaultProfaneContentFilterServiceTests
 
         Assert.AreEqual(@"My least favorite web technologies are S\*\*\*\*\*\*\*\*\*t and W\*\*\*\*\*\*s!", result.FinalOutput);
 
-        Assert.HasCount(10, result.Steps);
+        Assert.HasCount(30, result.Steps);
         Assert.AreEqual(1, result.Steps.Count(static step => step.IsFiltered));
 
         CollectionAssert.That.Contains(result.Steps,

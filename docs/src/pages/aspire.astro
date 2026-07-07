@@ -66,7 +66,7 @@ app.MapPost("/scrub", async (
 
 const customDataExample = `// Optional: ship a folder of newline-delimited *.txt files with
 // project-specific words and phrases that should also be filtered.
-// They are merged with the built-in 4,900+ word dictionary at runtime.
+// They are merged with the built-in 6,500+ word dictionary at runtime.
 
 var profanityFilter = builder.AddProfanityFilter("profanity-filter")
     .WithCustomDataBindMount("./CustomData");`;
@@ -237,7 +237,7 @@ var profanityFilter = builder.AddProfanityFilter("profanity-filter")
       <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">WithCustomDataBindMount</code>.
       Drop one or more newline-delimited
       <code class="font-mono text-sm px-1.5 py-0.5 rounded bg-ink-100 dark:bg-white/10">*.txt</code>
-      files into the folder you point at &mdash; they&rsquo;re merged with the built-in 4,900+ word dictionary at startup.
+      files into the folder you point at &mdash; they&rsquo;re merged with the built-in 6,500+ word dictionary at startup.
     </p>
     <CodeBlock code={customDataExample} lang="csharp" />
   </section>
