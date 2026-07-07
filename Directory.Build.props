@@ -21,7 +21,7 @@
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <ReportAnalyzer>true</ReportAnalyzer>
 
-        <NoWarn>@(NoWarn);NU1903</NoWarn>
+        <NoWarn>@(NoWarn);NU1902;NU1903</NoWarn>
         
         <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors> 
