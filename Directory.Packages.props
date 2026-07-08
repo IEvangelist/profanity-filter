@@ -17,7 +17,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="10.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="10.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.8" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.9" />
@@ -32,16 +32,16 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.8" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.203" />
-    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="2.2.3" />
+    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="2.3.1" />
     <PackageVersion Include="MinVer" Version="7.0.0" />
     <PackageVersion Include="MSTest.Engine" Version="2.0.0-alpha.26264.3" />
-    <PackageVersion Include="MSTest.SourceGeneration" Version="2.0.0-alpha.26264.3" />
-    <PackageVersion Include="MSTest.TestFramework" Version="4.2.3" />
-    <PackageVersion Include="MSTest.Analyzers" Version="4.2.3" />
+    <PackageVersion Include="MSTest.SourceGeneration" Version="2.0.0-alpha.26358.12" />
+    <PackageVersion Include="MSTest.TestFramework" Version="4.3.0" />
+    <PackageVersion Include="MSTest.Analyzers" Version="4.3.0" />
     <PackageVersion Include="Nito.AsyncEx.Coordination" Version="5.1.2" />
     <PackageVersion Include="Pathological.Globbing" Version="9.1.0" />
     <PackageVersion Include="ProfanityFilter.Hosting" Version="9.0.7-alpha.0.10" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.7" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.11" />
     <PackageVersion Include="Markdig" Version="1.1.3" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.8" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.9" />
