@@ -7,8 +7,11 @@ import Stat from '../components/Stat.astro';
 import SectionEyebrow from '../components/SectionEyebrow.astro';
 import LiveDemo from '../components/LiveDemo.astro';
 import { Icon } from 'astro-icon/components';
+import { getContainerDownloads } from '../data/downloads';
 
 const base = import.meta.env.BASE_URL;
+
+const downloads = await getContainerDownloads();
 
 const heroSnippet = `# .github/workflows/profanity-filter.yml
 name: Profanity filter
@@ -157,11 +160,12 @@ const strategies = [
 
   <section class="border-y border-ink-200/60 dark:border-white/5 bg-ink-50/50 dark:bg-white/[0.015]">
     <div class="max-w-7xl mx-auto px-6 lg:px-8 py-10 sm:py-12">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-10">
         <Stat icon="ph:book-open-text-duotone" value="6,500+" label="Curated words" hint="across the dictionary" />
         <Stat icon="ph:globe-duotone" value="28" label="Languages" hint="globally inclusive" />
         <Stat icon="ph:palette-duotone" value="14" label="Replacement strategies" hint="for every taste" />
         <Stat icon="ph:lightning-duotone" value="Native AOT" label=".NET 10 powered" hint="instant cold starts" />
+        <Stat icon="ph:download-simple-duotone" value={downloads.totalCompact} label="Container pulls" hint="trusted from GHCR" />
       </div>
     </div>
   </section>

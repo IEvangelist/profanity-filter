@@ -5,10 +5,14 @@ import Callout from '../components/Callout.astro';
 import FeatureCard from '../components/FeatureCard.astro';
 import SectionEyebrow from '../components/SectionEyebrow.astro';
 import PageNav from '../components/PageNav.astro';
+import Stat from '../components/Stat.astro';
 import { Icon } from 'astro-icon/components';
 import { imageReference, images, versions } from '../data/versions';
+import { getContainerDownloads } from '../data/downloads';
 
 const base = import.meta.env.BASE_URL;
+
+const downloads = await getContainerDownloads();
 
 const actionImage = images.action;
 const apiImage = images.api;
@@ -97,7 +101,33 @@ const apiRoutes = [
           <Icon name="ph:tag-duotone" class="h-3.5 w-3.5" />
           v{versions.release}
         </span>
+        <span class="inline-flex items-center gap-1 rounded-full bg-amber-500/10 text-amber-700 dark:text-amber-300 ring-1 ring-amber-500/30 px-2.5 py-1 text-xs font-medium">
+          <Icon name="ph:download-simple-duotone" class="h-3.5 w-3.5" />
+          {downloads.totalCompact} pulls
+        </span>
       </div>
+    </div>
+  </section>
+
+  <!-- Trust signal: download counts pulled from GitHub Container Registry -->
+  <section class="max-w-5xl mx-auto px-6 lg:px-8 pt-2 pb-8">
+    <div class="rounded-2xl border border-ink-200/80 dark:border-white/10 bg-white/60 dark:bg-white/[0.02] px-6 py-8 sm:px-10">
+      <div class="text-center mb-8">
+        <SectionEyebrow icon="ph:seal-check-duotone" label="Trusted at scale" />
+        <p class="mt-3 text-ink-600 dark:text-ink-300 max-w-2xl mx-auto">
+          Real pulls, straight from
+          <a href="https://github.com/IEvangelist?tab=packages&repo_name=profanity-filter" target="_blank" rel="noopener noreferrer" class="text-brand-600 dark:text-brand-400 hover:underline">GitHub Container Registry</a>
+          &mdash; the total downloads GitHub reports across both images.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <Stat icon="ph:download-simple-duotone" value={downloads.totalCompact} label="Total pulls" hint="across both images" />
+        <Stat icon="simple-icons:githubactions" value={downloads.actionCompact} label="Action image" hint="GitHub Action runner" />
+        <Stat icon="ph:cloud-duotone" value={downloads.apiCompact} label="API image" hint="standalone HTTP API" />
+      </div>
+      <p class="mt-7 text-center text-xs text-ink-500 dark:text-ink-500">
+        Total downloads as reported by GitHub Container Registry{downloads.live ? '' : ' (last known snapshot)'}.
+      </p>
     </div>
   </section>
 
