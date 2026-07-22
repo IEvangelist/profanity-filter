@@ -116,6 +116,19 @@ Notes:
 - `exclude-profane-words` is case-insensitive.
 - Both inputs support comma-separated values.
 
+### 📚 Built-in dictionary sources
+
+The following built-in source names can be used with `exclude-profane-sources`:
+
+- `GoogleBannedWords`
+- `SwedishSwearWords`
+- `IndonesianSwearWords`
+- `RussianSwearWords`
+- `GermanSwearWords`
+- `ItalianSwearWords`
+
+For the complete list, see [src/ProfanityFilter.Services/Data](src/ProfanityFilter.Services/Data).
+
 ### 😵 Replacement strategies
 
 Each replacement strategy corresponds to a different way of replacing profane content. The following represents the available replacement types:
