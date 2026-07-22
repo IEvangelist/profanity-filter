@@ -97,6 +97,18 @@ internal static class CoreServiceExtensions
     private static readonly string[] s_newLines = ["\r\n", "\r", "\n"];
 
     /// <summary>
+    /// Gets source names to exclude from the action's input <c>exclude-profane-sources</c> value.
+    /// </summary>
+    public static string[]? GetExcludedProfaneSources(this ICoreService core) =>
+        ParseDelimitedInput(core.GetInput(ActionInputs.ExcludeProfaneSources));
+
+    /// <summary>
+    /// Gets words to exclude from the action's input <c>exclude-profane-words</c> value.
+    /// </summary>
+    public static string[]? GetExcludedProfaneWords(this ICoreService core) =>
+        ParseDelimitedInput(core.GetInput(ActionInputs.ExcludeProfaneWords));
+
+    /// <summary>
     /// Gets the custom profane words from the action's input <c>custom-profane-words-url</c> value,
     /// making an HTTP GET call to the specified URL.
     /// </summary>
@@ -124,5 +136,15 @@ internal static class CoreServiceExtensions
         }
 
         return default;
+    }
+
+    private static string[]? ParseDelimitedInput(string? input)
+    {
+        return input is null or { Length: 0 }
+            ? (string[]?)default
+            : input.Split([',', '\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+                .Select(static value => value.Trim())
+                .Where(static value => value.Length > 0)
+                .ToArray();
     }
 }

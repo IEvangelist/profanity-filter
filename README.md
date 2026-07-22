@@ -89,6 +89,32 @@ The following table describes each input:
 | `include-confused-reaction` | A `boolean` value to indicate if the action should react to the issue or pull request with the confused 😕 reaction. | `false` (default: `false`) |
 | `manual-profane-words` | A `string` value, with a comma-separated list of additional profane words to include in the filter. | `false` |
 | `custom-profane-words-url` | A URL that returns a `string` value, with a newline-separated list of custom profane words to include in the filter. | `false` |
+| `exclude-profane-sources` | A `string` value, with a comma-separated list of dictionary source names to exclude, for example `GoogleBannedWords` or `GoogleBannedWords.txt`. | `false` |
+| `exclude-profane-words` | A `string` value, with a comma-separated list of words to whitelist and exclude from filtering, for example `mongo`. | `false` |
+
+### 🧪 Exclusion examples
+
+To exclude entire dictionaries and whitelist specific words, configure the action like this:
+
+```yml
+- name: Scan issue or pull request for profanity
+  if: ${{ github.actor != 'dependabot[bot]' && github.actor != 'github-actions[bot]' }}
+  uses: IEvangelist/profanity-filter@main
+  id: profanity-filter
+  with:
+    token: ${{ secrets.GITHUB_TOKEN }}
+    replacement-strategy: middle-asterisk
+    # Skip one or more dictionaries by source name.
+    exclude-profane-sources: GoogleBannedWords,ItalianSwearWords
+    # Keep these words unchanged even if present in any dictionary.
+    exclude-profane-words: mongo,redis,kubernetes
+```
+
+Notes:
+
+- `exclude-profane-sources` accepts source names with or without `.txt` extension.
+- `exclude-profane-words` is case-insensitive.
+- Both inputs support comma-separated values.
 
 ### 😵 Replacement strategies
 

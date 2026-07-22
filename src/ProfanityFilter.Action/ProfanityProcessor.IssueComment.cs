@@ -28,11 +28,15 @@ internal sealed partial class ProfanityProcessor
             var replacementStrategy = core.GetReplacementStrategy();
 
             var additionalFilters = await GetAdditionalFiltersAsync();
+            var excludedSources = core.GetExcludedProfaneSources()?.ToHashSet(StringComparer.OrdinalIgnoreCase);
+            var excludedWords = core.GetExcludedProfaneWords()?.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
             var bodyFilterResult = await TryApplyFilterAsync(
                 issueComment.Body ?? "", new(replacementStrategy, FilterTarget.Comment)
                 {
-                    AdditionalFilterSources = additionalFilters
+                    AdditionalFilterSources = additionalFilters,
+                    ExcludedFilterSources = excludedSources,
+                    ExcludedWords = excludedWords
                 });
 
             filterResult = new FiltrationResult(BodyResult: bodyFilterResult);

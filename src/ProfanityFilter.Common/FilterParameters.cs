@@ -21,4 +21,15 @@ public readonly record struct FilterParameters(
     /// A collection of additional profane words to consider as a filter source.
     /// </summary>
     public HashSet<ProfaneSourceFilter>? AdditionalFilterSources { get; init; }
+
+    /// <summary>
+    /// A collection of source names to exclude from filtering.
+    /// Source name values can be either full file names or source aliases.
+    /// </summary>
+    public HashSet<string>? ExcludedFilterSources { get; init; }
+
+    /// <summary>
+    /// A collection of words to exclude from filtering, acting as a whitelist.
+    /// </summary>
+    public HashSet<string>? ExcludedWords { get; init; }
 }
