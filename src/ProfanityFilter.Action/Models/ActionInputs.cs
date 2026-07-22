@@ -30,4 +30,14 @@ internal static class ActionInputs
     /// The name of the <i>action.yml</i> input: <c>"custom-profane-words-url"</c>.
     /// </summary>
     internal const string CustomProfaneWordsUrl = "custom-profane-words-url";
+
+    /// <summary>
+    /// The name of the <i>action.yml</i> input: <c>"exclude-profane-sources"</c>.
+    /// </summary>
+    internal const string ExcludeProfaneSources = "exclude-profane-sources";
+
+    /// <summary>
+    /// The name of the <i>action.yml</i> input: <c>"exclude-profane-words"</c>.
+    /// </summary>
+    internal const string ExcludeProfaneWords = "exclude-profane-words";
 }

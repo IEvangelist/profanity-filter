@@ -80,12 +80,54 @@ internal sealed partial class DefaultProfaneContentFilterService(
             return result;
         }
 
-        var wordList =
-            await ReadAllProfaneWordsAsync(cancellationToken).ConfigureAwait(false);
+        var wordList = new Dictionary<string, ProfaneSourceFilter>(
+            await ReadAllProfaneWordsAsync(cancellationToken).ConfigureAwait(false));
 
         foreach (var profaneSourceFilter in parameters.AdditionalFilterSources ?? [])
         {
             wordList[profaneSourceFilter.SourceName] = profaneSourceFilter;
+        }
+
+        if (parameters.ExcludedFilterSources is { Count: > 0 } excludedSources)
+        {
+            var normalizedExcludedSources = excludedSources
+                .Where(static source => string.IsNullOrWhiteSpace(source) is false)
+                .Select(static source => NormalizeSourceName(source))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var source in wordList.Keys.ToArray())
+            {
+                if (normalizedExcludedSources.Contains(NormalizeSourceName(source)))
+                {
+                    wordList.Remove(source);
+                }
+            }
+        }
+
+        if (parameters.ExcludedWords is { Count: > 0 } excludedWords)
+        {
+            var normalizedExcludedWords = excludedWords
+                .Where(static word => string.IsNullOrWhiteSpace(word) is false)
+                .Select(static word => word.Trim())
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var (source, filter) in wordList.ToArray())
+            {
+                var filteredWords = filter.ProfaneWords
+                    .Where(word => ShouldIncludeWord(word, normalizedExcludedWords))
+                    .ToFrozenSet(StringComparer.OrdinalIgnoreCase);
+
+                if (filteredWords.Count is 0)
+                {
+                    wordList.Remove(source);
+                    continue;
+                }
+
+                if (filteredWords.Count != filter.ProfaneWords.Count)
+                {
+                    wordList[source] = new ProfaneSourceFilter(source, filteredWords);
+                }
+            }
         }
 
         var getEvaluator = strategy.GetMatchEvaluator();
@@ -125,5 +167,29 @@ internal sealed partial class DefaultProfaneContentFilterService(
         {
             Matches = MatchRegistry.Unregister(parameters)
         };
+
+        static string NormalizeSourceName(string source)
+        {
+            var fileName = Path.GetFileName(source);
+            var withoutExtension = Path.GetFileNameWithoutExtension(fileName);
+
+            return string.IsNullOrWhiteSpace(withoutExtension)
+                ? source.Trim()
+                : withoutExtension.Trim();
+        }
+
+        static bool ShouldIncludeWord(string word, HashSet<string> excludedWords)
+        {
+            var trimmedWord = word.Trim();
+
+            if (excludedWords.Contains(trimmedWord))
+            {
+                return false;
+            }
+
+            var unescapedWord = Regex.Unescape(trimmedWord);
+
+            return excludedWords.Contains(unescapedWord) is false;
+        }
     }
 }
