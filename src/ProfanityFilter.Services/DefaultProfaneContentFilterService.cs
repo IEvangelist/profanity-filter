@@ -80,8 +80,8 @@ internal sealed partial class DefaultProfaneContentFilterService(
             return result;
         }
 
-        var wordList =
-            await ReadAllProfaneWordsAsync(cancellationToken).ConfigureAwait(false);
+        var wordList = new Dictionary<string, ProfaneSourceFilter>(
+            await ReadAllProfaneWordsAsync(cancellationToken).ConfigureAwait(false));
 
         foreach (var profaneSourceFilter in parameters.AdditionalFilterSources ?? [])
         {
