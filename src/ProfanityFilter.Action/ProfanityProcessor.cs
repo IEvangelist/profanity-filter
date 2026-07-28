@@ -192,17 +192,23 @@ internal sealed partial class ProfanityProcessor(
         }
 
         var additionalFilters = await GetAdditionalFiltersAsync();
+        var excludedSources = core.GetExcludedProfaneSources()?.ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var excludedWords = core.GetExcludedProfaneWords()?.ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         var titleResult = await TryApplyFilterAsync(
             title, parameters: new(replacementStrategy, FilterTarget.Title)
             {
-                AdditionalFilterSources = additionalFilters
+                AdditionalFilterSources = additionalFilters,
+                ExcludedFilterSources = excludedSources,
+                ExcludedWords = excludedWords
             });
 
         var bodyResult = await TryApplyFilterAsync(
             body, parameters: new(replacementStrategy, FilterTarget.Body)
             {
-                AdditionalFilterSources = additionalFilters
+                AdditionalFilterSources = additionalFilters,
+                ExcludedFilterSources = excludedSources,
+                ExcludedWords = excludedWords
             });
 
         return new FiltrationResult(titleResult, bodyResult);

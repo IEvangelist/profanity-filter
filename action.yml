@@ -33,6 +33,14 @@ inputs:
     description:
       'A URL that returns a newline-delimted list of custom words to use for profanity filtering.'
     required: false
+  exclude-profane-sources:
+    description:
+      'A comma-separated list of source dictionaries to exclude, for example GoogleBannedWords or GoogleBannedWords.txt.'
+    required: false
+  exclude-profane-words:
+    description:
+      'A comma-separated list of words to whitelist and exclude from profanity filtering, for example mongo.'
+    required: false
 
 runs:
   using: 'docker'

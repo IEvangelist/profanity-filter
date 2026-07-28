@@ -228,4 +228,47 @@ public class DefaultProfaneContentFilterServiceTests
         CollectionAssert.That.Contains(result.Steps,
             static step => step.ProfaneSourceData.EndsWith("CustomWords.txt", StringComparison.OrdinalIgnoreCase));
     }
+
+    [TestMethod]
+    public async Task FilterProfanityAsyncWithExcludedSourcesSkipsMatchingDictionary()
+    {
+        var input = "Lots of fucking words like manky and arrusa!";
+
+        // Act
+        var result = await _sut.FilterProfanityAsync(input,
+            new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body)
+            {
+                ExcludedFilterSources = ["GoogleBannedWords"]
+            }, CancellationToken.None);
+
+        // Assert
+        Assert.IsTrue(result.IsFiltered);
+        Assert.IsNotNull(result.FinalOutput);
+        Assert.IsTrue(result.FinalOutput.Contains("fucking", StringComparison.OrdinalIgnoreCase));
+
+        Assert.IsFalse(result.Steps.Any(static step =>
+            step.IsFiltered &&
+            step.ProfaneSourceData.EndsWith("GoogleBannedWords.txt", StringComparison.OrdinalIgnoreCase)));
+    }
+
+    [TestMethod]
+    public async Task FilterProfanityAsyncWithExcludedWordsSkipsSpecificWord()
+    {
+        var input = "I love WebForms!";
+
+        // Act
+        var result = await _sut.FilterProfanityAsync(input,
+            new(ReplacementStrategy.Bleep, FilterTarget.Body)
+            {
+                AdditionalFilterSources =
+                [
+                    new("Custom", s_webFormsArray.ToFrozenSet())
+                ],
+                ExcludedWords = ["WebForms"]
+            }, CancellationToken.None);
+
+        // Assert
+        Assert.IsFalse(result.IsFiltered);
+        Assert.AreEqual(input, result.FinalOutput ?? result.Input);
+    }
 }
