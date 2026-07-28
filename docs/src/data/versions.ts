@@ -1,5 +1,5 @@
 export const versions = {
-  release: '13.4.6.1',
+  release: '13.4.6.2',
   aspire: '13.4.0',
   legacyPreviewPattern: '9.0.7-alpha.*',
 } as const;

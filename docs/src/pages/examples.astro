@@ -48,6 +48,16 @@ const customUrl = `- name: Scan for profanity
     # Pull words from any URL that returns newline-delimited text
     custom-profane-words-url: https://example.com/words.txt`;
 
+const excludeSourcesAndWords = `- name: Scan for profanity
+  uses: IEvangelist/profanity-filter@main
+  with:
+    token: \${{ secrets.GITHUB_TOKEN }}
+    replacement-strategy: middle-asterisk
+    # Skip one or more built-in dictionaries by source name
+    exclude-profane-sources: GoogleBannedWords,ItalianSwearWords
+    # Allowlist words so they're never filtered (case-insensitive)
+    exclude-profane-words: mongo,redis,kubernetes`;
+
 const angerEmojiWithReaction = `- name: Scan for profanity
   uses: IEvangelist/profanity-filter@main
   with:
@@ -105,6 +115,11 @@ const examples = [
     title: '🌐 Custom words from a URL',
     intro: 'Centralize a shared list across repos by hosting a newline-delimited text file at any URL.',
     code: customUrl,
+  },
+  {
+    title: '🛟 Exclude sources & allowlist words',
+    intro: 'Reduce false positives &mdash; skip entire built-in dictionaries by source name and allowlist specific words (case-insensitive) so terms like <code>mongo</code> or <code>redis</code> are never filtered.',
+    code: excludeSourcesAndWords,
   },
   {
     title: '😡 Anger emojis + confused reaction',
