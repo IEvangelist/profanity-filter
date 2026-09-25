@@ -34,6 +34,7 @@
     <PackageReference Include="GitHub.Actions.Core" />
     <PackageReference Include="GitHub.Actions.Octokit" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Kiota.Bundle" />
   </ItemGroup>
 
   <ItemGroup>
