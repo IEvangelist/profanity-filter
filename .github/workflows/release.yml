@@ -39,6 +39,10 @@ jobs:
             echo "minor=v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
             echo "is-stable-semver=true" >> "$GITHUB_OUTPUT"
           else
+            if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+              echo "::error::Action releases must use a stable vMAJOR.MINOR.PATCH version; received '$RELEASE_VERSION'."
+              exit 1
+            fi
             echo "::warning::Skipping Action aliases: '$RELEASE_VERSION' is not a stable vMAJOR.MINOR.PATCH version."
             echo "is-stable-semver=false" >> "$GITHUB_OUTPUT"
           fi
