@@ -19,7 +19,7 @@ name: Release NuGet packages
 on:
   push:
     tags:
-      - '**'
+      - '*.*.*.*'
 
 jobs:
   publish:

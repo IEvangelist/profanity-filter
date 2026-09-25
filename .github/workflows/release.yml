@@ -19,12 +19,27 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       packages: write
 
     steps:
       - name: 📥 Check out the repo
         uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+
+      - name: 🏷️ Derive Action release aliases
+        id: aliases
+        env:
+          RELEASE_VERSION: ${{ github.event.release.tag_name || inputs.version }}
+        run: |
+          if [[ "$RELEASE_VERSION" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "major=v${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo "minor=v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
+            echo "is-stable-semver=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "is-stable-semver=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: 🏷️ Get the version
         if: ${{ github.event_name != 'workflow_dispatch' }}
@@ -54,6 +69,18 @@ jobs:
             -p ContainerImageTags='"latest;${{ env.RELEASE_VERSION }}"' \
             -p ContainerRepository=${{ env.IMAGE_NAME }} \
             -bl
+
+      - name: 🔖 Update Action release aliases
+        if: steps.aliases.outputs.is-stable-semver == 'true'
+        env:
+          MAJOR_ALIAS: ${{ steps.aliases.outputs.major }}
+          MINOR_ALIAS: ${{ steps.aliases.outputs.minor }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git tag --force --annotate "$MAJOR_ALIAS" --message "Update $MAJOR_ALIAS Action release alias"
+          git tag --force --annotate "$MINOR_ALIAS" --message "Update $MINOR_ALIAS Action release alias"
+          git push --force origin "refs/tags/$MAJOR_ALIAS" "refs/tags/$MINOR_ALIAS"
 
       - name: 📦 Upload build log
         uses: actions/upload-artifact@main

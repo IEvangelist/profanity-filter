@@ -72,6 +72,22 @@ If you already have an existing workflow that is triggered `on/issues|pull_reque
     replacement-strategy: FirstLetterThenAsterisk
 ```
 
+### Release references
+
+Action releases use [Semantic Versioning](https://semver.org/) tags such as `v13.5.0`. Stable releases also maintain the `v13` and `v13.5` aliases. Use an alias for a maintained compatible release:
+
+```yml
+uses: IEvangelist/profanity-filter@v13
+```
+
+For an immutable reference, pin the Action to a commit SHA and retain its complete SemVer tag as a version comment:
+
+```yml
+uses: IEvangelist/profanity-filter@<commit-sha> # v13.5.0
+```
+
+NuGet package tags continue to use their four-component NuGet versions and do not publish packages for Action-only SemVer tags or aliases.
+
 > [!IMPORTANT]
 > You'll still need to ensure that the existing GitHub workflow has the appropriate `permissions`, with `issues: write` and `pull-requests: write` such that the profanity filter's `${{ secrets.GITHUB_TOKEN }}` will be capable of applying filters.
 
