@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'The manual version to release'
+        description: 'The vMAJOR.MINOR.PATCH Action version to release'
         required: true
 
 env:
@@ -38,6 +38,7 @@ jobs:
             echo "minor=v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
             echo "is-stable-semver=true" >> "$GITHUB_OUTPUT"
           else
+            echo "::warning::Skipping Action aliases: '$RELEASE_VERSION' is not a stable vMAJOR.MINOR.PATCH version."
             echo "is-stable-semver=false" >> "$GITHUB_OUTPUT"
           fi
 
