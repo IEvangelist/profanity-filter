@@ -19,7 +19,7 @@ name: Release NuGet packages
 on:
   push:
     tags:
-      - '**'
+      - '*.*.*.*'
 
 jobs:
   publish:
@@ -30,6 +30,15 @@ jobs:
       id-token: write    # required for the OIDC token exchange with nuget.org
 
     steps:
+      - name: ✅ Validate NuGet package tag
+        env:
+          TAG_VERSION: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$TAG_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+            echo "::error::NuGet package tags must use four numeric components (MAJOR.MINOR.PATCH.REVISION); received '$TAG_VERSION'."
+            exit 1
+          fi
+
       - name: 📥 Checkout repository (full history)
         uses: actions/checkout@main
         with:
