@@ -46,6 +46,8 @@ The client can be configured using the `ProfanityFilterOptions` class (in the `P
 
 - `ApiBaseAddress`: The base address of the Profanity Filter API.
 
+HTTPS connections validate the API's server certificate, including when the client runs in a container. For development or private certificate authorities, install the issuing CA certificate in the client's OS or container trust store rather than disabling certificate validation.
+
 ```json
 {
   "ProfanityFilter": {

@@ -4,7 +4,6 @@
 namespace ProfanityFilter.Client;
 
 internal sealed class DefaultRealtimeClient(
-    IConfiguration configuration,
     IOptions<ProfanityFilterOptions> options,
     ILogger<DefaultRealtimeClient> logger) : IRealtimeClient
 {
@@ -22,26 +21,7 @@ internal sealed class DefaultRealtimeClient(
     private void EnsureInitialized()
     {
         _connection ??= new HubConnectionBuilder()
-            .WithUrl(_hubUrl, options =>
-            {
-                // Only apply these options when running in a container.
-                if (!configuration.IsRunningInContainer())
-                {
-                    return;
-                }
-
-                options.UseDefaultCredentials = true;
-                options.HttpMessageHandlerFactory = handler =>
-                {
-                    if (handler is HttpClientHandler clientHandler)
-                    {
-                        clientHandler.ServerCertificateCustomValidationCallback =
-                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-                    }
-
-                    return handler;
-                };
-            })
+            .WithUrl(_hubUrl)
             .WithAutomaticReconnect()
             .WithStatefulReconnect()
             .Build();

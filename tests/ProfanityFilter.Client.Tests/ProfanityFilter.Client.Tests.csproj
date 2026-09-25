@@ -14,6 +14,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
 
     <!-- Provides some integration with MSBuild (including dotnet test support) -->
     <PackageReference Include="Microsoft.Testing.Platform.MSBuild" />
