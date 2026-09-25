@@ -5,12 +5,12 @@ global using System.Collections.Frozen;
 global using System.Diagnostics;
 global using System.Diagnostics.CodeAnalysis;
 global using System.Text.RegularExpressions;
-global using Actions.Core.Extensions;
-global using Actions.Core.Markdown;
-global using Actions.Core.Services;
-global using Actions.Core.Summaries;
-global using Actions.Octokit;
-global using Actions.Octokit.Extensions;
+global using ActionsToolkit.Core.Extensions;
+global using ActionsToolkit.Core.Markdown;
+global using ActionsToolkit.Core.Services;
+global using ActionsToolkit.Core.Summaries;
+global using ActionsToolkit.Octokit;
+global using ActionsToolkit.Octokit.Extensions;
 global using GitHub;
 global using GitHub.Models;
 global using Microsoft.Extensions.DependencyInjection;
@@ -22,8 +22,8 @@ global using ProfanityFilter.Action.Models;
 global using ProfanityFilter.Common;
 global using ProfanityFilter.Services;
 global using ContextSummaryPair = (
-    Actions.Octokit.Context Context,
-    Actions.Core.Summaries.Summary Summary);
+    ActionsToolkit.Octokit.Context Context,
+    ActionsToolkit.Core.Summaries.Summary Summary);
 global using Env = System.Environment;
 global using IssueUpdate = GitHub.Repos.Item.Item.Issues.Item.WithIssue_numberPatchRequestBody;
 global using PullRequestUpdate = GitHub.Repos.Item.Item.Pulls.Item.WithPull_numberPatchRequestBody;

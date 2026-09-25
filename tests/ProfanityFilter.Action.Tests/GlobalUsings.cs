@@ -4,9 +4,9 @@
 global using System.Runtime.CompilerServices;
 global using System.Text.Json.Serialization.Metadata;
 
-global using Actions.Core;
-global using Actions.Core.Services;
-global using Actions.Core.Summaries;
+global using ActionsToolkit.Core;
+global using ActionsToolkit.Core.Services;
+global using ActionsToolkit.Core.Summaries;
 
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
