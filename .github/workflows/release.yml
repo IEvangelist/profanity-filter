@@ -23,12 +23,6 @@ jobs:
       packages: write
 
     steps:
-      - name: 📥 Check out the repo
-        uses: actions/checkout@main
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.release.tag_name || inputs.version }}
-
       - name: 🏷️ Derive Action release aliases
         id: aliases
         env:
@@ -46,6 +40,13 @@ jobs:
             echo "::warning::Skipping Action aliases: '$RELEASE_VERSION' is not a stable vMAJOR.MINOR.PATCH version."
             echo "is-stable-semver=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: 📥 Check out the repo
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          ref: ${{ github.event.release.tag_name || inputs.version }}
 
       - name: 🏷️ Get the version
         if: ${{ github.event_name != 'workflow_dispatch' }}

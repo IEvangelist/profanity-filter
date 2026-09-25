@@ -86,7 +86,7 @@ For an immutable reference, pin the Action to a commit SHA and retain its comple
 uses: IEvangelist/profanity-filter@<commit-sha> # v13.5.0
 ```
 
-NuGet package tags continue to use their four-component NuGet versions and do not publish packages for Action-only SemVer tags or aliases.
+NuGet packages are published only from four-component version tags (`MAJOR.MINOR.PATCH.REVISION`); Action-only SemVer tags and aliases do not trigger a NuGet publish.
 
 > [!IMPORTANT]
 > You'll still need to ensure that the existing GitHub workflow has the appropriate `permissions`, with `issues: write` and `pull-requests: write` such that the profanity filter's `${{ secrets.GITHUB_TOKEN }}` will be capable of applying filters.
