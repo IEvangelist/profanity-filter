@@ -31,8 +31,8 @@
     
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" />
-    <PackageReference Include="GitHub.Actions.Core" />
-    <PackageReference Include="GitHub.Actions.Octokit" />
+    <PackageReference Include="ActionsToolkit.Core" />
+    <PackageReference Include="ActionsToolkit.Octokit" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Kiota.Bundle" />
   </ItemGroup>
