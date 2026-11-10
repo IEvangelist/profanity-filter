@@ -19,8 +19,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       packages: write
+    outputs:
+      version: ${{ steps.aliases.outputs.version }}
+      major: ${{ steps.aliases.outputs.major }}
+      minor: ${{ steps.aliases.outputs.minor }}
+      is-stable-semver: ${{ steps.aliases.outputs.is-stable-semver }}
 
     steps:
       - name: 🏷️ Derive Action release aliases
@@ -28,6 +33,7 @@ jobs:
         env:
           RELEASE_VERSION: ${{ github.event.release.tag_name || inputs.version }}
         run: |
+          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
           if [[ "$RELEASE_VERSION" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
             echo "major=v${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
             echo "minor=v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}" >> "$GITHUB_OUTPUT"
@@ -45,7 +51,7 @@ jobs:
         uses: actions/checkout@main
         with:
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
           ref: ${{ github.event.release.tag_name || inputs.version }}
 
       - name: 🏷️ Get the version
@@ -77,21 +83,56 @@ jobs:
             -p ContainerRepository=${{ env.IMAGE_NAME }} \
             -bl
 
-      - name: 🔖 Update Action release aliases
-        if: steps.aliases.outputs.is-stable-semver == 'true'
-        env:
-          MAJOR_ALIAS: ${{ steps.aliases.outputs.major }}
-          MINOR_ALIAS: ${{ steps.aliases.outputs.minor }}
-        run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git tag --force --annotate "$MAJOR_ALIAS" --message "Update $MAJOR_ALIAS Action release alias"
-          git tag --force --annotate "$MINOR_ALIAS" --message "Update $MINOR_ALIAS Action release alias"
-          git push --force origin "refs/tags/$MAJOR_ALIAS" "refs/tags/$MINOR_ALIAS"
-
       - name: 📦 Upload build log
         uses: actions/upload-artifact@main
         if: always()
         with:
           name: msbuild.binlog
           path: src/ProfanityFilter.Action/msbuild.binlog
+
+  # Runs only after the container image for this release has been published, so the
+  # tag never points at an action.yml that references an image that does not exist yet.
+  pin-action:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Check out the release tag
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+          ref: ${{ needs.deploy.outputs.version }}
+
+      # action.yml on the default branch references :latest. A released tag must instead
+      # reference the image published for that exact version, otherwise
+      # `uses: owner/repo@<tag>` would run whatever image was pushed most recently.
+      - name: 📌 Pin Action image to the release version
+        env:
+          RELEASE_VERSION: ${{ needs.deploy.outputs.version }}
+        run: |
+          sed -i "s|\(ghcr.io/${IMAGE_NAME}\):latest|\1:${RELEASE_VERSION}|" action.yml
+          if ! grep -qF "ghcr.io/${IMAGE_NAME}:${RELEASE_VERSION}'" action.yml; then
+            echo "::error::action.yml does not reference ghcr.io/${IMAGE_NAME}:${RELEASE_VERSION} after pinning."
+            exit 1
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          if ! git diff --quiet -- action.yml; then
+            git commit --message "Pin Action image to ${RELEASE_VERSION}" -- action.yml
+          fi
+          git tag --force --annotate "$RELEASE_VERSION" --message "Release $RELEASE_VERSION"
+          git push --force origin "refs/tags/$RELEASE_VERSION"
+
+      # Runs after pinning so the aliases point at the commit with the pinned image.
+      - name: 🔖 Update Action release aliases
+        if: needs.deploy.outputs.is-stable-semver == 'true'
+        env:
+          MAJOR_ALIAS: ${{ needs.deploy.outputs.major }}
+          MINOR_ALIAS: ${{ needs.deploy.outputs.minor }}
+        run: |
+          git tag --force --annotate "$MAJOR_ALIAS" --message "Update $MAJOR_ALIAS Action release alias"
+          git tag --force --annotate "$MINOR_ALIAS" --message "Update $MINOR_ALIAS Action release alias"
+          git push --force origin "refs/tags/$MAJOR_ALIAS" "refs/tags/$MINOR_ALIAS"
