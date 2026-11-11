@@ -35,5 +35,11 @@
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.11"
+  },
+  "overrides": {
+    "minimatch": "^11.0.4",
+    "@tailwindcss/typography": {
+      "postcss-selector-parser": "^6.1.5"
+    }
   }
 }
