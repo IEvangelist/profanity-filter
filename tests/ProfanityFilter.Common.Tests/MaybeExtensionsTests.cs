@@ -12,8 +12,11 @@ public class MaybeExtensionsTests
         var value = "test";
         var result = value.AsMaybe();
 
-        Assert.IsInstanceOfType<Available<string>>(result);
-        Assert.AreEqual(value, ((Available<string>)result).Value);
+        Assert.AreEqual(value, result switch
+        {
+            Available<string> available => available.Value,
+            Absent<string> => null
+        });
     }
 
     [TestMethod]
@@ -22,31 +25,54 @@ public class MaybeExtensionsTests
         string? value = null;
         var result = value.AsMaybe();
 
-        Assert.IsInstanceOfType<Absent<string>>(result);
+        Assert.IsTrue(result is Absent<string>);
     }
 
     [TestMethod]
     public void ChainWithSomethingReturnsTransformedSomething()
     {
-        var initial = new Available<int>(5);
+        Maybe<int> initial = new Available<int>(5);
         var result = initial.Chain(x => x * 2).Chain(x => x * 3.1);
 
-        Assert.IsInstanceOfType<Available<double>>(result);
-        Assert.AreEqual(31d, ((Available<double>)result).Value);
+        Assert.IsTrue(result is Available<double> { Value: 31d });
 
         var stringSomething = result.Chain(x => (x / 2).ToString(CultureInfo.InvariantCulture));
 
-        Assert.IsInstanceOfType<Available<string>>(stringSomething);
-        Assert.AreEqual("15.5", ((Available<string>)stringSomething).Value);
+        Assert.IsTrue(stringSomething is Available<string> { Value: "15.5" });
     }
 
     [TestMethod]
     public void ChainWithNothingReturnsNothing()
     {
-        var initial = new Absent<int>();
+        Maybe<int> initial = new Absent<int>();
         var result = initial.Chain(x => x * 2);
 
-        Assert.IsInstanceOfType<Absent<int>>(result);
+        Assert.IsTrue(result is Absent<int>);
+    }
+
+    [TestMethod]
+    public void ChainWithDefaultDoesNotInvokeCallback()
+    {
+        Maybe<int> initial = default;
+        var invoked = false;
+
+        var result = initial.Chain(value =>
+        {
+            invoked = true;
+            return value * 2;
+        });
+
+        Assert.IsFalse(invoked);
+        Assert.IsTrue(result is Absent<int>);
+    }
+
+    [TestMethod]
+    public void ChainWithNullResultPreservesAvailableCase()
+    {
+        Maybe<int> initial = new Available<int>(5);
+
+        var result = initial.Chain(static _ => (string?)null);
+
+        Assert.IsTrue(result is Available<string?> { Value: null });
     }
 }
-

@@ -33,7 +33,6 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="ActionsToolkit.Core" />
     <PackageReference Include="ActionsToolkit.Octokit" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Kiota.Bundle" />
   </ItemGroup>
 

@@ -1,10 +1,10 @@
 <Project>
     <PropertyGroup>
-        <DefaultTargetFramework>net10.0</DefaultTargetFramework>
+        <DefaultTargetFramework>net11.0</DefaultTargetFramework>
         <TargetFramework>$(DefaultTargetFramework)</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <LangVersion>preview</LangVersion>
+        <LangVersion>15.0</LangVersion>
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
 
         <UseArtifactsOutput>true</UseArtifactsOutput>

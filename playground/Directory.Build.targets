@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup>
+    <ProjectReference Update="..\src\ProfanityFilter.Hosting\ProfanityFilter.Hosting.csproj"
+                      IsAspireProjectResource="false" />
+  </ItemGroup>
+</Project>

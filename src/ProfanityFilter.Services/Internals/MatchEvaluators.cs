@@ -14,8 +14,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator GrawlixEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             var grawlixes = isNotTitle ? Symbols.Grawlixes : Symbols.UnescapedGrawlixes;
@@ -36,8 +34,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator BoldGrawlixEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             var grawlixes = isNotTitle ? Symbols.Grawlixes : Symbols.UnescapedGrawlixes;
@@ -59,8 +55,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator AsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             // Don't escape titles
@@ -79,8 +73,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator EmojiEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var emoji = Emoji.HandSelectedReplacements;
 
             return emoji[Random.Shared.Next(emoji.Length)];
@@ -93,8 +85,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator AngerEmojiEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var emoji = Emoji.AngerEmoji;
 
             return emoji[Random.Shared.Next(emoji.Length)];
@@ -106,8 +96,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator MiddleSwearEmojiEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var value = match.ValueSpan;
 
             var result = $"{value[0]}🤬{value[^1]}";
@@ -122,8 +110,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator RandomAsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var isNotTitle = parameters.Target is not FilterTarget.Title;
 
             // Don't escape titles
@@ -142,8 +128,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator MiddleAsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var value = match.ValueSpan;
 
             var isNotTitle = parameters.Target is not FilterTarget.Title;
@@ -165,8 +149,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator FirstLetterThenAsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var value = match.ValueSpan;
 
             var isNotTitle = parameters.Target is not FilterTarget.Title;
@@ -188,8 +170,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator VowelAsteriskEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var value = match.ValueSpan;
 
             var result = new StringBuilder(match.Length);
@@ -223,8 +203,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator BleepEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             return "bleep";
         };
 
@@ -234,8 +212,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator RedactedRectangleEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var length = match.Length;
 
             return new string('█', length);
@@ -248,8 +224,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator StrikeThroughEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             if (parameters.Target is FilterTarget.Title)
             {
                 return match.Value; // We cannot strike through a title.
@@ -267,8 +241,6 @@ internal static class MatchEvaluators
     internal static MatchEvaluator UnderscoresEvaluator(FilterParameters parameters) =>
         string (match) =>
         {
-            MatchRegistry.Register(parameters, match);
-
             var length = match.Length;
 
             return new string('_', length);

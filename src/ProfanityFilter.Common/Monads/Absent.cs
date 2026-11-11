@@ -7,7 +7,7 @@ namespace ProfanityFilter.Common.Monads;
 /// Represents a type that signifies the absence of a value.
 /// </summary>
 /// <typeparam name="T">The type of the value that is absent.</typeparam>
-public readonly record struct Absent<T> : IMaybe<T>
+public readonly record struct Absent<T>
 {
     /// <summary>
     /// Implicitly converts the <see cref="Absent{T}"/> to its contained value of type <typeparamref name="T"/>.

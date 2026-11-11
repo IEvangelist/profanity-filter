@@ -17,6 +17,11 @@ dotnet add package ProfanityFilter.Client
 To register the client in your application, call `AddProfanityFilterClient` on an `IHostApplicationBuilder` instance:
 
 ```csharp
+using Microsoft.AspNetCore.Mvc;
+using ProfanityFilter.Client;
+using ProfanityFilter.Common.Api;
+using ProfanityFilter.Common.Monads;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddProfanityFilterClient("profanity-filter");
@@ -28,7 +33,11 @@ app.MapPost(
     handler: static async (
         [FromBody] ProfanityFilterRequest request,
         [FromServices] IRestClient client) =>
-        await client.ApplyFilterAsync(request))
+        (await client.ApplyFilterAsync(request)) switch
+        {
+            Available<ProfanityFilterResponse>(var response) => Results.Ok(response),
+            Absent<ProfanityFilterResponse> => Results.NoContent()
+        })
     .WithName("Filter");
 
 app.Run();
@@ -39,6 +48,41 @@ The connection name parameter registers the client in the application's services
 - `IRestClient`: Interface for the REST client.
 - `IRealtimeClient`: Interface for the realtime client.
 - `ProfanityFilterClient`: Concrete type exposing the pair of REST and realtime clients.
+
+## Optional REST results
+
+REST methods return `Task<Maybe<T>>`. `Maybe<T>` has two cases:
+`Available<T>` contains a value, and `Absent<T>` represents no value.
+A JSON `null` response becomes `Absent<T>`; an empty array is still available.
+HTTP and deserialization errors throw exceptions rather than returning an absent
+result. Use pattern matching to handle both cases:
+
+```csharp
+Maybe<string[]> result = await client.GetDataNamesAsync();
+
+string[] names = result switch
+{
+    Available<string[]>(var values) => values,
+    Absent<string[]> => []
+};
+```
+
+Use `AsMaybe()` to wrap a value, or `Chain()` to transform an available value.
+These extension methods are in the `ProfanityFilter.Common.Extensions` namespace:
+
+```csharp
+using ProfanityFilter.Common.Extensions;
+
+string? dataName = null;
+Maybe<string> selectedDataName = dataName.AsMaybe(); // Absent<string>
+Maybe<int> count = result.Chain(static values => values.Length);
+```
+
+`AsMaybe()` maps null to `Absent<T>`. `Chain()` runs its callback only for an
+available value and propagates absence otherwise. `default(Maybe<T>)` is absent;
+an explicitly constructed `Available<T>` can contain null, as can the result of
+`Chain()` when its callback returns null. Unwrap a result before returning it
+from an HTTP endpoint, as shown in the example above.
 
 ## Configuration
 

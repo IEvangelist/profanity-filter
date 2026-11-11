@@ -1,11 +1,12 @@
 ﻿// Copyright (c) David Pine. All rights reserved.
 // Licensed under the MIT License.
 
-#:sdk Aspire.AppHost.Sdk@13.4.0
+#:sdk Aspire.AppHost.Sdk@13.6.5
 #:package Aspire.Hosting.Docker
 #:package Aspire.Hosting.JavaScript
-#:package ProfanityFilter.Hosting
+#:project ../src/ProfanityFilter.Hosting/ProfanityFilter.Hosting.csproj
 #:project ../src/ProfanityFilter.WebApi/ProfanityFilter.WebApi.csproj
+#:property AspireUseCliBundle=true
 #:property NoWarn=$(NoWarn);ASPIREPUBLISHERS001;ASPIRECOMPUTE001;ASPIREPIPELINES003;ASPIRECOMPUTE003;ASPIRECERTIFICATES001;
 
 using Microsoft.Extensions.Hosting;

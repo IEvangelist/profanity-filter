@@ -8,7 +8,7 @@ namespace ProfanityFilter.Common.Monads;
 /// </summary>
 /// <typeparam name="T">The type of the value.</typeparam>
 /// <param name="Value">The value contained in the <see cref="Available{T}"/>.</param>
-public readonly record struct Available<T>(T Value) : IMaybe<T>
+public readonly record struct Available<T>(T Value)
 {
     /// <summary>
     /// Implicitly converts the <see cref="Available{T}"/> to its contained value of type <typeparamref name="T"/>.

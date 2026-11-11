@@ -15,7 +15,26 @@ permissions:
   contents: read
 
 jobs:
+  compile:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@main
+
+    - name: 💜 Setup .NET
+      uses: actions/setup-dotnet@main
+      with:
+        global-json-file: ./global.json
+
+    - name: 🔨 Build entire solution
+      run: dotnet build --configuration Release
+
+    - name: 🔨 Build file-based AppHost
+      run: dotnet build playground/apphost.cs --configuration Release
+
   build:
+    needs: compile
     runs-on: ubuntu-latest
 
     strategy:
@@ -40,13 +59,10 @@ jobs:
 
     - name: 🧪 Test — ${{ matrix.project }}
       run: |
-        # Publish the test project.
-        dotnet publish --configuration Release tests/${{ matrix.project }}/
+        dotnet publish --configuration Release --runtime linux-x64 \
+          --output "${{ runner.temp }}/${{ matrix.project }}" \
+          tests/${{ matrix.project }}/
 
-        # Change to the test project directory.
-        cd artifacts/publish/${{ matrix.project }}
-        ls
-        cd ./release_linux-x64
+        cd "${{ runner.temp }}/${{ matrix.project }}"
 
-        # Call test executable.
         ./${{ matrix.project }}

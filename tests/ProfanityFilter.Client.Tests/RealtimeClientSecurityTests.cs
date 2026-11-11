@@ -26,8 +26,11 @@ public class RealtimeClientSecurityTests
         var names = new SubjectAlternativeNameBuilder();
         names.AddIpAddress(IPAddress.Loopback);
         request.CertificateExtensions.Add(names.Build());
-        using var certificate = request.CreateSelfSigned(
+        using var generatedCertificate = request.CreateSelfSigned(
             DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddMinutes(5));
+        // Windows TLS needs an imported private key rather than the ephemeral signing key.
+        using var certificate = X509CertificateLoader.LoadPkcs12(
+            generatedCertificate.Export(X509ContentType.Pfx), password: null);
 
         using var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();
