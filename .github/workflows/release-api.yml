@@ -34,6 +34,8 @@ jobs:
 
       - name: 💜 Setup .NET
         uses: actions/setup-dotnet@main
+        with:
+          global-json-file: ./global.json
 
       - name: ✨ Install Aspire CLI
         run: curl -sSL https://aspire.dev/install.sh | bash

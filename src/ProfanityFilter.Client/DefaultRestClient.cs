@@ -7,7 +7,7 @@ namespace ProfanityFilter.Client;
 internal sealed class DefaultRestClient(HttpClient client) : IRestClient
 {
     /// <inheritdoc />
-    async Task<IMaybe<ProfanityFilterResponse>> IRestClient.ApplyFilterAsync(ProfanityFilterRequest request)
+    async Task<Maybe<ProfanityFilterResponse>> IRestClient.ApplyFilterAsync(ProfanityFilterRequest request)
     {
         using var response = await client.PostAsJsonAsync(
             "profanity/filter", request, JsonSerializationContext.Default.ProfanityFilterRequest);
@@ -21,19 +21,19 @@ internal sealed class DefaultRestClient(HttpClient client) : IRestClient
     }
 
     /// <inheritdoc />
-    Task<IMaybe<string[]>> IRestClient.GetDataByNameAsync(string name) => GetMaybeAsync($"profanity/data/{name}", JsonSerializationContext.Default.StringArray);
+    Task<Maybe<string[]>> IRestClient.GetDataByNameAsync(string name) => GetMaybeAsync($"profanity/data/{name}", JsonSerializationContext.Default.StringArray);
 
     /// <inheritdoc />
-    Task<IMaybe<string[]>> IRestClient.GetDataNamesAsync() => GetMaybeAsync("profanity/data", JsonSerializationContext.Default.StringArray);
+    Task<Maybe<string[]>> IRestClient.GetDataNamesAsync() => GetMaybeAsync("profanity/data", JsonSerializationContext.Default.StringArray);
 
     /// <inheritdoc />
-    Task<IMaybe<StrategyResponse[]>> IRestClient.GetStrategiesAsync() => GetMaybeAsync("profanity/strategies", JsonSerializationContext.Default.StrategyResponseArray);
+    Task<Maybe<StrategyResponse[]>> IRestClient.GetStrategiesAsync() => GetMaybeAsync("profanity/strategies", JsonSerializationContext.Default.StrategyResponseArray);
 
     /// <inheritdoc />
-    Task<IMaybe<FilterTargetResponse[]>> IRestClient.GetTargetsAsync() => GetMaybeAsync("profanity/targets", JsonSerializationContext.Default.FilterTargetResponseArray);
+    Task<Maybe<FilterTargetResponse[]>> IRestClient.GetTargetsAsync() => GetMaybeAsync("profanity/targets", JsonSerializationContext.Default.FilterTargetResponseArray);
 
     /// <inheritdoc />
-    private async Task<IMaybe<T>> GetMaybeAsync<T>(string uri, JsonTypeInfo<T> typeInfo)
+    private async Task<Maybe<T>> GetMaybeAsync<T>(string uri, JsonTypeInfo<T> typeInfo)
     {
         var data = await client.GetFromJsonAsync<T>(uri, typeInfo);
 

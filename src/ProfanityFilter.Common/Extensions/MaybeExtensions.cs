@@ -9,12 +9,12 @@ namespace ProfanityFilter.Common.Extensions;
 public static class MaybeExtensions
 {
     /// <summary>
-    /// Converts a value to an instance of <see cref="IMaybe{T}"/>.
+    /// Converts a value to an instance of <see cref="Maybe{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of the value.</typeparam>
     /// <param name="value">The value to convert.</param>
-    /// <returns>An instance of <see cref="IMaybe{T}"/> containing the value if it is not null; otherwise, an instance of <see cref="Absent{T}"/>.</returns>
-    public static IMaybe<T> AsMaybe<T>(this T? value) => value is null
+    /// <returns>A union containing <see cref="Available{T}"/> if the value is not null; otherwise, <see cref="Absent{T}"/>.</returns>
+    public static Maybe<T> AsMaybe<T>(this T? value) => value is null
         ? new Absent<T>()
         : new Available<T>(value);
 
@@ -25,13 +25,13 @@ public static class MaybeExtensions
     /// <typeparam name="TOut">The type of the output value.</typeparam>
     /// <param name="this">The current instance of <typeparamref name="TIn"/>.</param>
     /// <param name="func">The function to transform the input value to the output value.</param>
-    /// <returns>An instance of <see cref="IMaybe{TOut}"/> containing the transformed value.</returns>
-    public static IMaybe<TOut> Chain<TIn, TOut>(
-        this IMaybe<TIn> @this,
+    /// <returns>A union containing the transformed available case, or the absent case.</returns>
+    public static Maybe<TOut> Chain<TIn, TOut>(
+        this Maybe<TIn> @this,
         Func<TIn, TOut> func) =>
         @this switch
         {
             Available<TIn> s => new Available<TOut>(func.Invoke(s.Value)),
-            _ => new Absent<TOut>(),
+            Absent<TIn> => new Absent<TOut>(),
         };
 }

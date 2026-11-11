@@ -21,13 +21,12 @@ public sealed class SomethingTests
     }
 
     [TestMethod]
-    public void SomethingShouldBeAssignableToIMaybe()
+    public void SomethingShouldBeConvertibleToMaybe()
     {
         // Arrange
-        var something = new Available<int>(42);
+        Maybe<int> something = new Available<int>(42);
 
         // Act & Assert
-        Assert.IsInstanceOfType<IMaybe<int>>(something);
-        Assert.AreEqual(42, something.Value);
+        Assert.IsTrue(something is Available<int> { Value: 42 });
     }
 }

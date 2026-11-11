@@ -90,10 +90,13 @@ internal sealed partial class DefaultProfaneContentFilterService(
 
         if (parameters.ExcludedFilterSources is { Count: > 0 } excludedSources)
         {
-            var normalizedExcludedSources = excludedSources
-                .Where(static source => string.IsNullOrWhiteSpace(source) is false)
-                .Select(static source => NormalizeSourceName(source))
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            HashSet<string> normalizedExcludedSources =
+            [
+                with(capacity: excludedSources.Count, comparer: StringComparer.OrdinalIgnoreCase),
+                .. excludedSources
+                    .Where(static source => string.IsNullOrWhiteSpace(source) is false)
+                    .Select(static source => NormalizeSourceName(source))
+            ];
 
             foreach (var source in wordList.Keys.ToArray())
             {
@@ -106,10 +109,13 @@ internal sealed partial class DefaultProfaneContentFilterService(
 
         if (parameters.ExcludedWords is { Count: > 0 } excludedWords)
         {
-            var normalizedExcludedWords = excludedWords
-                .Where(static word => string.IsNullOrWhiteSpace(word) is false)
-                .Select(static word => word.Trim())
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            HashSet<string> normalizedExcludedWords =
+            [
+                with(capacity: excludedWords.Count, comparer: StringComparer.OrdinalIgnoreCase),
+                .. excludedWords
+                    .Where(static word => string.IsNullOrWhiteSpace(word) is false)
+                    .Select(static word => word.Trim())
+            ];
 
             foreach (var (source, filter) in wordList.ToArray())
             {
@@ -132,6 +138,13 @@ internal sealed partial class DefaultProfaneContentFilterService(
 
         var getEvaluator = strategy.GetMatchEvaluator();
         var evaluator = getEvaluator(parameters);
+        List<string>? matches = null;
+        MatchEvaluator recordingEvaluator = match =>
+        {
+            (matches ??= []).Add(match.Value);
+
+            return evaluator(match);
+        };
 
         var stepContent = content;
 
@@ -141,14 +154,14 @@ internal sealed partial class DefaultProfaneContentFilterService(
             {
                 result = result with
                 {
-                    Steps = []
+                    Steps = [with(capacity: wordList.Count)]
                 };
             }
 
             FilterStep step = new(stepContent, source);
 
             var potentiallyReplacedContent =
-                Regex.Replace(stepContent, filter.RegexPattern, evaluator, options: RegexOptions.IgnoreCase);
+                Regex.Replace(stepContent, filter.RegexPattern, recordingEvaluator, options: RegexOptions.IgnoreCase);
 
             if (stepContent != potentiallyReplacedContent)
             {
@@ -165,7 +178,7 @@ internal sealed partial class DefaultProfaneContentFilterService(
 
         return result with
         {
-            Matches = MatchRegistry.Unregister(parameters)
+            Matches = matches
         };
 
         static string NormalizeSourceName(string source)

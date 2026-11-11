@@ -6,11 +6,13 @@ namespace ProfanityFilter.Services.Tests;
 [TestClass]
 public class DefaultProfaneContentFilterServiceTests
 {
-    private const string Path = "CustomData/CustomWords.txt";
+    private static readonly string s_customDataDirectory = System.IO.Path.Combine(AppContext.BaseDirectory, "CustomData");
+    private static readonly string Path = System.IO.Path.Combine(s_customDataDirectory, "CustomWords.txt");
 
     private DefaultProfaneContentFilterService _sut;
 
     private static readonly string[] s_webFormsArray = ["WebForms"];
+    private static readonly string[] s_invalidPatternArray = ["("];
 
     public DefaultProfaneContentFilterServiceTests() => _sut = new DefaultProfaneContentFilterService(
         cache: new MemoryCache(Options.Create<MemoryCacheOptions>(new())),
@@ -207,7 +209,7 @@ public class DefaultProfaneContentFilterServiceTests
     public async Task FilterProfanityAsyncWithCustomDataReturnsMultiStepResult()
     {
         string[] customWords = ["Silverlight", "WebForms"];
-        Directory.CreateDirectory("CustomData");
+        Directory.CreateDirectory(s_customDataDirectory);
 
         await File.WriteAllTextAsync(Path, string.Join('\n', customWords));
 
@@ -230,7 +232,10 @@ public class DefaultProfaneContentFilterServiceTests
     }
 
     [TestMethod]
-    public async Task FilterProfanityAsyncWithExcludedSourcesSkipsMatchingDictionary()
+    [DataRow("GoogleBannedWords")]
+    [DataRow(" googlebannedwords ")]
+    [DataRow("GOOGLEBANNEDWORDS.TXT")]
+    public async Task FilterProfanityAsyncWithExcludedSourcesSkipsMatchingDictionary(string excludedSource)
     {
         var input = "Lots of fucking words like manky and arrusa!";
 
@@ -238,7 +243,7 @@ public class DefaultProfaneContentFilterServiceTests
         var result = await _sut.FilterProfanityAsync(input,
             new(ReplacementStrategy.MiddleAsterisk, FilterTarget.Body)
             {
-                ExcludedFilterSources = ["GoogleBannedWords"]
+                ExcludedFilterSources = [excludedSource, "", " "]
             }, CancellationToken.None);
 
         // Assert
@@ -252,7 +257,10 @@ public class DefaultProfaneContentFilterServiceTests
     }
 
     [TestMethod]
-    public async Task FilterProfanityAsyncWithExcludedWordsSkipsSpecificWord()
+    [DataRow("WebForms")]
+    [DataRow("WEBFORMS")]
+    [DataRow(" WebForms ")]
+    public async Task FilterProfanityAsyncWithExcludedWordsSkipsSpecificWord(string excludedWord)
     {
         var input = "I love WebForms!";
 
@@ -264,11 +272,68 @@ public class DefaultProfaneContentFilterServiceTests
                 [
                     new("Custom", s_webFormsArray.ToFrozenSet())
                 ],
-                ExcludedWords = ["WebForms"]
+                ExcludedWords = [excludedWord, "", " "]
             }, CancellationToken.None);
 
         // Assert
         Assert.IsFalse(result.IsFiltered);
         Assert.AreEqual(input, result.FinalOutput ?? result.Input);
+    }
+
+    [TestMethod]
+    public async Task FilterProfanityAsyncDoesNotRetainMatchesAfterFailure()
+    {
+        var invalidSource = new ProfaneSourceFilter("Invalid", s_invalidPatternArray.ToFrozenSet());
+        var parameters = new FilterParameters(ReplacementStrategy.Bleep, FilterTarget.Body)
+        {
+            AdditionalFilterSources =
+            [
+                new("Custom", s_webFormsArray.ToFrozenSet()),
+                invalidSource
+            ]
+        };
+
+        await Assert.ThrowsAsync<RegexParseException>(async () =>
+            await _sut.FilterProfanityAsync("WebForms", parameters, CancellationToken.None));
+
+        parameters.AdditionalFilterSources.Remove(invalidSource);
+
+        var result = await _sut.FilterProfanityAsync("WebForms", parameters, CancellationToken.None);
+
+        Assert.AreEqual("bleep", result.FinalOutput);
+        Assert.IsNotNull(result.Matches);
+        Assert.HasCount(1, result.Matches);
+        Assert.AreEqual("WebForms", result.Matches[0]);
+    }
+
+    [TestMethod]
+    public async Task FilterProfanityAsyncWithSharedParametersKeepsConcurrentMatchesSeparate()
+    {
+        await _sut.ReadAllProfaneWordsAsync(CancellationToken.None);
+
+        var parameters = new FilterParameters(ReplacementStrategy.Bleep, FilterTarget.Body)
+        {
+            AdditionalFilterSources = [new("Custom", s_webFormsArray.ToFrozenSet())]
+        };
+        const int matchCount = 256;
+        var input = string.Join(' ', Enumerable.Repeat("WebForms", matchCount));
+        var start = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var tasks = Enumerable.Range(0, 16).Select(_ => Task.Run(async () =>
+        {
+            await start.Task;
+
+            return await _sut.FilterProfanityAsync(input, parameters, CancellationToken.None);
+        })).ToArray();
+
+        start.SetResult();
+
+        var results = await Task.WhenAll(tasks);
+
+        foreach (var result in results)
+        {
+            Assert.IsNotNull(result.Matches);
+            Assert.HasCount(matchCount, result.Matches);
+            Assert.IsTrue(result.Matches.All(static match => match is "WebForms"));
+        }
     }
 }

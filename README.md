@@ -208,3 +208,37 @@ The following is an example of a job summary that is rendered when profane conte
 
 ![A screenshot of an example job summary, showing the application process of the profanity filter.](assets/job-summary-lght.png#gh-light-mode-only)
 ![A screenshot of an example job summary, showing the application process of the profanity filter.](assets/job-summary-dark.png#gh-dark-mode-only)
+
+## Building from source
+
+Install the stable .NET 11 SDK specified in `global.json`. The projects target
+`net11.0` and use C# 15, without preview language features. The client and hosting
+NuGet packages therefore require .NET 11; using the container-based GitHub Action
+does not require a local .NET installation.
+
+The REST client's optional results use a non-boxing C# 15 `Maybe<T>` union; see
+the [client documentation](src/ProfanityFilter.Client/README.md#optional-rest-results).
+The filter uses collection-expression arguments to preserve exclusion-set
+comparers and preallocate collections from known input counts.
+
+```shell
+dotnet build --configuration Release
+dotnet build playground/apphost.cs --configuration Release
+dotnet test --configuration Release
+```
+
+The Action and test executables support Native AOT. Publishing requires the
+[Native AOT prerequisites](https://learn.microsoft.com/dotnet/core/deploying/native-aot/)
+for the target operating system. For example, on Linux x64:
+
+```shell
+dotnet publish tests/ProfanityFilter.Services.Tests --configuration Release --runtime linux-x64 --output ./artifacts/native-tests
+cd artifacts/native-tests
+./ProfanityFilter.Services.Tests
+```
+
+Run published tests from their output directory so custom dictionary files are
+created alongside the executable. CI builds the entire solution and AppHost, then
+publishes and runs all four test projects as Linux x64 Native AOT executables.
+The Web API remains a managed application; this upgrade does not opt it into
+Native AOT.
