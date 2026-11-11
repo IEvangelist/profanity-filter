@@ -109,11 +109,16 @@ jobs:
       # action.yml on the default branch references :latest. A released tag must instead
       # reference the image published for that exact version, otherwise
       # `uses: owner/repo@<tag>` would run whatever image was pushed most recently.
+      # Whatever tag the image reference currently has is replaced (:latest on the default
+      # branch, or an earlier release version when the release is based on a pinned tag, for
+      # example a hotfix). & and | are escaped because they are valid in tag names but have a
+      # special meaning inside the sed replacement.
       - name: 📌 Pin Action image to the release version
         env:
           RELEASE_VERSION: ${{ needs.deploy.outputs.version }}
         run: |
-          sed -i "s|\(ghcr.io/${IMAGE_NAME}\):latest|\1:${RELEASE_VERSION}|" action.yml
+          escaped_version=$(printf '%s' "$RELEASE_VERSION" | sed 's/[&|]/\\&/g')
+          sed -i "s|\(ghcr.io/${IMAGE_NAME}\):[^']*|\1:${escaped_version}|" action.yml
           if ! grep -qF "ghcr.io/${IMAGE_NAME}:${RELEASE_VERSION}'" action.yml; then
             echo "::error::action.yml does not reference ghcr.io/${IMAGE_NAME}:${RELEASE_VERSION} after pinning."
             exit 1
